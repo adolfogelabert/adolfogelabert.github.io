@@ -5,6 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Adolfo Gelabert | Senior Creative Designer</title>
     <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZLZQBRFRYM"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-ZLZQBRFRYM');
+    </script>
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -14,10 +24,6 @@
             --accent: #ca8a04;
             --bg-dark: #0a0a0a;
             --card-dark: #161616;
-        }
-
-        html {
-            /* scroll-behavior manejado por JS para mayor control */
         }
 
         body {
@@ -350,6 +356,75 @@
             width: 50px;
             height: auto;
         }
+
+        /* ===== MENÚ HAMBURGUESA MÓVIL ===== */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            width: 36px;
+            height: 36px;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            padding: 4px;
+            z-index: 200;
+        }
+        .hamburger span {
+            display: block;
+            height: 2px;
+            width: 100%;
+            background: #fff;
+            border-radius: 2px;
+            transition: all 0.35s ease;
+            transform-origin: center;
+        }
+        .hamburger.open span:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+        .hamburger.open span:nth-child(2) {
+            opacity: 0;
+            transform: scaleX(0);
+        }
+        .hamburger.open span:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+        #mobile-menu {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(10,10,10,0.97);
+            backdrop-filter: blur(16px);
+            z-index: 100;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+        }
+        #mobile-menu.open {
+            display: flex;
+        }
+        #mobile-menu a {
+            font-size: 1.6rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: #fff;
+            text-decoration: none;
+            opacity: 0.7;
+            transition: color 0.2s ease, opacity 0.2s ease;
+        }
+        #mobile-menu a:hover {
+            color: #ffcc00;
+            opacity: 1;
+        }
+        @media (max-width: 767px) {
+            .hamburger { display: flex; }
+        }
     </style>
 </head>
 <body>
@@ -377,11 +452,28 @@
                 <button onclick="changeLang('en')" id="btn-en" class="lang-btn px-2 py-1 rounded">EN</button>
             </div>
             
-            <a href="https://wa.me/51930562562" target="_blank" class="bg-yellow-600 text-black px-4 py-2 rounded text-xs font-black uppercase hover:bg-white transition i18n" data-es="Hablemos" data-en="Let's Talk">
+            <a href="https://wa.me/51930562562" target="_blank" class="hidden md:inline-block bg-yellow-600 text-black px-4 py-2 rounded text-xs font-black uppercase hover:bg-white transition i18n" data-es="Hablemos" data-en="Let's Talk">
                 Hablemos
             </a>
+
+            <!-- Botón Hamburguesa (solo móvil) -->
+            <button class="hamburger" id="hamburgerBtn" aria-label="Abrir menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
         </div>
     </nav>
+
+    <!-- Menú Móvil -->
+    <div id="mobile-menu" role="dialog" aria-modal="true">
+        <a href="#acerca"   class="i18n" data-es="Nosotros"   data-en="About">Nosotros</a>
+        <a href="#experiencia" class="i18n" data-es="Trayectoria" data-en="Experience">Trayectoria</a>
+        <a href="#skills"   class="i18n" data-es="Capacidades" data-en="Skills">Capacidades</a>
+        <a href="#referencias" class="i18n" data-es="Contactos"  data-en="References">Contactos</a>
+        <a href="#productos-digitales" class="i18n" data-es="Productos" data-en="Products">Productos</a>
+        <a href="https://wa.me/51930562562" target="_blank" style="color:#ffcc00;opacity:1;font-size:1rem;" class="i18n" data-es="Hablemos" data-en="Let's Talk">Hablemos</a>
+    </div>
 
     <!-- Sección Hero -->
     <section id="hero" class="min-h-screen flex flex-col justify-center items-center relative px-6 py-20 hero-gradient overflow-hidden">
@@ -1231,6 +1323,25 @@
         window.onload = () => {
             initCanvas();
             animateCanvas();
+
+            // ===== MENÚ HAMBURGUESA =====
+            const hamburgerBtn = document.getElementById('hamburgerBtn');
+            const mobileMenu   = document.getElementById('mobile-menu');
+
+            hamburgerBtn.addEventListener('click', () => {
+                const isOpen = mobileMenu.classList.toggle('open');
+                hamburgerBtn.classList.toggle('open', isOpen);
+                hamburgerBtn.setAttribute('aria-label', isOpen ? 'Cerrar menú' : 'Abrir menú');
+                document.body.style.overflow = isOpen ? 'hidden' : '';
+            });
+
+            mobileMenu.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.remove('open');
+                    hamburgerBtn.classList.remove('open');
+                    document.body.style.overflow = '';
+                });
+            });
 
             const savedLang = localStorage.getItem('preferredLang') || 'es';
             changeLang(savedLang);
