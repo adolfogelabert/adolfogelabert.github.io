@@ -14,6 +14,8 @@
 | 2026-09-17 | `terminos.html` / `terminos-condiciones.html` | Contenido mezclado: servicios hablaba de productos y viceversa | Redacción original combinada | `terminos.html` dejado solo servicios (11 secciones), `terminos-condiciones.html` solo productos (11 secciones) |
 | 2026-09-17 | `dashboard.html` / `index.html` | Sin control de acceso al panel | No existía login | Puerta visual temporal (`login-gate` + `siteLoginModal`, credenciales `admin`/`gelabert2026`) hasta Firebase |
 
+| 2026-10-05 | repo GitHub `main` | Push rechazado por divergencia con remoto (versión vieja con README, foto y PDF) | `git init` local sin historial remoto | Rescate de 3 archivos + `push --force-with-lease`, deploy OK |
+
 ## Pendientes de corrección (detectados en auditoría, aún no corregidos)
 - [x] URLs YouTube mock reemplazadas por reales el 2026-10-05 en `dashboard.html:345,354,363,372`
 - [ ] Stats hardcodeadas `dashboard.html:855,877`
