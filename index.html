@@ -1,0 +1,1882 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SEO Básico -->
+    <title>Adolfo Gelabert | Diseñador Gráfico &amp; Web Developer Specialist</title>
+    <meta name="description" content="Diseñador Gráfico y Web Developer con +18 años de experiencia. Especialista en Branding, UI/UX, PHP y Prompt Engineering para optimización creativa con IA.">
+    <meta name="keywords" content="Adolfo Gelabert, Diseñador Gráfico, Web Developer, UX UI Design, PHP Developer, Prompt Engineering, Branding, Logo Design">
+    <meta name="author" content="Adolfo Gelabert">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph (redes sociales y WhatsApp) -->
+    <meta property="og:title" content="Adolfo Gelabert - Portafolio Profesional">
+    <meta property="og:description" content="Estrategia Visual y Desarrollo Web de alto impacto. Explora mis proyectos de branding e integración de IA.">
+    <meta property="og:image" content="https://adolfogelabert.github.io/images/social-banner.jpg">
+    <meta property="og:url" content="https://adolfogelabert.github.io/">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="es_PE">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Adolfo Gelabert - Portafolio Profesional">
+    <meta name="twitter:description" content="Estrategia Visual y Desarrollo Web de alto impacto. Branding, UI/UX e IA.">
+    <meta name="twitter:image" content="https://adolfogelabert.github.io/images/social-banner.jpg">
+
+    <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZLZQBRFRYM"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-ZLZQBRFRYM');
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Outfit:wght@200;400;900&display=swap');
+        
+        :root {
+            --accent: #ca8a04;
+            --bg-dark: #0a0a0a;
+            --card-dark: #161616;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-dark);
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, .font-heading {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        /* Contenedor del Efecto de Fondo */
+        #hero-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.4;
+        }
+
+        .hero-gradient {
+            background: radial-gradient(circle at 50% 50%, rgba(202, 138, 4, 0.1) 0%, rgba(10, 10, 10, 0) 70%);
+        }
+
+        .bento-item {
+            background: var(--card-dark);
+            border: 1px solid #262626;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bento-item:hover {
+            border-color: var(--accent);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px -10px rgba(202, 138, 4, 0.3);
+        }
+
+        .glow-text {
+            text-shadow: #B78E24;/*0 0 20px rgba(202, 138, 4, 0.5);*/
+        }
+
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .skill-tag {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+        }
+
+        .timeline-line {
+            background: linear-gradient(to bottom, var(--accent) 0%, #262626 100%);
+        }
+
+        .profile-frame {
+            position: relative;
+            padding: 5px;
+            background: linear-gradient(135deg, var(--accent), #444);
+            border-radius: 2rem;
+            z-index: 10;
+        }
+
+        #backToTop {
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        #backToTop.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Barra de desplazamiento personalizada */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-dark); }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+        /* Estilo Toggle de Idioma */
+        .lang-btn {
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+        .lang-btn.active {
+            background: var(--accent);
+            color: black;
+            border-color: var(--accent);
+        }
+
+        /* Estilo de Iconos Sociales */
+        .social-link {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            opacity: 0.4;
+        }
+        .social-link:hover {
+            opacity: 1;
+            color: var(--accent);
+            transform: scale(1.25) translateY(-2px);
+        }
+
+
+        /* Contenedor para centrar el botón */
+        
+        .contenedor-boton {
+            display: flex;
+            justify-content: center; /* Centrado horizontal */
+            align-items: center;     /* Centrado vertical (si el contenedor tiene altura) */
+            padding: 20px;
+            width: 100%;
+        }
+
+        /* Estilos del Botón Dorado Glow */
+        .btn-descargar {
+            position: relative;
+            padding: 14px 34px;
+            background: #111; /* Fondo oscuro */
+            color: #ffcc00;   /* Tu color dorado/amarillo */
+            border: 2px solid #ffcc00;
+            border-radius: 8px;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            cursor: pointer;
+            outline: none;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        /* Efecto al pasar el mouse (Hover) */
+        .btn-descargar:hover {
+            background: #ffcc00;
+            color: #000000;
+            /* Brillo exterior (Glow) */
+            box-shadow: 0 0 10px #ffcc00, 
+                        0 0 30px #ffcc00, 
+                        0 0 50px rgba(255, 204, 0, 0.6);
+            transform: translateY(-2px); /* Pequeño salto hacia arriba */
+        }
+
+        /* Efecto al hacer clic */
+        .btn-descargar:active {
+            transform: translateY(1px);
+            box-shadow: 0 0 15px #ffcc00;
+        }
+
+        /* ===== SLIDER PRODUCTOS DIGITALES ===== */
+        #productos-digitales {
+            background: #0a0a0a;
+            padding: 80px 24px;
+        }
+        #productos-digitales .section-title {
+            text-align: center;
+            font-size: clamp(1.8rem, 4vw, 3rem);
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 12px;
+            color: #fff;
+        }
+        #productos-digitales .section-subtitle {
+            text-align: center;
+            color: rgba(255,255,255,0.45);
+            font-size: 0.95rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: 56px;
+        }
+        .slider-wrapper {
+            position: relative;
+            max-width: 1100px;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+        .slider-track {
+            display: flex;
+            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            gap: 24px;
+        }
+        .slide-card {
+            flex: 0 0 calc(33.333% - 16px);
+            aspect-ratio: 1 / 1;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid rgba(255, 204, 0, 0.15);
+            background: #111;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .slide-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 0 30px rgba(255, 204, 0, 0.25);
+        }
+        .slide-card a {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            height: 100%;
+            width: 100%;
+            text-decoration: none;
+            padding: 28px;
+            background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.4) 55%, transparent 100%);
+            box-sizing: border-box;
+        }
+        .slide-card .card-tag {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: #ffcc00;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+        .slide-card .card-title {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 10px;
+            line-height: 1.2;
+        }
+        .slide-card .card-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: #000;
+            background: #ffcc00;
+            padding: 8px 18px;
+            border-radius: 6px;
+            align-self: flex-start;
+            transition: background 0.2s ease;
+        }
+        .slide-card a:hover .card-cta {
+            background: #fff;
+        }
+        .slide-card .card-bg {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            z-index: 0;
+            transition: transform 0.5s ease;
+        }
+        .slide-card:hover .card-bg {
+            transform: scale(1.04);
+        }
+        .slide-card a { position: relative; z-index: 1; }
+        /* Colores de fondo por defecto si no hay imagen */
+        .slide-card:nth-child(1) .card-bg { background-color: #1a1200; }
+        .slide-card:nth-child(2) .card-bg { background-color: #0d1a00; }
+        .slide-card:nth-child(3) .card-bg { background-color: #00101a; }
+        .slide-card:nth-child(4) .card-bg { background-color: #1a0010; }
+        .slide-card:nth-child(5) .card-bg { background-color: #0a0a1a; }
+        /* Flechas de navegación */
+        .slider-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 10;
+            background: rgba(0,0,0,0.7);
+            border: 1px solid rgba(255,204,0,0.4);
+            color: #ffcc00;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s ease, border-color 0.2s ease;
+            font-size: 1rem;
+        }
+        .slider-btn:hover {
+            background: #ffcc00;
+            color: #000;
+            border-color: #ffcc00;
+        }
+        .slider-btn.prev { left: -22px; }
+        .slider-btn.next { right: -22px; }
+        /* Dots */
+        .slider-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 32px;
+        }
+        .slider-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+        .slider-dot.active {
+            background: #ffcc00;
+            transform: scale(1.3);
+        }
+        @media (max-width: 768px) {
+            .slide-card { flex: 0 0 calc(100% - 0px); }
+            .slider-btn.prev { left: 4px; }
+            .slider-btn.next { right: 4px; }
+        }
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .slide-card { flex: 0 0 calc(50% - 12px); }
+        }
+
+        .logo-icon{
+            width: 50px;
+            height: auto;
+        }
+
+        /* ===== MENÚ HAMBURGUESA MÓVIL ===== */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            width: 36px;
+            height: 36px;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            padding: 4px;
+            z-index: 200;
+        }
+        .hamburger span {
+            display: block;
+            height: 2px;
+            width: 100%;
+            background: #fff;
+            border-radius: 2px;
+            transition: all 0.35s ease;
+            transform-origin: center;
+        }
+        .hamburger.open span:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+        .hamburger.open span:nth-child(2) {
+            opacity: 0;
+            transform: scaleX(0);
+        }
+        .hamburger.open span:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+        #mobile-menu {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(10,10,10,0.97);
+            backdrop-filter: blur(16px);
+            z-index: 100;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+        }
+        #mobile-menu.open {
+            display: flex;
+        }
+        #mobile-menu a {
+            font-size: 1.6rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: #fff;
+            text-decoration: none;
+            opacity: 0.7;
+            transition: color 0.2s ease, opacity 0.2s ease;
+        }
+        #mobile-menu a:hover {
+            color: #ffcc00;
+            opacity: 1;
+        }
+        @media (max-width: 767px) {
+            .hamburger { display: flex; }
+        }
+
+        /* ===== MODAL PRODUCTOS ===== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 300;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        .modal-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background: #161616;
+            border: 1px solid #262626;
+            border-radius: 1.5rem;
+            max-width: 800px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: translateY(30px) scale(0.95);
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative;
+        }
+        .modal-overlay.open .modal-content {
+            transform: translateY(0) scale(1);
+        }
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: #fff;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            z-index: 10;
+        }
+        .modal-close:hover {
+            background: #ca8a04;
+            color: #000;
+        }
+        .modal-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+        }
+        @media (max-width: 768px) {
+            .modal-body { grid-template-columns: 1fr; }
+        }
+        .modal-img {
+            width: 100%;
+            height: 100%;
+            min-height: 300px;
+            object-fit: cover;
+            border-radius: 1.5rem 0 0 1.5rem;
+        }
+        @media (max-width: 768px) {
+            .modal-img { border-radius: 1.5rem 1.5rem 0 0; min-height: 250px; }
+        }
+        .modal-details {
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .modal-tag {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: #ca8a04;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .modal-title {
+            font-size: 1.75rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+            margin-bottom: 12px;
+            line-height: 1.1;
+        }
+        .modal-desc {
+            color: #9ca3af;
+            font-size: 0.9rem;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+        .modal-features {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 1.5rem 0;
+        }
+        .modal-features li {
+            font-size: 0.8rem;
+            color: #d1d5db;
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .modal-features li i {
+            color: #ca8a04;
+            font-size: 0.7rem;
+        }
+        .modal-price {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .modal-price .old-price {
+            font-size: 0.75rem;
+            color: #6b7280;
+            text-decoration: line-through;
+        }
+        .modal-price .current-price {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #ca8a04;
+        }
+        .footer-links a { transition: color 0.3s ease; }
+        .footer-links a:hover { color: var(--accent); }
+    </style>
+</head>
+<body>
+
+    <!-- Navegación -->
+    <nav class="fixed top-0 w-full z-50 px-6 py-4 flex justify-between items-center backdrop-blur-md border-b border-white/5">
+        <div class="flex items-center gap-2">
+            <!--div class="w-8 h-8 bg-yellow-600 rounded flex items-center justify-center font-black text-black">A</div-->
+            <a href="index.html"><img src="images/icon_logo_cv_512px.svg" class="logo-icon" alt=""></a>
+            <a href="index.html"><span class="font-heading font-bold tracking-widest text-sm uppercase">Adolfo Gelabert</span></a>
+
+        </div>
+        
+        <div class="hidden md:flex gap-8 text-xs font-bold tracking-[0.2em] uppercase opacity-70">
+            <a href="#acerca" class="hover:text-yellow-500 transition i18n" data-es="Nosotros" data-en="About">Nosotros</a>
+            <a href="#experiencia" class="hover:text-yellow-500 transition i18n" data-es="Trayectoria" data-en="Experience">Trayectoria</a>
+            <a href="#skills" class="hover:text-yellow-600 transition i18n" data-es="Capacidades" data-en="Skills">Capacidades</a>
+            <a href="#referencias" class="hover:text-yellow-600 transition i18n" data-es="Contactos" data-en="References">Contactos</a>
+            <a href="#productos-digitales" class="hover:text-yellow-600 transition i18n" data-es="Productos" data-en="Products">Productos</a>
+            <a href="#multimedia" class="hover:text-yellow-600 transition i18n" data-es="Multimedia" data-en="Media">Multimedia</a>
+            <a href="#publicaciones" class="hover:text-yellow-600 transition i18n" data-es="Publicaciones" data-en="Publications">Publicaciones</a>
+            <a href="terminos.html" class="hover:text-yellow-600 transition i18n" data-es="Términos" data-en="Terms">Términos</a>
+        </div>
+
+        <div class="flex items-center gap-4">
+            <div class="flex bg-white/5 p-1 rounded-lg border border-white/10 text-[10px] font-bold">
+                <button onclick="changeLang('es')" id="btn-es" class="lang-btn px-2 py-1 rounded active">ES</button>
+                <button onclick="changeLang('en')" id="btn-en" class="lang-btn px-2 py-1 rounded">EN</button>
+            </div>
+            
+            <a href="https://wa.me/51930562562" target="_blank" class="hidden md:inline-block bg-yellow-600 text-black px-4 py-2 rounded text-xs font-black uppercase hover:bg-white transition i18n" data-es="Hablemos" data-en="Let's Talk">
+                Hablemos
+            </a>
+
+            <!-- Botón Hamburguesa (solo móvil) -->
+            <button class="hamburger" id="hamburgerBtn" aria-label="Abrir menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Menú Móvil -->
+    <div id="mobile-menu" role="dialog" aria-modal="true">
+        <a href="#acerca"   class="i18n" data-es="Nosotros"   data-en="About">Nosotros</a>
+        <a href="#experiencia" class="i18n" data-es="Trayectoria" data-en="Experience">Trayectoria</a>
+        <a href="#skills"   class="i18n" data-es="Capacidades" data-en="Skills">Capacidades</a>
+        <a href="#referencias" class="i18n" data-es="Contactos"  data-en="References">Contactos</a>
+        <a href="#productos-digitales" class="i18n" data-es="Productos" data-en="Products">Productos</a>
+        <a href="#multimedia" class="i18n" data-es="Multimedia" data-en="Media">Multimedia</a>
+        <a href="#publicaciones" class="i18n" data-es="Publicaciones" data-en="Publications">Publicaciones</a>
+        <a href="terminos.html" class="i18n" data-es="Términos" data-en="Terms">Términos</a>
+        <a href="https://wa.me/51930562562" target="_blank" style="color:#ffcc00;opacity:1;font-size:1rem;" class="i18n" data-es="Hablemos" data-en="Let's Talk">Hablemos</a>
+    </div>
+
+    <!-- Sección Hero -->
+    <section id="hero" class="min-h-screen flex flex-col justify-center items-center relative px-6 py-20 hero-gradient overflow-hidden">
+        <canvas id="hero-canvas"></canvas>
+
+        <div class="absolute top-1/4 left-10 w-64 h-64 bg-yellow-600/10 blur-[120px] rounded-full"></div>
+        
+        <div class="z-10 mb-8 floating">
+            <div class="profile-frame shadow-2xl">
+                <img src="https://raw.githubusercontent.com/adolfogelabert/adolfogelabert.github.io/refs/heads/main/images/foto_perfil_ajgs.jpg" alt="Adolfo Gelabert" class="w-32 h-32 md:w-40 md:h-40 rounded-[1.8rem] object-cover grayscale hover:grayscale-0 transition-all duration-500">
+            </div>
+        </div>
+
+        <div class="text-center z-10">
+            <span class="inline-block px-4 py-1 rounded-full border border-yellow-600/30 text-yellow-600 text-[10px] font-bold uppercase tracking-[0.3em] mb-6 animate-pulse i18n" 
+                data-es="Disponible para nuevos proyectos" data-en="Available for New Projects">
+                Disponible para nuevos proyectos
+            </span>
+            <h1 class="text-6xl md:text-8xl font-black mb-4 tracking-tighter uppercase">
+                <span class="i18n" data-es="Creativo" data-en="Creative">Creativo</span><br>
+                <span class="text-yellow-600 glow-text italic i18n" data-es="Visionario" data-en="Visionary">Visionario</span>
+            </h1>
+            <p class="max-w-2xl mx-auto text-lg md:text-xl text-gray-400 font-light leading-relaxed i18n" 
+                data-es="Adolfo Gelabert. 18+ años fusionando el diseño de marca con el futuro de la Inteligencia Artificial. No solo diseño logos, construyo legados visuales."
+                data-en="Adolfo Gelabert. 18+ years merging brand design with the future of Artificial Intelligence. I don't just design logos, I build visual legacies.">
+                Adolfo Gelabert. 18+ años fusionando el diseño de marca con el futuro de la Inteligencia Artificial. No solo diseño logos, construyo legados visuales.
+            </p>
+        </div>
+
+        <div class="mt-12 flex gap-4 z-10">
+            <a href="#acerca" class="w-12 h-12 flex items-center justify-center rounded-full border border-white/10 hover:border-yellow-600 transition group">
+                <i class="fas fa-arrow-down group-hover:text-yellow-600"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- Sección Acerca de / Biografía -->
+    <section id="acerca" class="max-w-7xl mx-auto px-6 py-24 border-t border-white/5">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-12">
+            
+            <div class="md:col-span-4 flex flex-col gap-6">
+                <div class="bento-item rounded-3xl p-8">
+                    <h3 class="text-sm font-bold uppercase tracking-[0.2em] text-yellow-600 mb-6 i18n" data-es="Origen y Educación" data-en="Origin & Education">Origen y Educación</h3>
+                    <div class="space-y-6">
+                        <div>
+                            <p class="text-[10px] uppercase tracking-widest text-gray-500 mb-1 i18n" data-es="Nacido en" data-en="Born in">Nacido en</p>
+                            <p class="text-md font-bold">Valencia, Venezuela</p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] uppercase tracking-widest text-gray-500 mb-1 i18n" data-es="Base actual" data-en="Current Base">Base actual</p>
+                            <p class="text-md font-bold">San Miguel, Lima, Perú</p>
+                        </div>
+                        <div class="pt-4 border-t border-white/5">
+                            <p class="text-[10px] uppercase tracking-widest text-gray-500 mb-2 i18n" data-es="Formación Académica" data-en="Academic Background">Formación Académica</p>
+                            <div class="flex items-start gap-3 mb-4">
+                                <div class="mt-1"><i class="fas fa-university text-yellow-600 text-xs"></i></div>
+                                <div>
+                                    <p class="text-sm font-bold leading-tight">U. "José Antonio Páez"</p>
+                                    <p class="text-xs text-gray-500">Ing. en Computación (incompleto)</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start gap-3 mb-4">
+                                <div class="mt-1"><i class="fas fa-university text-yellow-600 text-xs"></i></div>
+                                <div>
+                                    <p class="text-sm font-bold leading-tight">
+                                        <a href="https://www.domestika.org/es/schools/1502-instituto-de-diseno-charles-worth/students" target="_blank">Inst. de diseño "Charlest Worth"</a>
+                                    </p>
+                                    <p class="text-xs text-gray-500">Diseño Gráfico (Tec.)</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start gap-3 mb-4">
+                                <div class="mt-1"><i class="fas fa-university text-yellow-600 text-xs"></i></div>
+                                <div>
+                                    <p class="text-sm font-bold leading-tight">
+                                        <a href="https://www.domestika.org/es/schools/1898-cdd-centro-de-diseno-digital" target="_blank">CDD Centro de Diseño Digital</a>
+                                    </p>
+                                    <p class="text-xs text-gray-500">Diseño Gráfico (Especialization web-digital)</p>
+                                </div>
+                            </div>
+
+                            <style>
+                                a.cursos{color:#6b7280;}
+                                a.cursos:hover{color:#ffaa00;}
+                            </style>
+
+                            <!-- inicio de seccion 1 -->
+                            <div class="flex items-start gap-3" style="margin-bottom: 10px;">
+                                <div class="mt-1"><i class="fas fa-certificate text-yellow-600 text-xs"></i></div>
+                                <div>
+                                    <p class="text-sm font-bold leading-tight i18n"
+                                    data-es="Curso de iniciación a los flujos de trabajos con inteligencia artificial"
+                                    data-en="Introductory course to workflows with artificial intelligence">
+                                    Curso de iniciación a los flujos de trabajos con inteligencia artificial</p>
+                                    <p class="text-xs text-gray-500">
+                                        <a href="https://media.licdn.com/dms/image/v2/D4E2DAQEdQtbroIrDHA/profile-treasury-document-images_1280/B4EZkxTONxGYAU-/1/1757468747751?e=1778716800&v=beta&t=9Sa3LQVGwxOFZrqm69ZAe2wiUsZwBnKn55Qg8lVY0uI" target="_blank" class="cursos">BIG school</a>
+                                    </p>
+                                </div>
+                            </div>
+                            <!-- fin de seccion -->
+
+                            <!-- inicio de seccion 2 -->
+                            <div class="flex items-start gap-3" style="margin-bottom: 10px;">
+                                <div class="mt-1"><i class="fas fa-certificate text-yellow-600 text-xs"></i></div>
+                                <div>
+                                    <p class="text-sm font-bold leading-tight i18n"
+                                    data-es="Fotografía de producto con inteligencia artificial"
+                                    data-en="Product photography with artificial intelligence.">
+                                    Fotografía de producto con inteligencia artificial</p>
+                                    <p class="text-xs text-gray-500">
+                                        <a href="https://media.licdn.com/dms/image/v2/D4E2DAQEqQ_jM4CEG1A/profile-treasury-document-images_1280/B4EZkQtZ0NGoAg-/1/1756921962762?e=1778716800&v=beta&t=L1uFCArDLcX8nmf5z6kym9bBt9PWjsfO1hdyowyyFYw" target="_blank" class="cursos">Domestika</a>
+                                    </p>
+                                </div>
+                            </div>
+                            <!-- fin de seccion -->
+
+                            <!-- inicio de seccion 3 -->
+                            <div class="flex items-start gap-3" style="margin-bottom: 10px;">
+                                <div class="mt-1"><i class="fas fa-certificate text-yellow-600 text-xs"></i></div>
+                                <div>
+                                    <p class="text-sm font-bold leading-tight i18n" 
+                                    data-es="Curso: Community Manager"
+                                    data-en="Community Manager">
+                                    Curso: Community Manager</p>
+                                    <p class="text-xs text-gray-500">
+                                        <a href="https://certificado.ipn.edu.pe/index.php/verificador/felicitaciones/004947495-CM45774" target="_blank" class="cursos">Instituto Peruano de Negocios</a>
+                                    </p>
+                                </div>
+                            </div>
+                            <!-- fin de seccion -->
+
+                            <!-- inicio de seccion 4 -->
+                            <div class="flex items-start gap-3" style="margin-bottom: 10px;">
+                                <div class="mt-1"><i class="fas fa-certificate text-yellow-600 text-xs"></i></div>
+                                <div>
+                                    <p class="text-sm font-bold leading-tight i18n" 
+                                    data-es="Actualización Curso De Adobe Indesign 2023"
+                                    data-en="Adobe InDesign 2023 Course Update">
+                                    Actualización Curso De Adobe Indesign 2023</p>
+                                    <p class="text-xs text-gray-500">
+                                        <a href="https://certificado.skill.edu.pe/A23-CAID03-18" target="_blank" class="cursos">Skill - Centro de capacitación</a>
+                                    </p>
+                                </div>
+                            </div>
+                            <!-- fin de seccion -->
+
+                            <!-- inicio de seccion 5 -->
+                            <div class="flex items-start gap-3" style="margin-bottom: 10px;">
+                                <div class="mt-1"><i class="fas fa-certificate text-yellow-600 text-xs"></i></div>
+                                <div>
+                                    <p class="text-sm font-bold leading-tight i18n" 
+                                    data-es="Actualización Curso De Adobe Illustrator 2023"
+                                    data-en="Adobe Illustrator 2023 Course Update">
+                                    Actualización Curso De Adobe Illustrator 2023</p>
+                                    <p class="text-xs text-gray-500">
+                                        <a href="https://certificado.skill.edu.pe/A23-CAI03-18" target="_blank" class="cursos">Skill - Centro de capacitación</a>
+                                    </p>
+                                </div>
+                            </div>
+                            <!-- fin de seccion -->
+
+                            <!-- inicio de seccion 6 -->
+                            <div class="flex items-start gap-3" style="margin-bottom: 10px;">
+                                <div class="mt-1"><i class="fas fa-certificate text-yellow-600 text-xs"></i></div>
+                                <div>
+                                    <p class="text-sm font-bold leading-tight i18n" 
+                                    data-es="Actualización Curso De Adobe Photoshop 2023"
+                                    data-en="Adobe Photoshop 2023 Course Update">
+                                    Actualización Curso De Adobe Photoshop 2023</p>
+                                    <p class="text-xs text-gray-500">
+                                        <a href="https://certificado.skill.edu.pe/A23-CAP03-18" target="_blank" class="cursos">Skill - Centro de capacitación</a>
+                                    </p>
+                                </div>
+                            </div>
+                            <!-- fin de seccion -->
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="md:col-span-8">
+                <div class="mb-12">
+                    <h2 class="text-5xl font-black mb-8 uppercase tracking-tighter i18n" data-es="La Mente detrás de la Escena" data-en="The Mind Behind the Scenes">La Mente detrás de la Escena</h2>
+                    <div class="prose prose-invert max-w-none space-y-6 text-gray-400 text-lg leading-relaxed font-light">
+                        <p class="i18n" 
+                            data-es="Mi viaje comenzó en Valencia, Venezuela, donde las artes visuales y la tecnología capturaron mi atención desde muy temprano. Con más de 18 años de trayectoria, he evolucionado de ser un diseñador gráfico tradicional a un estratega digital que entiende la intersección entre la estética y la funcionalidad."
+                            data-en="My journey began in Valencia, Venezuela, where visual arts and technology captured my attention early on. With over 18 years of experience, I have evolved from a traditional graphic designer into a digital strategist who understands the intersection between aesthetics and functionality.">
+                            Mi viaje comenzó en Valencia, Venezuela, donde las artes visuales y la tecnología capturaron mi atención desde muy temprano. Con más de 18 años de trayectoria, he evolucionado de ser un diseñador gráfico tradicional a un estratega digital que entiende la intersección entre la estética y la funcionalidad.
+                        </p>
+                        <p class="i18n"
+                            data-es="Hoy, establecido en Lima, mi enfoque principal es la construcción de identidades corporativas robustas. Me especializo en el desarrollo de logotipos y branding, pero mi verdadera pasión actual reside en la Inteligencia Artificial. Creo firmemente que la IA no reemplaza al creativo, sino que amplifica su visión, permitiéndonos alcanzar niveles de detalle y eficiencia antes imposibles."
+                            data-en="Today, based in Lima, my primary focus is building robust corporate identities. I specialize in logo development and branding, but my true current passion lies in Artificial Intelligence. I firmly believe that AI does not replace the creative, but amplifies their vision, allowing us to reach levels of detail and efficiency previously impossible.">
+                            Hoy, establecido en Lima, mi enfoque principal es la construcción de identidades corporativas robustas. Me especializo en el desarrollo de logotipos y branding, pero mi verdadera pasión actual reside en la Inteligencia Artificial. Creo firmemente que la IA no reemplaza al creativo, sino que amplifica su visión, permitiéndonos alcanzar niveles de detalle y eficiencia antes imposibles.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="bento-item p-4 rounded-2xl text-center">
+                        <p class="text-2xl font-bold text-yellow-600">1975</p>
+                        <p class="text-[9px] uppercase font-black opacity-40 i18n" data-es="Nacimiento" data-en="Birth">Nacimiento</p>
+                    </div>
+                    <div class="bento-item p-4 rounded-2xl text-center">
+                        <p class="text-2xl font-bold text-yellow-600">800+</p>
+                        <p class="text-[9px] uppercase font-black opacity-40 i18n" data-es="Logos creados" data-en="Logos created">Logos creados</p>
+                    </div>
+                    <div class="bento-item p-4 rounded-2xl text-center">
+                        <p class="text-2xl font-bold text-yellow-600">100%</p>
+                        <p class="text-[9px] uppercase font-black opacity-40 i18n" data-es="Compromiso" data-en="Commitment">Compromiso</p>
+                    </div>
+                    <div class="bento-item p-4 rounded-2xl text-center">
+                        <p class="text-2xl font-bold text-yellow-600">8.5k</p>
+                        <p class="text-[9px] uppercase font-black opacity-40 i18n" data-es="Cafés" data-en="Coffees">Cafés</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Bento Grid de Habilidades -->
+    <section id="skills" class="max-w-7xl mx-auto px-6 py-20">
+        <div class="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-4">
+            
+            <div class="md:col-span-2 md:row-span-2 bento-item rounded-3xl p-8 flex flex-col justify-between">
+                <div>
+                    <h3 class="text-3xl font-bold mb-4 i18n" data-es="Experiencia Clave" data-en="Core Expertise">Experiencia Clave</h3>
+                    <!-- Experiencia Clave -->
+                    <div class="space-y-4">
+                        <div class="group">
+                            <div class="flex justify-between mb-1 text-sm font-bold opacity-60">
+                                <span class="i18n" data-es="Branding e Identidad" data-en="Branding & Identity">Branding e Identidad</span>
+                                <span>100%</span>
+                            </div>
+                            <div class="h-1 bg-white/5 rounded-full overflow-hidden">
+                                <div class="h-full bg-yellow-600 w-full"></div>
+                            </div>
+                        </div>
+
+                        <div class="group">
+                            <div class="flex justify-between mb-1 text-sm font-bold opacity-60"><span>Adobe Creative Cloud</span><span>95%</span></div>
+                            <div class="h-1 bg-white/5 rounded-full overflow-hidden">
+                                <div class="h-full bg-yellow-600 w-[95%]"></div>
+                            </div>
+                        </div>
+
+                        <div class="group">
+                            <div class="flex justify-between mb-1 text-sm font-bold opacity-60"><span>Web Design & HTML5</span><span>85%</span></div>
+                            <div class="h-1 bg-white/5 rounded-full overflow-hidden">
+                                <div class="h-full bg-yellow-600 w-[85%]"></div>
+                            </div>
+                        </div>
+
+                        <div class="group">
+                            <div class="flex justify-between mb-1 text-sm font-bold opacity-60"><span>Office Suite (2008-2019)</span><span>90%</span></div>
+                            <div class="h-1 bg-white/5 rounded-full overflow-hidden">
+                                <div class="h-full bg-yellow-600 w-[90%]"></div>
+                            </div>
+                        </div>
+
+                        <div class="group">
+                            <div class="flex justify-between mb-1 text-sm font-bold opacity-60"><span>Diseño con Bootstrap 4</span><span>90%</span></div>
+                            <div class="h-1 bg-white/5 rounded-full overflow-hidden">
+                                <div class="h-full bg-yellow-600 w-[90%]"></div>
+                            </div>
+                        </div>
+
+                        <div class="group">
+                            <div class="flex justify-between mb-1 text-sm font-bold opacity-60"><span>Diseño y edición de imagen con IAs (Leonardo.ai, Krea.ai, Gemini)</span><span>87%</span></div>
+                            <div class="h-1 bg-white/5 rounded-full overflow-hidden">
+                                <div class="h-full bg-yellow-600 w-[87%]"></div>
+                            </div>
+                        </div>
+
+                        <div class="group">
+                            <div class="flex justify-between mb-1 text-sm font-bold opacity-60"><span>CMS WordPress</span><span>90%</span></div>
+                            <div class="h-1 bg-white/5 rounded-full overflow-hidden">
+                                <div class="h-full bg-yellow-600 w-[90%]"></div>
+                            </div>
+                        </div>
+
+                        <div class="group">
+                            <div class="flex justify-between mb-1 text-sm font-bold opacity-60"><span>Manejo de herramientas de IA Generativa (ChatGPT, Google Gemini)</span><span>83%</span></div>
+                            <div class="h-1 bg-white/5 rounded-full overflow-hidden">
+                                <div class="h-full bg-yellow-600 w-[83%]"></div>
+                            </div>
+                        </div>
+
+                        <div class="group">
+                            <div class="flex justify-between mb-1 text-sm font-bold opacity-60"><span>Sistemas operativos (Windows 10/11, macOS, Ubuntu)</span><span>85%</span></div>
+                            <div class="h-1 bg-white/5 rounded-full overflow-hidden">
+                                <div class="h-full bg-yellow-600 w-[85%]"></div>
+                            </div>
+                        </div>
+
+                        <div class="group">
+                            <div class="flex justify-between mb-1 text-sm font-bold opacity-60"><span>Diseño de entornos adaptativos (Responsive) y móviles</span><span>85%</span></div>
+                            <div class="h-1 bg-white/5 rounded-full overflow-hidden">
+                                <div class="h-full bg-yellow-600 w-[85%]"></div>
+                            </div>
+                        </div>
+
+                        <div class="group">
+                            <div class="flex justify-between mb-1 text-sm font-bold opacity-60"><span>Edición de video (After Effects, Filmora, CapCut)</span><span>85%</span></div>
+                            <div class="h-1 bg-white/5 rounded-full overflow-hidden">
+                                <div class="h-full bg-yellow-600 w-[85%]"></div>
+                            </div>
+                        </div>
+
+                        <div class="group">
+                            <div class="flex justify-between mb-1 text-sm font-bold opacity-60"><span>Administración de cPanel en servidores hosting Linux/Windows</span><span>80%</span></div>
+                            <div class="h-1 bg-white/5 rounded-full overflow-hidden">
+                                <div class="h-full bg-yellow-600 w-[80%]"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap-2 mt-8">
+                    <span class="skill-tag px-3 py-1 rounded text-[10px] font-bold uppercase">Figma</span>
+                    <span class="skill-tag px-3 py-1 rounded text-[10px] font-bold uppercase i18n" data-es="Diseño UI/UX" data-en="UI/UX Design">Diseño UI/UX</span>
+                    <span class="skill-tag px-3 py-1 rounded text-[10px] font-bold uppercase">Mailing</span>
+                    <span class="skill-tag px-3 py-1 rounded text-[10px] font-bold uppercase i18n" data-es="Empaque" data-en="Packaging">Empaque</span>
+                </div>
+            </div>
+
+            <div class="md:col-span-2 bento-item rounded-3xl p-8 bg-gradient-to-br from-[#161616] to-[#1a1300]">
+                <div class="flex justify-between items-start">
+                    <h3 class="text-xl font-bold uppercase tracking-widest text-yellow-500 i18n" data-es="Integración IA" data-en="AI Integration">Integración IA</h3>
+                    <i class="fas fa-brain text-yellow-600 text-2xl floating"></i>
+                </div>
+                <p class="text-sm text-gray-500 mt-4 leading-relaxed i18n" 
+                   
+                    data-es="Especialista en ingeniería de producción para la creación de recursos visuales de alta fidelidad. Utilizo herramientas de vanguardia como Leonardo AI, Midjourney y Gemini para automatizar tareas repetitivas y potenciar la conceptualización creativa, logrando una optimización del flujo de trabajo superior al 40 %."
+                    
+                    data-en="Prompt Engineering Specialist for the generation of high-fidelity visual assets. I use cutting-edge tools such as Leonardo AI, Midjourney, and Gemini to automate repetitive tasks and enhance creative conceptualization, achieving workflow optimization of over 40%.">
+                    Especialista en Prompt Engineering para la generación de activos visuales de alta fidelidad. Utilizo herramientas de vanguardia como Leonardo AI, Midjourney y Gemini para automatizar tareas repetitivas y potenciar la conceptualización creativa, logrando una optimización del flujo de trabajo superior al 40%.
+                </p>
+            </div>
+
+            <div class="bento-item rounded-3xl p-6 flex flex-col items-center justify-center text-center group cursor-pointer" onclick="window.open('https://github.com/adolfogelabert', '_blank')">
+                <i class="fab fa-github text-4xl mb-4 group-hover:scale-110 transition text-white"></i>
+                <span class="text-[10px] font-bold uppercase tracking-widest i18n" data-es="Proyectos Code" data-en="Code Projects">Proyectos Code</span>
+            </div>
+
+            <div class="bento-item rounded-3xl p-6 flex flex-col items-center justify-center text-center">
+                <span class="text-5xl font-black text-yellow-600">18+</span>
+                <span class="text-[10px] font-bold uppercase tracking-widest mt-2 i18n" data-es="Años Exp." data-en="Years Exp.">Años Exp.</span>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Trayectoria -->
+    <section id="experiencia" class="max-w-4xl mx-auto px-6 py-20 border-t border-white/5">
+        <h2 class="text-4xl font-black mb-16 text-center uppercase tracking-[0.2em] i18n" data-es="Trayectoria" data-en="Experience">Trayectoria</h2>
+        
+        <div class="space-y-24 relative">
+            <div class="absolute left-0 md:left-1/2 top-0 bottom-0 w-px timeline-line opacity-20"></div>
+
+            <!--ESTUDIO CONCEPTUAL SAC-->
+
+            <div class="relative flex flex-col md:flex-row gap-8 items-center">
+                <div class="md:w-1/2 md:text-right">
+                    <span class="text-yellow-600 font-bold text-xs i18n" data-es="2019 — PRESENTE" data-en="2019 — PRESENT">2019 — PRESENTE | Perú</span>
+                    <h4 class="text-2xl font-bold">ESTUDIO CONCEPTUAL SAC</h4>
+                    <p class="text-sm text-gray-500 uppercase tracking-widest i18n" data-es="Diseñador Senior & Especialista Web" data-en="Senior Designer & Web Specialist">Diseñador Senior & Especialista Web</p>
+                </div>
+                <div class="absolute left-[-5px] md:left-1/2 md:ml-[-5px] w-[10px] h-[10px] bg-yellow-600 rounded-full shadow-[0_0_15px_rgba(202,138,4,1)]"></div>
+                <div class="md:w-1/2 bg-white/5 p-6 rounded-2xl border border-white/5 text-sm text-gray-400 i18n"
+                    
+                    data-es="Lidero el desarrollo de campañas masivas de mailing mediante tecnologías HTML5 y el diseño técnico de empaques industriales, optimizando los procesos creativos mediante la implementación estratégica de Inteligencia Artificial en el flujo de trabajo corporativo para maximizar la eficiencia y la innovación visual."
+                    
+                    data-en="I lead the development of mass mailing campaigns using HTML5 technologies and the technical design of industrial packaging, optimizing creative processes through the strategic implementation of Artificial Intelligence in the corporate workflow to maximize efficiency and visual innovation.">
+
+                    Lidero el desarrollo de campañas masivas de mailing mediante tecnologías HTML5 y el diseño técnico de empaques industriales, optimizando los procesos creativos mediante la implementación estratégica de Inteligencia Artificial en el flujo de trabajo corporativo para maximizar la eficiencia y la innovación visual.
+                </div>
+            </div>
+
+            <!--FERRETTI, CA - VENEZUELA -->
+
+            <div class="relative flex flex-col md:flex-row-reverse gap-8 items-center">
+                <div class="md:w-1/2">
+                    <span class="text-yellow-600 font-bold text-xs">2016 — 2019 | VZLA</span>
+                    <h4 class="text-2xl font-bold">FERRETTI, C.A.</h4>
+                    <p class="text-sm text-gray-500 uppercase tracking-widest i18n" data-es="Coord. de Marca & Web" data-en="Brand & Web Coord.">Coord. de Marca & Web</p>
+                </div>
+                <div class="absolute left-[-5px] md:left-1/2 md:ml-[-5px] w-[10px] h-[10px] bg-yellow-600 rounded-full"></div>
+                <div class="md:w-1/2 bg-white/5 p-6 rounded-2xl border border-white/5 text-sm text-gray-400 md:text-right i18n"
+                    
+                    data-es="Lideré el desarrollo de identidad visual para la línea de herrajes ZOE y coordiné la gestión de material POP para grandes cadenas nacionales como EPA, integrando la estrategia de marca con la presencia web de la empresa para fortalecer el posicionamiento en el mercado masivo."
+                    
+                    data-en="I led the development of visual identity for the ZOE hardware line and coordinated the management of POP material for large national chains such as EPA, integrating the brand strategy with the company's web presence to strengthen positioning in the mass market.">
+
+                    Lideré el desarrollo de identidad visual para la línea de herrajes ZOE y coordiné la gestión de material POP para grandes cadenas nacionales como EPA, integrando la estrategia de marca con la presencia web de la empresa para fortalecer el posicionamiento en el mercado masivo.
+                </div>
+            </div>
+
+            <!--GRIFOCENTRO, CA - VENEZUELA -->
+
+            <div class="relative flex flex-col md:flex-row gap-8 items-center">
+                <div class="md:w-1/2 md:text-right">
+                    <span class="text-yellow-600 font-bold text-xs">MAY 2016 — JUL 2016 | VZLA</span>
+                    <h4 class="text-2xl font-bold">GRIFO CENTRO, C.A.</h4>
+                    <p class="text-sm text-gray-500 uppercase tracking-widest i18n" data-es="Operaciones & Publicidad" data-en="Operations & Advertising">Diseñador Gráfico</p>
+                </div>
+                <div class="absolute left-[-5px] md:left-1/2 md:ml-[-5px] w-[10px] h-[10px] bg-yellow-600 rounded-full"></div>
+                <div class="md:w-1/2 bg-white/5 p-6 rounded-2xl border border-white/5 text-sm text-gray-400 i18n"
+                    data-es="Diseñador Gráfico en la empresa Grifocentro. elaboración de empaques, diseño gráfico en general, aunque fue una estancia breve aproveche el poco tiempo dentro de esta empresa, agradeciendo la oportunidad prestada por la misma. esperando siempre que la situación país cambien para beneficio de todos sus empleados y directores."
+                    data-en="Creation of the advertising department. Development of learning platforms under Moodle and institutional image management.">
+                    Creación del departamento de publicidad. Desarrollo de plataformas de aprendizaje bajo Moodle y gestión de imagen institucional.
+                </div>
+            </div>
+
+            <!--MESSEN, C.A. - VENEZUELA -->
+
+            <div class="relative flex flex-col md:flex-row-reverse gap-8 items-center">
+                <div class="md:w-1/2">
+                    <span class="text-yellow-600 font-bold text-xs">2011 — 2016 | VZLA</span>
+                    <h4 class="text-2xl font-bold">MESSEN, C.A.</h4>
+                    <p class="text-sm text-gray-500 uppercase tracking-widest i18n" data-es="Operaciones & Publicidad" data-en="Operations & Advertising">Operaciones & Publicidad</p>
+                </div>
+                <div class="absolute left-[-5px] md:left-1/2 md:ml-[-5px] w-[10px] h-[10px] bg-yellow-600 rounded-full"></div>
+                <div class="md:w-1/2 bg-white/5 p-6 rounded-2xl border border-white/5 text-sm text-gray-400 md:text-right i18n"
+                    data-es="Fundé y lideré el departamento de publicidad, donde gestioné la identidad institucional y desarrollé plataformas de aprendizaje digital bajo entorno Moodle, integrando soluciones tecnológicas con comunicación visual estratégica."
+
+                    data-en="I founded and led the advertising department, where I managed the institutional identity and developed digital learning platforms under the Moodle environment, integrating technological solutions with strategic visual communication.">
+
+                    Fundé y lideré el departamento de publicidad, donde gestioné la identidad institucional y desarrollé plataformas de aprendizaje digital bajo entorno Moodle, integrando soluciones tecnológicas con comunicación visual estratégica.
+                </div>
+            </div>
+
+            <!--BACO PUBLICIDAD, CA - VENEZUELA -->
+
+            <div class="relative flex flex-col md:flex-row gap-8 items-center">
+                <div class="md:w-1/2 md:text-right">
+                    <span class="text-yellow-600 font-bold text-xs">2005 — 2010 | VZLA</span>
+                    <h4 class="text-2xl font-bold">BACO PUBLICIDAD, C.A.</h4>
+                    <p class="text-sm text-gray-500 uppercase tracking-widest i18n" data-es="Diseñador Gráfico" data-en="Graphic Designer">Diseñador Gráfico</p>
+                </div>
+                <div class="absolute left-[-5px] md:left-1/2 md:ml-[-5px] w-[10px] h-[10px] bg-yellow-600 rounded-full"></div>
+                <div class="md:w-1/2 bg-white/5 p-6 rounded-2xl border border-white/5 text-sm text-gray-400 i18n"
+                    data-es="Especialista en diseño integral y artes finales con 5 años de trayectoria en el sector editorial, coordinando la producción de materiales impresos y web para los principales diarios de Venezuela, como El Nacional y El Universal, bajo estándares técnicos de alta precisión."
+
+                    data-en="Specialist in comprehensive design and final artwork with 5 years of experience in the publishing sector, coordinating the production of printed and web materials for the main newspapers in Venezuela, such as El Nacional and El Universal, under high precision technical standards.">
+
+                    Especialista en diseño integral y artes finales con 5 años de trayectoria en el sector editorial, coordinando la producción de materiales impresos y web para los principales diarios de Venezuela, como El Nacional y El Universal, bajo estándares técnicos de alta precisión. 
+                </div>
+            </div>
+
+            <!--Merkguia, CA - VENEZUELA -->
+
+            <div class="relative flex flex-col md:flex-row-reverse gap-8 items-center">
+                <div class="md:w-1/2">
+                    <span class="text-yellow-600 font-bold text-xs">2010 - 2011 | VZLA</span>
+                    <h4 class="text-2xl font-bold">MERKGUIA, C.A.</h4>
+                    <p class="text-sm text-gray-500 uppercase tracking-widest i18n" data-es="Coordinador General de operaciones" data-en="General Operations Coordinator.">Coordinador General de operaciones</p>
+                </div>
+                <div class="absolute left-[-5px] md:left-1/2 md:ml-[-5px] w-[10px] h-[10px] bg-yellow-600 rounded-full"></div>
+                <div class="md:w-1/2 bg-white/5 p-6 rounded-2xl border border-white/5 text-sm text-gray-400 md:text-right i18n"
+                    
+                    data-es="Coordiné integralmente la imagen corporativa y la estrategia de marketing digital de la empresa, gestionando la publicidad de múltiples clientes afiliados a través de la creación de materiales impresos, publicaciones especializadas y la organización de eventos promocionales para potenciar la visibilidad de sus productos y servicios."
+                    
+                    data-en="I comprehensively coordinated the company's corporate image and digital marketing strategy, managing advertising for multiple affiliated clients through the creation of printed materials, specialized publications, and the organization of promotional events to enhance the visibility of their products and services.">
+
+                    Coordiné integralmente la imagen corporativa y la estrategia de marketing digital de la empresa, gestionando la publicidad de múltiples clientes afiliados a través de la creación de materiales impresos, publicaciones especializadas y la organización de eventos promocionales para potenciar la visibilidad de sus productos y servicios.
+                </div>
+
+            </div>
+
+                    <div class="text-center mt-8">
+                        <div class="btn-descargar">
+                            <a href="https://adolfogelabert.github.io/images/CV_AJGS_PERU_MAYO_2026.pdf" target="_blank">descargar pdf</a>
+                        </div>
+                    </div>
+
+
+        </div>
+    </section>
+
+    <!-- Referencias -->
+    <section id="referencias" class="bg-[#0f0f0f] py-20 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-12">
+                <div>
+                    <span class="text-yellow-600 text-[10px] font-black uppercase tracking-[0.4em] i18n" data-es="Validation" data-en="Validation">Validación</span>
+                    <h2 class="text-4xl font-black uppercase i18n" data-es="Referencias" data-en="References">Referencias</h2>
+                </div>
+                <p class="text-gray-500 max-w-sm mt-4 md:mt-0 text-sm i18n" 
+                    data-es="Personas que pueden dar fe de mi compromiso y capacidad técnica durante estos años."
+                    data-en="People who can attest to my commitment and technical capacity during these years.">
+                    Personas que pueden dar fe de mi compromiso y capacidad técnica durante estos años.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bento-item p-8 rounded-3xl group">
+                    <div class="flex justify-between mb-6">
+                        <i class="fas fa-quote-left text-yellow-600/30 text-3xl transition group-hover:text-yellow-600"></i>
+                        <span class="text-[10px] font-bold bg-white/5 px-2 py-1 rounded uppercase tracking-widest i18n" data-es="Licda. Contaduría Pública" data-en="Manager">Licda. Contaduría Pública</span>
+                    </div>
+                    <h5 class="text-xl font-bold mb-1">Nelsys Navas</h5>
+                    <p class="text-gray-500 text-xs mb-4">+58 412-5274000<br>Email: nelsysnavas12324@gmail.com</p>
+                    <p class="text-sm italic leading-relaxed text-gray-400 i18n"
+                        
+                        data-es='"Adolfo posee una capacidad única para materializar conceptos complejos. Su visión técnica, combinada con una ejecución estética impecable, garantiza resultados que superan cualquier expectativa en cada proyecto."'
+                       
+                        data-en='"Adolfo possesses a unique ability to bring complex concepts to life. His technical vision, combined with impeccable aesthetic execution, guarantees results that exceed all expectations in every project."'>
+
+                        "Adolfo posee una capacidad única para materializar conceptos complejos. Su visión técnica, combinada con una ejecución estética impecable, garantiza resultados que superan cualquier expectativa en cada proyecto."
+                    </p>
+                </div>
+
+                <div class="bento-item p-8 rounded-3xl group">
+                    <div class="flex justify-between mb-6">
+                        <i class="fas fa-quote-left text-yellow-600/30 text-3xl transition group-hover:text-yellow-600"></i>
+                        <span class="text-[10px] font-bold bg-white/5 px-2 py-1 rounded uppercase tracking-widest i18n" data-es="RR.HH. Messen, C.A." data-en="HR Messen, C.A.">RR.HH. Messen, C.A.</span>
+                    </div>
+                    <h5 class="text-xl font-bold mb-1">Cairy Carolina Perozo</h5>
+                    <p class="text-gray-500 text-xs mb-4">+58 414-4844993<br>Email: ccairy74@gmail.com</p>
+                    <p class="text-sm italic leading-relaxed text-gray-400 i18n"
+
+                        data-es='"Un profesional integral que domina la intersección entre el diseño estratégico y la eficiencia operativa. Su disciplina y enfoque en objetivos lo convierten en una pieza clave para cualquier estructura corporativa."'
+                        
+                        data-en='"A well-rounded professional who excels at the intersection of strategic design and operational efficiency. His discipline and focus on objectives make him a key asset to any corporate structure."'>
+                        
+                        "Un profesional integral que domina la intersección entre el diseño estratégico y la eficiencia operativa. Su disciplina y enfoque en objetivos lo convierten en una pieza clave para cualquier estructura corporativa."
+                    </p>
+                </div>
+
+                <div class="bento-item p-8 rounded-3xl group">
+                    <div class="flex justify-between mb-6">
+                        <i class="fas fa-quote-left text-yellow-600/30 text-3xl transition group-hover:text-yellow-600"></i>
+                        <span class="text-[10px] font-bold bg-white/5 px-2 py-1 rounded uppercase tracking-widest i18n" data-es="Diseñadora Gráfica" data-en="Graphic Designer">Diseñadora Gráfica</span>
+                    </div>
+                    <h5 class="text-xl font-bold mb-1">Zaida Escorcia</h5>
+                    <p class="text-gray-500 text-xs mb-4">+58 412-0174915<br>Email: zaes79@gmail.com</p>
+                    <p class="text-sm italic leading-relaxed text-gray-400 i18n"
+                        data-es='"Su dominio del branding va más allá de lo visual; Adolfo construye identidades con propósito. Es un experto en crear sistemas de marca coherentes, memorables y perfectamente adaptados al mercado actual."'
+                        
+                        data-en='"His mastery of branding goes beyond the visual; Adolfo builds identities with purpose. He is an expert in creating coherent, memorable brand systems perfectly adapted to today's market"'>
+
+                        "Su dominio del branding va más allá de lo visual; Adolfo construye identidades con propósito. Es un experto en crear sistemas de marca coherentes, memorables y perfectamente adaptados al mercado actual."
+                    </p>
+                </div>
+                <div class="bento-item p-8 rounded-3xl group">
+                    <div class="flex justify-between mb-6">
+                        <i class="fas fa-quote-left text-yellow-600/30 text-3xl transition group-hover:text-yellow-600"></i>
+                        <span class="text-[10px] font-bold bg-white/5 px-2 py-1 rounded uppercase tracking-widest i18n" data-es="CEO Messen Vzla" data-en="CEO Messen Vzla">CEO Messen Vzla</span>
+                    </div>
+                    <h5 class="text-xl font-bold mb-1">Dr/Ing Fidel Fernández</h5>
+                    <p class="text-gray-500 text-xs mb-4">+58 424-4056620/+58 426-5461647<br>Email: fidelfernandezg@gmail.com</p>
+                    <p class="text-sm italic leading-relaxed text-gray-400 i18n"
+                        
+                        data-es='"Lo que distingue a Adolfo es su capacidad de vanguardia. Su habilidad para integrar la Inteligencia Artificial en procesos creativos no solo optimiza tiempos, sino que eleva la calidad artística a un nivel superior."'
+                        
+                        data-en='"What sets Adolfo apart is his pioneering spirit. His ability to integrate Artificial Intelligence into creative processes not only optimizes time but also elevates artistic quality to a higher level."'>
+
+                        "Lo que distingue a Adolfo es su capacidad de vanguardia. Su habilidad para integrar la Inteligencia Artificial en procesos creativos no solo optimiza tiempos, sino que eleva la calidad artística a un nivel superior."
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Productos Digitales - Slider -->
+    <section id="productos-digitales">
+        <div class="max-w-7xl mx-auto">
+            <p class="section-subtitle i18n" data-es="Recursos & Herramientas" data-en="Resources & Tools">Recursos & Herramientas</p>
+            <h2 class="section-title i18n" data-es="Productos Digitales" data-en="Digital Products">Productos <span style="color:#ffcc00;font-style:italic;">Digitales</span></h2>
+            <p class="text-center mt-4"><a href="ventas.html" class="text-xs uppercase tracking-widest text-gray-500 hover:text-yellow-500 transition i18n" data-es="Ver tienda →" data-en="View store →">Ver tienda →</a></p>
+        </div>
+
+        <div class="slider-wrapper">
+            <!-- Flecha izquierda -->
+            <button class="slider-btn prev" id="sliderPrev" aria-label="Anterior">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+
+            <div class="slider-track" id="sliderTrack">
+
+                <!-- CARD 1 -->
+                <div class="slide-card" onclick="openProductModal(0)" style="cursor:pointer">
+                    <div class="card-bg" style="background-image: url('images/producto1.jpg');"></div>
+                    <div>
+                        <span class="card-tag i18n" data-es="Guía" data-en="Guide">Guía</span>
+                        <span class="card-title i18n" data-es="Mejores Prompts — Parte 1" data-en="Better Prompts — Part 1">Mejores Prompts — Parte 1</span>
+                        <span class="card-cta i18n" data-es="Ver detalles →" data-en="View details →">Ver detalles →</span>
+                    </div>
+                </div>
+
+                <!-- CARD 2 -->
+                <div class="slide-card" onclick="openProductModal(1)" style="cursor:pointer">
+                    <div class="card-bg" style="background-image: url('images/producto2.jpg');"></div>
+                    <div>
+                        <span class="card-tag i18n" data-es="Guía" data-en="Guide">Guía</span>
+                        <span class="card-title i18n" data-es="Boceto o Sketch con IA" data-en="AI Sketch">Boceto o Sketch con IA</span>
+                        <span class="card-cta i18n" data-es="Ver detalles →" data-en="View details →">Ver detalles →</span>
+                    </div>
+                </div>
+
+                <!-- CARD 3 -->
+                <div class="slide-card" onclick="openProductModal(2)" style="cursor:pointer">
+                    <div class="card-bg" style="background-image: url('images/producto3.jpg');"></div>
+                    <div>
+                        <span class="card-tag i18n" data-es="Guía Técnica" data-en="Technical Guide">Guía Técnica</span>
+                        <span class="card-title i18n" data-es="Del Lente al Lienzo" data-en="From Lens to Canvas">Del Lente<br>al Lienzo</span>
+                        <span class="card-cta i18n" data-es="Ver detalles →" data-en="View details →">Ver detalles →</span>
+                    </div>
+                </div>
+
+                <!-- CARD 4 -->
+                <!--div class="slide-card">
+                    <div class="card-bg" style="background-image: url('images/producto4.jpg');"></div>
+                    <a href="#" target="_blank" rel="noopener noreferrer">
+                        <span class="card-tag i18n" data-es="Kit" data-en="Kit">Kit</span>
+                        <span class="card-title i18n" data-es="Nombre del Producto 4" data-en="Product Name 4">Nombre del Producto 4</span>
+                        <span class="card-cta i18n" data-es="Ver producto →" data-en="View product →">Ver producto →</span>
+                    </a>
+                </div-->
+
+                <!-- CARD 5 -->
+                <!--div class="slide-card">
+                    <div class="card-bg" style="background-image: url('images/producto5.jpg');"></div>
+                    <a href="#" target="_blank" rel="noopener noreferrer">
+                        <span class="card-tag i18n" data-es="Recurso" data-en="Resource">Recurso</span>
+                        <span class="card-title i18n" data-es="Nombre del Producto 5" data-en="Product Name 5">Nombre del Producto 5</span>
+                        <span class="card-cta i18n" data-es="Ver producto →" data-en="View product →">Ver producto →</span>
+                    </a>
+                </div-->
+
+            </div><!-- /slider-track -->
+
+            <!-- Flecha derecha -->
+            <button class="slider-btn next" id="sliderNext" aria-label="Siguiente">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div><!-- /slider-wrapper -->
+
+        <!-- Dots -->
+        <div class="slider-dots" id="sliderDots"></div>
+    </section>
+
+    <!-- Multimedia / Videos -->
+    <section id="multimedia" class="max-w-7xl mx-auto px-6 py-20 border-t border-white/5">
+        <div class="text-center mb-12">
+            <span class="text-yellow-600 text-[10px] font-black uppercase tracking-[0.4em] i18n" data-es="Multimedia" data-en="Media">Multimedia</span>
+            <h2 class="text-4xl font-black uppercase tracking-[0.1em] mt-2 i18n" data-es="Videos y Tutoriales" data-en="Videos & Tutorials">Videos y <span class="text-yellow-600 italic">Tutoriales</span></h2>
+            <p class="text-gray-500 max-w-lg mx-auto text-sm mt-4 i18n"
+                data-es="Aprende diseño, branding e IA con mis videos del canal."
+                data-en="Learn design, branding and AI with my channel videos.">
+                Aprende diseño, branding e IA con mis videos del canal.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <a href="https://www.youtube.com/watch?v=J1V3fIut4dU" target="_blank" rel="noopener noreferrer" class="bento-item rounded-3xl overflow-hidden group">
+                <div class="aspect-video relative overflow-hidden bg-neutral-900">
+                    <img src="https://img.youtube.com/vi/J1V3fIut4dU/hqdefault.jpg" alt="Tutorial landing page con IA" class="w-full h-full object-cover opacity-70 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500">
+                    <span class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition"><span class="w-14 h-14 rounded-full bg-yellow-600 text-black flex items-center justify-center"><i class="fas fa-play"></i></span></span>
+                    <span class="absolute bottom-2 right-2 bg-black/80 text-[10px] font-mono px-2 py-0.5 rounded">13:33</span>
+                </div>
+                <div class="p-6">
+                    <span class="text-yellow-600 text-[10px] font-bold uppercase tracking-[0.2em] i18n" data-es="Tutorial" data-en="Tutorial">Tutorial</span>
+                    <h3 class="text-lg font-bold mt-2 leading-snug i18n" data-es="Crea tu landing page con IA y Github con un boceto (Parte 1)" data-en="Create your landing page with AI and GitHub from a sketch (Part 1)">Crea tu landing page con IA y Github con un boceto (Parte 1)</h3>
+                    <p class="text-gray-500 text-xs mt-2 i18n" data-es="1.2k vistas · Hace 1 día" data-en="1.2k views · 1 day ago">1.2k vistas · Hace 1 día</p>
+                </div>
+            </a>
+
+            <a href="https://www.youtube.com/watch?v=8Zf6A60BvmM" target="_blank" rel="noopener noreferrer" class="bento-item rounded-3xl overflow-hidden group">
+                <div class="aspect-video relative overflow-hidden bg-neutral-900">
+                    <img src="https://img.youtube.com/vi/8Zf6A60BvmM/hqdefault.jpg" alt="Proyecto Tecnogamers Perú" class="w-full h-full object-cover opacity-70 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500">
+                    <span class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition"><span class="w-14 h-14 rounded-full bg-yellow-600 text-black flex items-center justify-center"><i class="fas fa-play"></i></span></span>
+                    <span class="absolute bottom-2 right-2 bg-black/80 text-[10px] font-mono px-2 py-0.5 rounded">14:08</span>
+                </div>
+                <div class="p-6">
+                    <span class="text-yellow-600 text-[10px] font-bold uppercase tracking-[0.2em] i18n" data-es="Caso de Estudio" data-en="Case Study">Caso de Estudio</span>
+                    <h3 class="text-lg font-bold mt-2 leading-snug i18n" data-es="Proyecto Tecnogamers Perú - Modal de Productos y Gestión Completa" data-en="Tecnogamers Peru Project - Product Modal and Full Management">Proyecto Tecnogamers Perú - Modal de Productos y Gestión Completa</h3>
+                    <p class="text-gray-500 text-xs mt-2 i18n" data-es="980 vistas · Hace 2 días" data-en="980 views · 2 days ago">980 vistas · Hace 2 días</p>
+                </div>
+            </a>
+
+            <a href="https://www.youtube.com/watch?v=crrlgi4h4LQ" target="_blank" rel="noopener noreferrer" class="bento-item rounded-3xl overflow-hidden group">
+                <div class="aspect-video relative overflow-hidden bg-neutral-900">
+                    <img src="https://img.youtube.com/vi/crrlgi4h4LQ/hqdefault.jpg" alt="Podcast branding en menos de 1 hora" class="w-full h-full object-cover opacity-70 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500">
+                    <span class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition"><span class="w-14 h-14 rounded-full bg-yellow-600 text-black flex items-center justify-center"><i class="fas fa-play"></i></span></span>
+                    <span class="absolute bottom-2 right-2 bg-black/80 text-[10px] font-mono px-2 py-0.5 rounded">50:04</span>
+                </div>
+                <div class="p-6">
+                    <span class="text-yellow-600 text-[10px] font-bold uppercase tracking-[0.2em] i18n" data-es="Podcast" data-en="Podcast">Podcast</span>
+                    <h3 class="text-lg font-bold mt-2 leading-snug i18n" data-es="Tu Primer Podcast Listo en menos de 1 Hora - Guía para Emprendedores" data-en="Your First Podcast Ready in Under 1 Hour - Entrepreneur Guide">Tu Primer Podcast Listo en menos de 1 Hora - Guía para Emprendedores</h3>
+                    <p class="text-gray-500 text-xs mt-2 i18n" data-es="2.4k vistas · Hace 1 mes" data-en="2.4k views · 1 month ago">2.4k vistas · Hace 1 mes</p>
+                </div>
+            </a>
+
+            <a href="https://www.youtube.com/watch?v=ZBS4O1xUiKo" target="_blank" rel="noopener noreferrer" class="bento-item rounded-3xl overflow-hidden group">
+                <div class="aspect-video relative overflow-hidden bg-neutral-900">
+                    <img src="https://img.youtube.com/vi/ZBS4O1xUiKo/hqdefault.jpg" alt="Publicar canción en Routenote" class="w-full h-full object-cover opacity-70 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500">
+                    <span class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition"><span class="w-14 h-14 rounded-full bg-yellow-600 text-black flex items-center justify-center"><i class="fas fa-play"></i></span></span>
+                    <span class="absolute bottom-2 right-2 bg-black/80 text-[10px] font-mono px-2 py-0.5 rounded">21:46</span>
+                </div>
+                <div class="p-6">
+                    <span class="text-yellow-600 text-[10px] font-bold uppercase tracking-[0.2em] i18n" data-es="Audio / Distribución" data-en="Audio / Distribution">Audio / Distribución</span>
+                    <h3 class="text-lg font-bold mt-2 leading-snug i18n" data-es="Cómo Publicar tu Canción en Routenote (GRATIS) | Tutorial Paso a Paso" data-en="How to Publish Your Song on Routenote (FREE) | Step-by-Step Tutorial">Cómo Publicar tu Canción en Routenote (GRATIS) | Tutorial Paso a Paso</h3>
+                    <p class="text-gray-500 text-xs mt-2 i18n" data-es="4.5k vistas · Hace 1 mes" data-en="4.5k views · 1 month ago">4.5k vistas · Hace 1 mes</p>
+                </div>
+            </a>
+        </div>
+
+        <p class="text-center mt-8"><a href="https://www.youtube.com/@adolfojosegelabert" target="_blank" rel="noopener noreferrer" class="text-xs uppercase tracking-widest text-gray-500 hover:text-yellow-500 transition i18n" data-es="Ver canal →" data-en="View channel →">Ver canal →</a></p>
+    </section>
+
+    <!-- Publicaciones Calameo -->
+    <section id="publicaciones" class="max-w-7xl mx-auto px-6 py-20 border-t border-white/5">
+        <div class="text-center mb-12">
+            <span class="text-yellow-600 text-[10px] font-black uppercase tracking-[0.4em] i18n" data-es="Publicaciones" data-en="Publications">Publicaciones</span>
+            <h2 class="text-4xl font-black uppercase tracking-[0.1em] mt-2 i18n" data-es="Estantería de Publicaciones" data-en="Publication Bookshelf">Estantería de <span class="text-yellow-600 italic">Publicaciones</span></h2>
+            <p class="text-gray-500 max-w-lg mx-auto text-sm mt-4 i18n"
+                data-es="Explora mis publicaciones y revistas digitales en Calameo."
+                data-en="Explore my digital publications and magazines on Calameo.">
+                Explora mis publicaciones y revistas digitales en Calameo.
+            </p>
+        </div>
+
+        <div class="rounded-2xl overflow-hidden border border-white/5">
+            <iframe
+                src="//v.calameo.com/library/?type=account&id=4307118&rows=3&sortBy=latestPublished&theme=dark&bgColor=0a0a0a&thumbSize=large&showTitle=true&showShadow=true&showGloss=true&showInfo=account&linkTo=view&linkTarget=_blank"
+                width="100%"
+                height="720"
+                frameborder="0"
+                allowfullscreen
+                allowtransparency>
+            </iframe>
+        </div>
+    </section>
+
+    <!-- Pie de Página -->
+    <footer class="py-16 px-6 border-t border-white/5">
+        <div class="max-w-6xl mx-auto">
+            <!-- Redes Sociales -->
+            <div class="flex flex-col items-center gap-6 mb-12">
+                <div class="flex flex-wrap justify-center gap-8 text-2xl">
+                    <a href="https://github.com/adolfogelabert" target="_blank" class="social-link" title="Github"><i class="fab fa-github"></i></a>
+                    <a href="https://www.behance.net/adolfogelabert" target="_blank" class="social-link" title="Behance"><i class="fab fa-behance"></i></a>
+                    <a href="https://www.youtube.com/@adolfojosegelabert" target="_blank" class="social-link" title="YouTube"><i class="fab fa-youtube"></i></a>
+                    <a href="https://www.linkedin.com/in/adolfo-gelabert/" target="_blank" class="social-link" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="https://wa.me/51930562562" target="_blank" class="social-link" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                    <a href="https://www.instagram.com/adolfogelabert/" target="_blank" class="social-link" title="Instagram"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            <!-- Links Legales -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center mb-12 footer-links">
+                <div>
+                    <h4 class="font-heading font-bold text-xs uppercase tracking-[0.2em] mb-4 text-white">Términos y Condiciones</h4>
+                    <p class="text-gray-500 text-xs leading-relaxed">Reglas de uso, compra y entrega de productos digitales y servicios.</p>
+                </div>
+                <div>
+                    <h4 class="font-heading font-bold text-xs uppercase tracking-[0.2em] mb-4 text-white">Política de Privacidad</h4>
+                    <p class="text-gray-500 text-xs leading-relaxed">Cómo recopilamos, usamos y protegemos tu información personal.</p>
+                </div>
+                <div>
+                    <h4 class="font-heading font-bold text-xs uppercase tracking-[0.2em] mb-4 text-white">Preguntas Frecuentes</h4>
+                    <p class="text-gray-500 text-xs leading-relaxed">Respuestas a las dudas más comunes sobre productos y servicios.</p>
+                </div>
+            </div>
+            <div class="flex flex-col md:flex-row justify-center gap-6 text-[10px] uppercase tracking-[0.3em] text-gray-500 mb-8">
+                <a href="terminos-condiciones.html" class="hover:text-yellow-600 transition">Términos y Condiciones</a>
+                <span class="hidden md:inline text-gray-700">|</span>
+                <a href="politica-privacidad.html" class="hover:text-yellow-600 transition">Política de Privacidad</a>
+                <span class="hidden md:inline text-gray-700">|</span>
+                <a href="preguntas-frecuentes.html" class="hover:text-yellow-600 transition">Preguntas Frecuentes</a>
+            </div>
+            <p class="text-[10px] uppercase tracking-[0.5em] opacity-20 text-center">© 2026 Lima, Perú - Adolfo Gelabert</p>
+            <div class="flex justify-start mt-4">
+                <a href="dashboard.html" class="text-gray-700 hover:text-gray-500 transition opacity-30 hover:opacity-100" title="Dashboard">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal de Producto -->
+    <div class="modal-overlay" id="productModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeProductModal()" aria-label="Cerrar">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-body">
+                <img id="modalImg" src="" alt="" class="modal-img">
+                <div class="modal-details">
+                    <span class="modal-tag" id="modalTag"></span>
+                    <h2 class="modal-title" id="modalTitle"></h2>
+                    <p class="modal-desc" id="modalDesc"></p>
+                    <ul class="modal-features" id="modalFeatures"></ul>
+                    <div class="modal-price">
+                        <div>
+                            <span class="old-price" id="modalOld"></span>
+                            <span class="current-price" id="modalPrice"></span>
+                        </div>
+                        <a id="modalBuy" href="ventas.html" class="btn-glow font-black py-3 px-8 rounded-xl text-xs uppercase tracking-widest i18n" data-es="Ver en Tienda" data-en="View Store">Ver en Tienda</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Botón Back to Top -->
+    <button id="backToTop" onclick="smoothScrollTo(0, 1000)" class="fixed bottom-8 right-8 w-12 h-12 bg-yellow-600 text-black rounded-full shadow-2xl flex items-center justify-center z-50 hover:bg-white transition-all transform hover:scale-110">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <!-- Botón flotante acceso admin (discreto) -->
+    <button id="adminGear" onclick="openSiteLogin()" aria-label="Acceso administrador" class="fixed bottom-6 left-6 z-40 w-10 h-10 rounded-full bg-white/5 border border-white/10 text-gray-600 opacity-40 hover:opacity-100 hover:text-yellow-600 hover:border-yellow-600/50 flex items-center justify-center transition-all">
+        <i class="fas fa-gear text-sm"></i>
+    </button>
+
+    <!-- Modal login sitio (temporal hasta Firebase) -->
+    <div class="modal-overlay" id="siteLoginModal">
+        <div class="modal-content" style="max-width:420px;">
+            <button class="modal-close" onclick="closeSiteLogin()" aria-label="Cerrar">
+                <i class="fas fa-times"></i>
+            </button>
+            <div style="padding:2.5rem 2rem;">
+                <div class="flex flex-col items-center gap-3 mb-6">
+                    <img src="images/icon_logo_cv_512px.svg" alt="AG" style="width:48px;height:auto;">
+                    <div class="text-center">
+                        <h3 class="font-heading text-sm font-black text-white tracking-widest uppercase">Acceso restringido</h3>
+                        <p class="text-[9px] text-yellow-600 tracking-widest uppercase font-bold mt-1">Panel de administración</p>
+                    </div>
+                </div>
+                <form onsubmit="handleSiteLoginSubmit(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-[8px] font-bold tracking-widest text-gray-500 uppercase mb-1">Usuario</label>
+                        <input type="text" id="site-login-user" autocomplete="username" placeholder="USUARIO" class="w-full bg-white/5 border border-white/10 rounded px-3 py-2.5 text-xs text-white focus:outline-none focus:border-yellow-600 font-mono uppercase" required />
+                    </div>
+                    <div>
+                        <label class="block text-[8px] font-bold tracking-widest text-gray-500 uppercase mb-1">Contraseña</label>
+                        <input type="password" id="site-login-pass" autocomplete="current-password" placeholder="••••••••" class="w-full bg-white/5 border border-white/10 rounded px-3 py-2.5 text-xs text-white focus:outline-none focus:border-yellow-600 font-mono" required />
+                    </div>
+                    <p id="site-login-error" class="hidden text-[10px] font-mono text-rose-400 tracking-widest uppercase text-center">❌ Usuario o contraseña incorrectos</p>
+                    <button type="submit" class="w-full bg-yellow-600 hover:bg-white text-black font-black py-3 rounded-lg text-[10px] tracking-widest uppercase transition-all">
+                        Ingresar al panel
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Animación del Fondo (Network Effect) ---
+        const canvas = document.getElementById('hero-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        const particleCount = 60;
+        const connectionDistance = 150;
+        let mouse = { x: null, y: null };
+
+        function initCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            particles = [];
+            for (let i = 0; i < particleCount; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    vx: (Math.random() - 0.5) * 0.5,
+                    vy: (Math.random() - 0.5) * 0.5,
+                    size: 2
+                });
+            }
+        }
+
+        function animateCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            particles.forEach((p, i) => {
+                p.x += p.vx;
+                p.y += p.vy;
+
+                if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(202, 138, 4, 0.5)';
+                ctx.fill();
+
+                for (let j = i + 1; j < particles.length; j++) {
+                    const p2 = particles[j];
+                    const dx = p.x - p2.x;
+                    const dy = p.y - p2.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < connectionDistance) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(202, 138, 4, ${1 - dist / connectionDistance})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        ctx.stroke();
+                    }
+                }
+            });
+            requestAnimationFrame(animateCanvas);
+        }
+
+        window.addEventListener('resize', initCanvas);
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.x;
+            mouse.y = e.y;
+        });
+
+        // ===== MODAL PRODUCTOS =====
+        const productData = [
+            {
+                img: 'images/producto1.jpg',
+                tag: 'Guía Técnica 001',
+                titleEs: 'Mejores Prompts — Parte 1',
+                titleEn: 'Better Prompts — Part 1',
+                descEs: 'Transforma retratos reales en obras de arte al óleo. Incluye el "Prompt Maestro" estructurado para resultados profesionales.',
+                descEn: 'Transform real portraits into oil painting artworks. Includes the structured "Master Prompt" for professional results.',
+                old: '$19.00',
+                price: '$7.00',
+                featuresEs: ['Prompt Maestro estructurado', 'Paso a paso detallado', 'Soporte con IA generativa', 'Formato PDF descargable'],
+                featuresEn: ['Structured Master Prompt', 'Detailed step-by-step', 'Generative AI support', 'Downloadable PDF format']
+            },
+            {
+                img: 'images/producto2.jpg',
+                tag: 'Guía Técnica 002',
+                titleEs: 'Boceto o Sketch con IA',
+                titleEn: 'AI Sketch',
+                descEs: 'Crea ilustraciones con trazo manual y estética de storyboard. El control definitivo sobre el dibujo anatómico.',
+                descEn: 'Create illustrations with manual strokes and storyboard aesthetics. The ultimate control over anatomical drawing.',
+                old: '$15.00',
+                price: '$7.00',
+                featuresEs: ['Técnicas de bocetado digital', 'Estilo storyboard profesional', 'Dibujo anatómico preciso', 'Prompts para ilustración'],
+                featuresEn: ['Digital sketching techniques', 'Professional storyboard style', 'Precise anatomical drawing', 'Illustration prompts']
+            },
+            {
+                img: 'images/producto3.jpg',
+                tag: 'Guía Técnica 003',
+                titleEs: 'Del Lente al Lienzo',
+                titleEn: 'From Lens to Canvas',
+                descEs: 'Transforma retratos reales en obras de arte al óleo con calidad cinematográfica.',
+                descEn: 'Transform real portraits into oil painting artworks with cinematic quality.',
+                old: '$12.00',
+                price: '$7.00',
+                featuresEs: ['Prompt Maestro para óleo', 'Texturas hiperrealistas', 'Calidad cinematográfica 8K', 'Guía de parámetros avanzados'],
+                featuresEn: ['Master prompt for oil painting', 'Hiperrealistic textures', 'Cinematic 8K quality', 'Advanced parameters guide']
+            }
+        ];
+
+        function openProductModal(index) {
+            const p = productData[index];
+            const lang = localStorage.getItem('preferredLang') || 'es';
+
+            document.getElementById('modalImg').src = p.img;
+            document.getElementById('modalImg').alt = lang === 'es' ? p.titleEs : p.titleEn;
+            document.getElementById('modalTag').textContent = p.tag;
+            document.getElementById('modalTitle').textContent = lang === 'es' ? p.titleEs : p.titleEn;
+            document.getElementById('modalDesc').textContent = lang === 'es' ? p.descEs : p.descEn;
+            document.getElementById('modalOld').textContent = p.old;
+            document.getElementById('modalPrice').textContent = p.price;
+
+            const features = lang === 'es' ? p.featuresEs : p.featuresEn;
+            document.getElementById('modalFeatures').innerHTML = features.map(f => '<li><i class="fas fa-check-circle"></i> ' + f + '</li>').join('');
+
+            document.getElementById('productModal').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeProductModal() {
+            document.getElementById('productModal').classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        document.getElementById('productModal').addEventListener('click', function(e) {
+            if (e.target.id === 'productModal') closeProductModal();
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeProductModal();
+        });
+
+        // --- Lógica de Internacionalización ---
+        function changeLang(lang) {
+            const elements = document.querySelectorAll('.i18n');
+            elements.forEach(el => {
+                const text = el.getAttribute(`data-${lang}`);
+                if (text) {
+                    if (text.includes('<br>')) {
+                        el.innerHTML = text;
+                    } else {
+                        el.innerText = text;
+                    }
+                }
+            });
+
+            document.getElementById('btn-es').classList.toggle('active', lang === 'es');
+            document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+            localStorage.setItem('preferredLang', lang);
+        }
+
+        // Control del botón Back to Top
+        const backToTopBtn = document.getElementById('backToTop');
+        window.onscroll = function() {
+            if (document.body.scrollTop > 500 || document.documentElement.scrollTop > 500) {
+                backToTopBtn.classList.add('show');
+            } else {
+                backToTopBtn.classList.remove('show');
+            }
+        };
+
+        // ===== SLIDER PRODUCTOS DIGITALES =====
+        (function () {
+            const track    = document.getElementById('sliderTrack');
+            const btnPrev  = document.getElementById('sliderPrev');
+            const btnNext  = document.getElementById('sliderNext');
+            const dotsWrap = document.getElementById('sliderDots');
+
+            if (!track) return;
+
+            const cards = track.querySelectorAll('.slide-card');
+            const total = cards.length;
+            let current = 0;
+
+            // Cuántas tarjetas son visibles según el ancho
+            function visibleCount() {
+                const w = window.innerWidth;
+                if (w <= 768)  return 1;
+                if (w <= 1024) return 2;
+                return 3;
+            }
+
+            // Crear dots
+            function buildDots() {
+                dotsWrap.innerHTML = '';
+                const pages = Math.ceil(total / visibleCount());
+                for (let i = 0; i < pages; i++) {
+                    const d = document.createElement('button');
+                    d.className = 'slider-dot' + (i === 0 ? ' active' : '');
+                    d.setAttribute('aria-label', 'Página ' + (i + 1));
+                    d.addEventListener('click', () => goTo(i * visibleCount()));
+                    dotsWrap.appendChild(d);
+                }
+            }
+
+            function updateDots() {
+                const vc = visibleCount();
+                const pageIndex = Math.round(current / vc);
+                dotsWrap.querySelectorAll('.slider-dot').forEach((d, i) => {
+                    d.classList.toggle('active', i === pageIndex);
+                });
+            }
+
+            function goTo(index) {
+                const vc = visibleCount();
+                const maxIndex = total - vc;
+                current = Math.max(0, Math.min(index, maxIndex));
+                const cardWidth  = cards[0].getBoundingClientRect().width;
+                const gap = 24;
+                track.style.transform = 'translateX(-' + (current * (cardWidth + gap)) + 'px)';
+                updateDots();
+            }
+
+            btnPrev.addEventListener('click', () => goTo(current - visibleCount()));
+            btnNext.addEventListener('click', () => goTo(current + visibleCount()));
+
+            // Swipe táctil
+            let touchStartX = 0;
+            track.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+            track.addEventListener('touchend', e => {
+                const diff = touchStartX - e.changedTouches[0].clientX;
+                if (Math.abs(diff) > 50) diff > 0 ? goTo(current + 1) : goTo(current - 1);
+            });
+
+            buildDots();
+            window.addEventListener('resize', () => { buildDots(); goTo(current); });
+        })();
+
+        // Inicialización
+        window.onload = () => {
+            initCanvas();
+            animateCanvas();
+
+            // ===== MENÚ HAMBURGUESA =====
+            const hamburgerBtn = document.getElementById('hamburgerBtn');
+            const mobileMenu   = document.getElementById('mobile-menu');
+
+            hamburgerBtn.addEventListener('click', () => {
+                const isOpen = mobileMenu.classList.toggle('open');
+                hamburgerBtn.classList.toggle('open', isOpen);
+                hamburgerBtn.setAttribute('aria-label', isOpen ? 'Cerrar menú' : 'Abrir menú');
+                document.body.style.overflow = isOpen ? 'hidden' : '';
+            });
+
+            mobileMenu.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.remove('open');
+                    hamburgerBtn.classList.remove('open');
+                    document.body.style.overflow = '';
+                });
+            });
+
+            const savedLang = localStorage.getItem('preferredLang') || 'es';
+            changeLang(savedLang);
+
+            const scrollObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('opacity-100');
+                        entry.target.classList.remove('opacity-0', 'translate-y-10');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('section').forEach(section => {
+                if(section.id !== 'hero') { 
+                    section.classList.add('transition-all', 'duration-1000', 'opacity-0', 'translate-y-10');
+                    scrollObserver.observe(section);
+                } else {
+                    section.classList.add('opacity-100');
+                }
+            });
+
+            // ===== SCROLL SUAVE PERSONALIZADO =====
+            window.smoothScrollTo = function(targetY, duration) {
+                const startY = window.scrollY;
+                const distance = targetY - startY;
+                let startTime = null;
+
+                function easeInOutQuart(t) {
+                    return t < 0.5
+                        ? 8 * t * t * t * t
+                        : 1 - Math.pow(-2 * t + 2, 4) / 2;
+                }
+
+                function step(timestamp) {
+                    if (!startTime) startTime = timestamp;
+                    const elapsed = timestamp - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    window.scrollTo(0, startY + distance * easeInOutQuart(progress));
+                    if (progress < 1) requestAnimationFrame(step);
+                }
+                requestAnimationFrame(step);
+            }
+
+            document.querySelectorAll('a[href^="#"]').forEach(link => {
+                link.addEventListener('click', function (e) {
+                    const hash = this.getAttribute('href');
+                    if (hash === '#') return;
+                    const target = document.querySelector(hash);
+                    if (!target) return;
+                    e.preventDefault();
+                    const offsetTop = target.getBoundingClientRect().top + window.scrollY - 80;
+                    smoothScrollTo(offsetTop, 1000);
+                    history.pushState(null, null, hash);
+                });
+            });
+        };
+    </script>
+
+    <!-- Cookie Consent -->
+    <div id="cookie-consent" class="fixed bottom-0 left-0 w-full z-50 p-4 md:p-6 transform translate-y-full opacity-0 transition-all duration-500" style="display:none;">
+        <div class="max-w-4xl mx-auto bg-[#161616] border border-[#262626] rounded-2xl p-6 md:p-8 shadow-2xl">
+            <div class="flex flex-col md:flex-row items-start md:items-center gap-6">
+                <div class="flex-1">
+                    <p class="text-sm text-gray-300 leading-relaxed">
+                        Este sitio utiliza cookies técnicas para mejorar la experiencia de navegación. Al continuar, aceptas nuestra 
+                        <a href="politica-privacidad.html" class="text-yellow-600 hover:text-yellow-500 underline transition">Política de Privacidad</a>.
+                    </p>
+                </div>
+                <button onclick="acceptCookies()" class="flex-shrink-0 bg-yellow-600 text-black px-6 py-2.5 rounded text-xs font-black uppercase tracking-widest hover:bg-white transition">
+                    Aceptar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function acceptCookies() {
+            localStorage.setItem('cookiesAccepted', 'true');
+            var banner = document.getElementById('cookie-consent');
+            banner.style.transform = 'translateY(100%)';
+            banner.style.opacity = '0';
+            setTimeout(function() { banner.style.display = 'none'; }, 500);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!localStorage.getItem('cookiesAccepted')) {
+                var banner = document.getElementById('cookie-consent');
+                banner.style.display = 'block';
+                setTimeout(function() {
+                    banner.style.transform = 'translateY(0)';
+                    banner.style.opacity = '1';
+                }, 1000);
+            }
+        });
+    </script>
+
+    <script>
+        // --- LOGIN SITIO (temporal hasta Firebase, mismas credenciales que dashboard) ---
+        var SITE_AUTH_TEMP = { user: 'admin', pass: 'gelabert2026' };
+
+        function openSiteLogin() {
+            document.getElementById('siteLoginModal').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeSiteLogin() {
+            document.getElementById('siteLoginModal').classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        function handleSiteLoginSubmit(e) {
+            e.preventDefault();
+            var u = document.getElementById('site-login-user').value.trim();
+            var p = document.getElementById('site-login-pass').value;
+            var err = document.getElementById('site-login-error');
+            if (u === SITE_AUTH_TEMP.user && p === SITE_AUTH_TEMP.pass) {
+                sessionStorage.setItem('dash_auth', '1');
+                window.location.href = 'dashboard.html';
+            } else if (err) {
+                err.classList.remove('hidden');
+            }
+        }
+
+        document.getElementById('siteLoginModal').addEventListener('click', function(e) {
+            if (e.target.id === 'siteLoginModal') closeSiteLogin();
+        });
+
+        document.addEventListener('keydown', function(e) {
+            var m = document.getElementById('siteLoginModal');
+            if (e.key === 'Escape' && m && m.classList.contains('open')) closeSiteLogin();
+        });
+    </script>
+</body>
+</html>

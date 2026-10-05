@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adolfo Gelabert | Productos Digitales</title>
+    <meta name="description" content="Guías premium de prompts para dominar la Inteligencia Artificial. Transforma tu flujo de trabajo creativo con técnicas de vanguardia.">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:title" content="Adolfo Gelabert - Productos Digitales">
+    <meta property="og:description" content="Guías premium de prompts para dominar la IA. Técnicas de vanguardia para optimizar tu flujo creativo.">
+    <meta property="og:type" content="website">
+
+    <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Outfit:wght@200;400;900&display=swap');
+
+        :root {
+            --accent: #ca8a04;
+            --bg-dark: #0a0a0a;
+            --card-dark: #161616;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-dark);
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, .font-heading {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        /* Barra de desplazamiento personalizada */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-dark); }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+        /* Estilo Toggle de Idioma */
+        .lang-btn {
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+        .lang-btn.active {
+            background: var(--accent);
+            color: black;
+            border-color: var(--accent);
+        }
+
+        /* Estilo de Iconos Sociales */
+        .social-link {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            opacity: 0.7;
+        }
+        .social-link:hover {
+            opacity: 1;
+            color: var(--accent);
+            transform: scale(1.25) translateY(-2px);
+        }
+
+        /* Tarjetas de Producto */
+        .product-card {
+            background: var(--card-dark);
+            border: 1px solid #262626;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .product-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-8px);
+            box-shadow: 0 10px 30px -10px rgba(202, 138, 4, 0.3);
+        }
+
+        .btn-glow {
+            background: var(--accent);
+            color: #000;
+            transition: all 0.3s ease;
+        }
+        .btn-glow:hover {
+            background: #fff;
+            box-shadow: 0 0 20px rgba(202, 138, 4, 0.4);
+            transform: scale(1.05);
+        }
+
+        /* Botón Back to Top */
+        #backToTop {
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        #backToTop.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* ===== MENÚ HAMBURGUESA MÓVIL ===== */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            width: 36px;
+            height: 36px;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            padding: 4px;
+            z-index: 200;
+        }
+        .hamburger span {
+            display: block;
+            height: 2px;
+            width: 100%;
+            background: #fff;
+            border-radius: 2px;
+            transition: all 0.35s ease;
+            transform-origin: center;
+        }
+        .hamburger.open span:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+        .hamburger.open span:nth-child(2) {
+            opacity: 0;
+            transform: scaleX(0);
+        }
+        .hamburger.open span:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+        #mobile-menu {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(10,10,10,0.97);
+            backdrop-filter: blur(16px);
+            z-index: 100;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+        }
+        #mobile-menu.open {
+            display: flex;
+        }
+        #mobile-menu a {
+            font-size: 1.6rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: #fff;
+            text-decoration: none;
+            opacity: 0.7;
+            transition: color 0.2s ease, opacity 0.2s ease;
+        }
+        #mobile-menu a:hover {
+            color: var(--accent);
+            opacity: 1;
+        }
+        @media (max-width: 767px) {
+            .hamburger { display: flex; }
+        }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        .modal-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background: var(--card-dark);
+            border: 1px solid #262626;
+            border-radius: 1.5rem;
+            max-width: 800px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: translateY(30px) scale(0.95);
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative;
+        }
+        .modal-overlay.open .modal-content {
+            transform: translateY(0) scale(1);
+        }
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: #fff;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            z-index: 10;
+        }
+        .modal-close:hover {
+            background: var(--accent);
+            color: #000;
+        }
+        .modal-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+        }
+        @media (max-width: 768px) {
+            .modal-body { grid-template-columns: 1fr; }
+        }
+        .modal-img {
+            width: 100%;
+            height: 100%;
+            min-height: 300px;
+            object-fit: cover;
+            border-radius: 1.5rem 0 0 1.5rem;
+        }
+        @media (max-width: 768px) {
+            .modal-img { border-radius: 1.5rem 1.5rem 0 0; min-height: 250px; }
+        }
+        .modal-details {
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .modal-tag {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--accent);
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .modal-title {
+            font-size: 1.75rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+            margin-bottom: 12px;
+            line-height: 1.1;
+        }
+        .modal-desc {
+            color: #9ca3af;
+            font-size: 0.9rem;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+        .modal-features {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 1.5rem 0;
+        }
+        .modal-features li {
+            font-size: 0.8rem;
+            color: #d1d5db;
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .modal-features li i {
+            color: var(--accent);
+            font-size: 0.7rem;
+        }
+        .modal-price {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: auto;
+        }
+        .modal-price .old-price {
+            font-size: 0.75rem;
+            color: #6b7280;
+            text-decoration: line-through;
+        }
+        .modal-price .current-price {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--accent);
+        }
+
+        /* ===== MODAL DE PAGO ===== */
+        .pay-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 400;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        .pay-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+        .pay-content {
+            background: var(--card-dark);
+            border: 1px solid #262626;
+            border-radius: 1.5rem;
+            max-width: 520px;
+            width: 92%;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: translateY(30px) scale(0.95);
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative;
+        }
+        .pay-overlay.open .pay-content {
+            transform: translateY(0) scale(1);
+        }
+        .pay-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: #fff;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            z-index: 10;
+        }
+        .pay-close:hover {
+            background: var(--accent);
+            color: #000;
+        }
+        .pay-header {
+            padding: 1.5rem 1.5rem 0;
+            text-align: center;
+        }
+        .pay-header h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .pay-header p {
+            font-size: 0.8rem;
+            color: #9ca3af;
+            margin-top: 4px;
+        }
+        .pay-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 4px;
+            padding: 1rem 1.5rem;
+            flex-wrap: wrap;
+        }
+        .pay-tab {
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: 1px solid #262626;
+            background: transparent;
+            color: #9ca3af;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .pay-tab:hover {
+            border-color: #444;
+            color: #fff;
+        }
+        .pay-tab.active {
+            background: var(--accent);
+            color: #000;
+            border-color: var(--accent);
+        }
+        .pay-tab i { font-size: 0.85rem; }
+        .pay-body {
+            padding: 0 1.5rem 1.5rem;
+        }
+        .pay-panel {
+            display: none;
+            text-align: center;
+        }
+        .pay-panel.active {
+            display: block;
+        }
+        .pay-panel .pay-icon {
+            font-size: 2.5rem;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+        .pay-panel .pay-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: #6b7280;
+            margin-bottom: 8px;
+        }
+        .pay-panel .pay-value {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #fff;
+            word-break: break-all;
+            background: rgba(255,255,255,0.05);
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 1px solid #262626;
+            margin-bottom: 16px;
+            cursor: pointer;
+            transition: border-color 0.2s ease;
+        }
+        .pay-panel .pay-value:hover {
+            border-color: var(--accent);
+        }
+        .pay-panel .pay-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 28px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        .pay-btn-stripe {
+            background: #635bff;
+            color: #fff;
+        }
+        .pay-btn-stripe:hover {
+            background: #7a73ff;
+            box-shadow: 0 0 20px rgba(99,91,255,0.4);
+        }
+        .pay-btn-paypal {
+            background: #0070ba;
+            color: #fff;
+        }
+        .pay-btn-paypal:hover {
+            background: #009cde;
+            box-shadow: 0 0 20px rgba(0,112,186,0.4);
+        }
+        .pay-btn-copy {
+            background: var(--accent);
+            color: #000;
+        }
+        .pay-btn-copy:hover {
+            background: #fff;
+            box-shadow: 0 0 20px rgba(202,138,4,0.4);
+        }
+        .pay-qr {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 16px;
+            background: #fff;
+            border-radius: 12px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .pay-qr img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        .pay-note {
+            font-size: 0.7rem;
+            color: #6b7280;
+            margin-top: 12px;
+            line-height: 1.5;
+        }
+        .footer-links a { transition: color 0.3s ease; }
+        .footer-links a:hover { color: var(--accent); }
+    </style>
+</head>
+<body>
+
+    <!-- Navegación -->
+    <nav class="fixed top-0 w-full z-50 px-6 py-4 flex justify-between items-center backdrop-blur-md border-b border-white/5">
+        <div class="flex items-center gap-2">
+            <a href="index.html"><img src="images/icon_logo_cv_512px.svg" class="w-8 h-8" alt=""></a>
+            <a href="index.html"><span class="font-heading font-bold tracking-widest text-sm uppercase">Adolfo Gelabert</span></a>
+        </div>
+
+        <div class="hidden md:flex gap-8 text-xs font-bold tracking-[0.2em] uppercase opacity-70">
+            <a href="index.html" class="hover:text-yellow-500 transition i18n" data-es="CV" data-en="CV">CV</a>
+            <a href="index.html#skills" class="hover:text-yellow-600 transition i18n" data-es="Capacidades" data-en="Skills">Capacidades</a>
+            <a href="#productos" class="hover:text-yellow-600 transition i18n" data-es="Tienda" data-en="Store">Tienda</a>
+        </div>
+
+        <div class="flex items-center gap-4">
+            <div class="flex bg-white/5 p-1 rounded-lg border border-white/10 text-[10px] font-bold">
+                <button onclick="changeLang('es')" id="btn-es" class="lang-btn px-2 py-1 rounded active">ES</button>
+                <button onclick="changeLang('en')" id="btn-en" class="lang-btn px-2 py-1 rounded">EN</button>
+            </div>
+
+            <a href="https://wa.me/51930562562" target="_blank" class="hidden md:inline-block bg-yellow-600 text-black px-4 py-2 rounded text-xs font-black uppercase hover:bg-white transition i18n" data-es="Hablemos" data-en="Let's Talk">
+                Hablemos
+            </a>
+
+            <!-- Botón Hamburguesa (solo móvil) -->
+            <button class="hamburger" id="hamburgerBtn" aria-label="Abrir menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Menú Móvil -->
+    <div id="mobile-menu" role="dialog" aria-modal="true">
+        <a href="index.html" class="i18n" data-es="CV" data-en="CV">CV</a>
+        <a href="index.html#skills" class="i18n" data-es="Capacidades" data-en="Skills">Capacidades</a>
+        <a href="#productos" class="i18n" data-es="Tienda" data-en="Store">Tienda</a>
+        <a href="terminos.html" class="i18n" data-es="Términos" data-en="Terms">Términos</a>
+        <a href="https://wa.me/51930562562" target="_blank" style="color:#ffcc00;opacity:1;font-size:1rem;" class="i18n" data-es="Hablemos" data-en="Let's Talk">Hablemos</a>
+    </div>
+
+    <!-- Hero -->
+    <section class="min-h-[60vh] flex flex-col justify-center items-center relative px-6 py-32 text-center">
+        <div class="absolute top-1/4 left-10 w-64 h-64 bg-yellow-600/10 blur-[120px] rounded-full"></div>
+        <span class="inline-block px-4 py-1 rounded-full border border-yellow-600/30 text-yellow-600 text-[10px] font-bold uppercase tracking-[0.3em] mb-6 animate-pulse i18n"
+            data-es="Recursos Técnicos de Vanguardia" data-en="Cutting-Edge Technical Resources">
+            Recursos Técnicos de Vanguardia
+        </span>
+        <h1 class="text-6xl md:text-8xl font-black mb-6 tracking-tighter uppercase">
+            <span class="i18n" data-es="Productos" data-en="Products">Productos</span><br>
+            <span class="text-yellow-600 italic i18n" data-es="Digitales" data-en="Digital">Digitales</span>
+        </h1>
+        <p class="max-w-2xl mx-auto text-lg md:text-xl text-gray-400 font-light leading-relaxed i18n"
+            data-es="Optimiza tu flujo de trabajo con guías premium diseñadas para dominar la Inteligencia Artificial."
+            data-en="Optimize your workflow with premium guides designed to master Artificial Intelligence.">
+            Optimiza tu flujo de trabajo con guías premium diseñadas para dominar la Inteligencia Artificial.
+        </p>
+    </section>
+
+    <!-- Grid de Productos -->
+    <section id="productos" class="max-w-7xl mx-auto px-6 py-20">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+            <!-- Producto 1 -->
+            <article class="product-card rounded-3xl overflow-hidden flex flex-col group cursor-pointer"
+                onclick="openModal(0)"
+                data-img="images/producto1.jpg"
+                data-tag="Guía Técnica 001"
+                data-title-es="Del Lente al Lienzo" data-title-en="From Lens to Canvas"
+                data-desc-es="Transforma retratos reales en obras de arte al óleo. Incluye el 'Prompt Maestro' estructurado para resultados profesionales."
+                data-desc-en="Transform real portraits into oil painting artworks. Includes the structured 'Master Prompt' for professional results."
+                data-old="$19.00" data-price="$7.00"
+                data-features-es="Prompt Maestro estructurado,Paso a paso detallado,Soporte con IA generativa,Formato PDF descargable"
+                data-features-en="Structured Master Prompt,Detailed step-by-step,Generative AI support,Downloadable PDF format">
+                <div class="aspect-[4/5] bg-neutral-900 relative overflow-hidden">
+                    <img src="images/producto1.jpg" alt="Del Lente al Lienzo" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 opacity-60 group-hover:opacity-100">
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent"></div>
+                    <div class="absolute bottom-6 left-8">
+                        <span class="text-[10px] font-bold tracking-widest uppercase text-yellow-600">Guía Técnica 001</span>
+                    </div>
+                </div>
+                <div class="p-8 flex-grow flex flex-col">
+                    <h2 class="text-2xl font-bold mb-3 tracking-tight uppercase font-heading">Del Lente al Lienzo</h2>
+                    <p class="text-gray-400 text-sm mb-8 leading-relaxed font-light flex-grow i18n"
+                        data-es="Transforma retratos reales en obras de arte al óleo. Incluye el 'Prompt Maestro' estructurado para resultados profesionales."
+                        data-en="Transform real portraits into oil painting artworks. Includes the structured 'Master Prompt' for professional results.">
+                        Transforma retratos reales en obras de arte al óleo. Incluye el 'Prompt Maestro' estructurado para resultados profesionales.
+                    </p>
+                    <div class="flex items-center justify-between">
+                        <div class="flex flex-col">
+                            <span class="text-[10px] text-gray-600 line-through mb-1 uppercase tracking-tighter">Normal $19.00</span>
+                            <span class="text-3xl font-black text-yellow-600 tracking-tighter">$7.00</span>
+                        </div>
+                        <button onclick="event.stopPropagation(); closeModal(); openPayModal();" class="btn-glow font-black py-3 px-6 rounded-xl text-xs uppercase tracking-widest i18n cursor-pointer" data-es="Obtener" data-en="Get it">Obtener</button>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Producto 2 -->
+            <article class="product-card rounded-3xl overflow-hidden flex flex-col group cursor-pointer"
+                onclick="openModal(1)"
+                data-img="images/producto2.jpg"
+                data-tag="Guía Técnica 002"
+                data-title-es="Prompts 3D" data-title-en="3D Prompts"
+                data-desc-es="Domina texturas complejas: desde roca volcánica hasta cristal iridiscente con calidad cinematográfica 8K."
+                data-desc-en="Master complex textures: from volcanic rock to iridescent crystal with cinematic 8K quality."
+                data-old="$15.00" data-price="$7.00"
+                data-features-es="Más de 50 prompts 3D,Texturas hiperrealistas,Calidad cinematográfica 8K,Guía de parámetros avanzados"
+                data-features-en="50+ 3D prompts,Hiperrealistic textures,Cinematic 8K quality,Advanced parameters guide">
+                <div class="aspect-[4/5] bg-neutral-900 relative overflow-hidden">
+                    <img src="images/producto2.jpg" alt="Prompts 3D Hiperrealismo" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 opacity-60 group-hover:opacity-100">
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent"></div>
+                    <div class="absolute bottom-6 left-8">
+                        <span class="text-[10px] font-bold tracking-widest uppercase text-yellow-600">Guía Técnica 002</span>
+                    </div>
+                </div>
+                <div class="p-8 flex-grow flex flex-col">
+                    <h2 class="text-2xl font-bold mb-3 tracking-tight uppercase font-heading">Prompts 3D</h2>
+                    <p class="text-gray-400 text-sm mb-8 leading-relaxed font-light flex-grow i18n"
+                        data-es="Domina texturas complejas: desde roca volcánica hasta cristal iridiscente con calidad cinematográfica 8K."
+                        data-en="Master complex textures: from volcanic rock to iridescent crystal with cinematic 8K quality.">
+                        Domina texturas complejas: desde roca volcánica hasta cristal iridiscente con calidad cinematográfica 8K.
+                    </p>
+                    <div class="flex items-center justify-between">
+                        <div class="flex flex-col">
+                            <span class="text-[10px] text-gray-600 line-through mb-1 uppercase tracking-tighter">Normal $15.00</span>
+                            <span class="text-3xl font-black text-yellow-600 tracking-tighter">$7.00</span>
+                        </div>
+                        <button onclick="event.stopPropagation(); closeModal(); openPayModal();" class="btn-glow font-black py-3 px-6 rounded-xl text-xs uppercase tracking-widest i18n cursor-pointer" data-es="Obtener" data-en="Get it">Obtener</button>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Producto 3 -->
+            <article class="product-card rounded-3xl overflow-hidden flex flex-col group cursor-pointer"
+                onclick="openModal(2)"
+                data-img="images/producto3.jpg"
+                data-tag="Guía Técnica 003"
+                data-title-es="Boceto & Sketch" data-title-en="Sketch & Drawing"
+                data-desc-es="Crea ilustraciones con trazo manual y estética de storyboard. El control definitivo sobre el dibujo anatómico."
+                data-desc-en="Create illustrations with manual strokes and storyboard aesthetics. The ultimate control over anatomical drawing."
+                data-old="$12.00" data-price="$7.00"
+                data-features-es="Técnicas de bocetado digital,Estilo storyboard profesional,Dibujo anatómico preciso,Prompts para ilustración"
+                data-features-en="Digital sketching techniques,Professional storyboard style,Precise anatomical drawing,Illustration prompts">
+                <div class="aspect-[4/5] bg-neutral-900 relative overflow-hidden">
+                    <img src="images/producto3.jpg" alt="Boceto & Sketch" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 opacity-60 group-hover:opacity-100">
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent"></div>
+                    <div class="absolute bottom-6 left-8">
+                        <span class="text-[10px] font-bold tracking-widest uppercase text-yellow-600">Guía Técnica 003</span>
+                    </div>
+                </div>
+                <div class="p-8 flex-grow flex flex-col">
+                    <h2 class="text-2xl font-bold mb-3 tracking-tight uppercase font-heading">Boceto & Sketch</h2>
+                    <p class="text-gray-400 text-sm mb-8 leading-relaxed font-light flex-grow i18n"
+                        data-es="Crea ilustraciones con trazo manual y estética de storyboard. El control definitivo sobre el dibujo anatómico."
+                        data-en="Create illustrations with manual strokes and storyboard aesthetics. The ultimate control over anatomical drawing.">
+                        Crea ilustraciones con trazo manual y estética de storyboard. El control definitivo sobre el dibujo anatómico.
+                    </p>
+                    <div class="flex items-center justify-between">
+                        <div class="flex flex-col">
+                            <span class="text-[10px] text-gray-600 line-through mb-1 uppercase tracking-tighter">Normal $12.00</span>
+                            <span class="text-3xl font-black text-yellow-600 tracking-tighter">$7.00</span>
+                        </div>
+                        <button onclick="event.stopPropagation(); closeModal(); openPayModal();" class="btn-glow font-black py-3 px-6 rounded-xl text-xs uppercase tracking-widest i18n cursor-pointer" data-es="Obtener" data-en="Get it">Obtener</button>
+                    </div>
+                </div>
+            </article>
+
+        </div>
+    </section>
+
+    <!-- Pie de Página -->
+    <footer class="py-16 px-6 border-t border-white/5">
+        <div class="max-w-6xl mx-auto">
+            <!-- Redes Sociales -->
+            <div class="flex flex-col items-center gap-6 mb-12">
+                <div class="flex flex-wrap justify-center gap-8 text-2xl">
+                    <a href="https://github.com/adolfogelabert" target="_blank" class="social-link" title="Github"><i class="fab fa-github"></i></a>
+                    <a href="https://www.behance.net/adolfogelabert" target="_blank" class="social-link" title="Behance"><i class="fab fa-behance"></i></a>
+                    <a href="https://www.youtube.com/@adolfojosegelabert" target="_blank" class="social-link" title="YouTube"><i class="fab fa-youtube"></i></a>
+                    <a href="https://www.linkedin.com/in/adolfo-gelabert/" target="_blank" class="social-link" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="https://wa.me/51930562562" target="_blank" class="social-link" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                    <a href="https://www.instagram.com/adolfogelabert/" target="_blank" class="social-link" title="Instagram"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            <!-- Links Legales -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center mb-12 footer-links">
+                <div>
+                    <h4 class="font-heading font-bold text-xs uppercase tracking-[0.2em] mb-4 text-white">Términos y Condiciones</h4>
+                    <p class="text-gray-500 text-xs leading-relaxed">Reglas de uso, compra y entrega de productos digitales y servicios.</p>
+                </div>
+                <div>
+                    <h4 class="font-heading font-bold text-xs uppercase tracking-[0.2em] mb-4 text-white">Política de Privacidad</h4>
+                    <p class="text-gray-500 text-xs leading-relaxed">Cómo recopilamos, usamos y protegemos tu información personal.</p>
+                </div>
+                <div>
+                    <h4 class="font-heading font-bold text-xs uppercase tracking-[0.2em] mb-4 text-white">Preguntas Frecuentes</h4>
+                    <p class="text-gray-500 text-xs leading-relaxed">Respuestas a las dudas más comunes sobre productos y servicios.</p>
+                </div>
+            </div>
+            <div class="flex flex-col md:flex-row justify-center gap-6 text-[10px] uppercase tracking-[0.3em] text-gray-500 mb-8">
+                <a href="terminos-condiciones.html" class="hover:text-yellow-600 transition">Términos y Condiciones</a>
+                <span class="hidden md:inline text-gray-700">|</span>
+                <a href="politica-privacidad.html" class="hover:text-yellow-600 transition">Política de Privacidad</a>
+                <span class="hidden md:inline text-gray-700">|</span>
+                <a href="preguntas-frecuentes.html" class="hover:text-yellow-600 transition">Preguntas Frecuentes</a>
+            </div>
+            <p class="text-[10px] uppercase tracking-[0.5em] opacity-20 text-center">© 2026 Lima, Perú - Adolfo Gelabert</p>
+        </div>
+    </footer>
+
+    <!-- Modal de Producto -->
+    <div class="modal-overlay" id="productModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()" aria-label="Cerrar">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-body">
+                <img id="modalImg" src="" alt="" class="modal-img">
+                <div class="modal-details">
+                    <span class="modal-tag" id="modalTag"></span>
+                    <h2 class="modal-title font-heading" id="modalTitle"></h2>
+                    <p class="modal-desc" id="modalDesc"></p>
+                    <ul class="modal-features" id="modalFeatures"></ul>
+                    <div class="modal-price">
+                        <div>
+                            <span class="old-price" id="modalOld"></span>
+                            <span class="current-price" id="modalPrice"></span>
+                        </div>
+                        <button onclick="closeModal(); openPayModal()" class="btn-glow font-black py-3 px-8 rounded-xl text-xs uppercase tracking-widest i18n" data-es="Comprar" data-en="Buy">Comprar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Pago -->
+    <div class="pay-overlay" id="payModal">
+        <div class="pay-content">
+            <button class="pay-close" onclick="closePayModal()" aria-label="Cerrar">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="pay-header">
+                <h3 class="i18n" data-es="Método de Pago" data-en="Payment Method">Método de Pago</h3>
+                <p class="i18n" data-es="Elige cómo quieres pagar" data-en="Choose how you want to pay">Elige cómo quieres pagar</p>
+            </div>
+
+            <div class="pay-tabs">
+                <button class="pay-tab active" onclick="showPayTab('stripe', this)"><i class="fab fa-stripe-s"></i> Stripe</button>
+                <button class="pay-tab" onclick="showPayTab('paypal', this)"><i class="fab fa-paypal"></i> PayPal</button>
+                <button class="pay-tab" onclick="showPayTab('yape', this)"><i class="fas fa-mobile-alt"></i> Yape</button>
+                <button class="pay-tab" onclick="showPayTab('plin', this)"><i class="fas fa-wallet"></i> Plin</button>
+                <button class="pay-tab" onclick="showPayTab('binance', this)"><i class="fab fa-bitcoin"></i> Binance</button>
+                <button class="pay-tab" onclick="showPayTab('transfer', this)"><i class="fas fa-university"></i> Transferencia</button>
+            </div>
+
+            <div class="pay-body">
+                <!-- Stripe -->
+                <div class="pay-panel active" id="panel-stripe">
+                    <div class="pay-icon"><i class="fab fa-cc-stripe"></i></div>
+                    <p class="pay-label i18n" data-es="Pago seguro con tarjeta" data-en="Secure card payment">Pago seguro con tarjeta</p>
+                    <p class="pay-note i18n" data-es="Serás redirigido a la pasarela de pago segura de Stripe." data-en="You will be redirected to Stripe's secure payment gateway.">Serás redirigido a la pasarela de pago segura de Stripe.</p>
+                    <br>
+                    <a href="TU_LINK_STRIPE" target="_blank" class="pay-btn pay-btn-stripe"><i class="fab fa-stripe-s"></i> Pagar con Stripe</a>
+                    <p class="pay-note">Acepta Visa, Mastercard, AMEX</p>
+                </div>
+
+                <!-- PayPal -->
+                <div class="pay-panel" id="panel-paypal">
+                    <div class="pay-icon"><i class="fab fa-paypal"></i></div>
+                    <p class="pay-label i18n" data-es="Pago con PayPal" data-en="PayPal payment">Pago con PayPal</p>
+                    <p class="pay-note i18n" data-es="Haz clic para pagar de forma segura con tu cuenta PayPal." data-en="Click to pay securely with your PayPal account.">Haz clic para pagar de forma segura con tu cuenta PayPal.</p>
+                    <br>
+                    <a href="TU_LINK_PAYPAL" target="_blank" class="pay-btn pay-btn-paypal"><i class="fab fa-paypal"></i> Pagar con PayPal</a>
+                </div>
+
+                <!-- Yape -->
+                <div class="pay-panel" id="panel-yape">
+                    <div class="pay-icon"><i class="fas fa-mobile-alt"></i></div>
+                    <p class="pay-label">YAPE</p>
+                    <div class="pay-qr">
+                        <img src="images/qr-yape-placeholder.png" alt="QR Yape">
+                    </div>
+                    <p class="pay-label">Celular Yape</p>
+                    <div class="pay-value" onclick="copyText(this)">+51 999 999 999</div>
+                    <button class="pay-btn pay-btn-copy" onclick="copyText(document.querySelector('#panel-yape .pay-value'))"><i class="fas fa-copy"></i> Copiar número</button>
+                    <p class="pay-note i18n" data-es="Envía el comprobante a nuestro WhatsApp." data-en="Send the receipt to our WhatsApp.">Envía el comprobante a nuestro WhatsApp.</p>
+                </div>
+
+                <!-- Plin -->
+                <div class="pay-panel" id="panel-plin">
+                    <div class="pay-icon"><i class="fas fa-wallet"></i></div>
+                    <p class="pay-label">PLIN</p>
+                    <div class="pay-qr">
+                        <img src="images/qr-plin-placeholder.png" alt="QR Plin">
+                    </div>
+                    <p class="pay-label">Celular Plin</p>
+                    <div class="pay-value" onclick="copyText(this)">+51 999 999 999</div>
+                    <button class="pay-btn pay-btn-copy" onclick="copyText(document.querySelector('#panel-plin .pay-value'))"><i class="fas fa-copy"></i> Copiar número</button>
+                    <p class="pay-note i18n" data-es="Envía el comprobante a nuestro WhatsApp." data-en="Send the receipt to our WhatsApp.">Envía el comprobante a nuestro WhatsApp.</p>
+                </div>
+
+                <!-- Binance -->
+                <div class="pay-panel" id="panel-binance">
+                    <div class="pay-icon"><i class="fab fa-bitcoin"></i></div>
+                    <p class="pay-label">BINANCE PAY</p>
+                    <div class="pay-qr">
+                        <img src="images/qr-binance-placeholder.png" alt="QR Binance">
+                    </div>
+                    <p class="pay-label">Wallet Address (USDT / BTC / BUSD)</p>
+                    <div class="pay-value" onclick="copyText(this)">TU_WALLET_ADDRESS_AQUI</div>
+                    <button class="pay-btn pay-btn-copy" onclick="copyText(document.querySelector('#panel-binance .pay-value'))"><i class="fas fa-copy"></i> Copiar dirección</button>
+                    <p class="pay-note i18n" data-es="Red: ERC-20 o BEP-20. Envía el comprobante a nuestro WhatsApp." data-en="Network: ERC-20 or BEP-20. Send the receipt to our WhatsApp.">Red: ERC-20 o BEP-20. Envía el comprobante a nuestro WhatsApp.</p>
+                </div>
+
+                <!-- Transferencia Bancaria -->
+                <div class="pay-panel" id="panel-transfer">
+                    <div class="pay-icon"><i class="fas fa-university"></i></div>
+                    <p class="pay-label i18n" data-es="Transferencia Bancaria" data-en="Bank Transfer">Transferencia Bancaria</p>
+                    <div style="text-align:left; padding:12px; background:rgba(255,255,255,0.05); border-radius:10px; border:1px solid #262626; margin-bottom:16px;">
+                        <p style="font-size:0.75rem; color:#9ca3af; margin-bottom:4px;">Banco</p>
+                        <p style="font-size:0.9rem; font-weight:700; margin-bottom:12px;">TU_BANCO</p>
+                        <p style="font-size:0.75rem; color:#9ca3af; margin-bottom:4px;">Titular</p>
+                        <p style="font-size:0.9rem; font-weight:700; margin-bottom:12px;">TU_NOMBRE_COMPLETO</p>
+                        <p style="font-size:0.75rem; color:#9ca3af; margin-bottom:4px;">Cuenta</p>
+                        <p style="font-size:0.9rem; font-weight:700; margin-bottom:12px;">TU_NUMERO_DE_CUENTA</p>
+                        <p style="font-size:0.75rem; color:#9ca3af; margin-bottom:4px;">CCI</p>
+                        <p style="font-size:0.9rem; font-weight:700;">TU_CCI</p>
+                    </div>
+                    <button class="pay-btn pay-btn-copy" onclick="copyText(document.querySelector('#panel-transfer p:nth-child(6)'))"><i class="fas fa-copy"></i> Copiar datos</button>
+                    <p class="pay-note i18n" data-es="Envía el comprobante a nuestro WhatsApp para confirmar tu compra." data-en="Send the receipt to our WhatsApp to confirm your purchase.">Envía el comprobante a nuestro WhatsApp para confirmar tu compra.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Botón Back to Top -->
+    <button id="backToTop" onclick="smoothScrollTo(0, 1200)" class="fixed bottom-8 right-8 w-12 h-12 bg-yellow-600 text-black rounded-full shadow-2xl flex items-center justify-center z-50 hover:bg-white transition-all transform hover:scale-110">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Scroll suave personalizado
+            function smoothScrollTo(targetY, duration) {
+                var startY = window.scrollY;
+                var distance = targetY - startY;
+                var startTime = null;
+
+                function easeInOutQuart(t) {
+                    return t < 0.5
+                        ? 8 * t * t * t * t
+                        : 1 - Math.pow(-2 * t + 2, 4) / 2;
+                }
+
+                function step(timestamp) {
+                    if (!startTime) startTime = timestamp;
+                    var elapsed = timestamp - startTime;
+                    var progress = Math.min(elapsed / duration, 1);
+                    window.scrollTo(0, startY + distance * easeInOutQuart(progress));
+                    if (progress < 1) requestAnimationFrame(step);
+                }
+                requestAnimationFrame(step);
+            }
+
+            window.smoothScrollTo = smoothScrollTo;
+
+            // --- Modales ---
+            var productModal = document.getElementById('productModal');
+            var payModal = document.getElementById('payModal');
+            var cards = document.querySelectorAll('.product-card');
+            var currentLang = localStorage.getItem('preferredLang') || 'es';
+
+            function openModal(index) {
+                var card = cards[index];
+                if (!card || !productModal) return;
+
+                document.getElementById('modalImg').src = card.dataset.img;
+                document.getElementById('modalImg').alt = card.dataset.titleEs;
+                document.getElementById('modalTag').textContent = card.dataset.tag;
+                document.getElementById('modalTitle').textContent = currentLang === 'es' ? card.dataset.titleEs : card.dataset.titleEn;
+                document.getElementById('modalDesc').textContent = currentLang === 'es' ? card.dataset.descEs : card.dataset.descEn;
+                document.getElementById('modalOld').textContent = card.dataset.old;
+                document.getElementById('modalPrice').textContent = card.dataset.price;
+
+                var features = currentLang === 'es' ? card.dataset.featuresEs.split(',') : card.dataset.featuresEn.split(',');
+                document.getElementById('modalFeatures').innerHTML = features.map(function(f) {
+                    return '<li><i class="fas fa-check-circle"></i> ' + f.trim() + '</li>';
+                }).join('');
+
+                productModal.classList.add('open');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeModal() {
+                if (productModal) productModal.classList.remove('open');
+                document.body.style.overflow = '';
+            }
+
+            function openPayModal() {
+                if (payModal) payModal.classList.add('open');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closePayModal() {
+                if (payModal) payModal.classList.remove('open');
+                document.body.style.overflow = '';
+            }
+
+            // Cerrar modales con click afuera
+            if (productModal) {
+                productModal.addEventListener('click', function(e) {
+                    if (e.target === productModal) closeModal();
+                });
+            }
+            if (payModal) {
+                payModal.addEventListener('click', function(e) {
+                    if (e.target === payModal) closePayModal();
+                });
+            }
+
+            // Cerrar con Escape
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    if (payModal && payModal.classList.contains('open')) {
+                        closePayModal();
+                    } else if (productModal && productModal.classList.contains('open')) {
+                        closeModal();
+                    }
+                }
+            });
+
+            // Tabs de pago
+            function showPayTab(method, el) {
+                document.querySelectorAll('.pay-tab').forEach(function(t) { t.classList.remove('active'); });
+                document.querySelectorAll('.pay-panel').forEach(function(p) { p.classList.remove('active'); });
+                el.classList.add('active');
+                var panel = document.getElementById('panel-' + method);
+                if (panel) panel.classList.add('active');
+            }
+
+            // Copiar texto
+            function copyText(el) {
+                var text = el.textContent || el.innerText;
+                navigator.clipboard.writeText(text).then(function() {
+                    el.style.borderColor = '#ca8a04';
+                    setTimeout(function() { el.style.borderColor = ''; }, 1000);
+                });
+            }
+
+            // Hacer funciones globales para los onclick del HTML
+            window.openModal = openModal;
+            window.closeModal = closeModal;
+            window.openPayModal = openPayModal;
+            window.closePayModal = closePayModal;
+            window.showPayTab = showPayTab;
+            window.copyText = copyText;
+
+            // --- Internacionalización ---
+            function changeLang(lang) {
+                currentLang = lang;
+                document.querySelectorAll('.i18n').forEach(function(el) {
+                    var text = el.getAttribute('data-' + lang);
+                    if (text) {
+                        if (text.indexOf('<br>') !== -1) {
+                            el.innerHTML = text;
+                        } else {
+                            el.innerText = text;
+                        }
+                    }
+                });
+                document.getElementById('btn-es').classList.toggle('active', lang === 'es');
+                document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+                localStorage.setItem('preferredLang', lang);
+            }
+
+            window.changeLang = changeLang;
+
+            // Back to Top
+            var backToTopBtn = document.getElementById('backToTop');
+            window.onscroll = function() {
+                if (document.body.scrollTop > 500 || document.documentElement.scrollTop > 500) {
+                    backToTopBtn.classList.add('show');
+                } else {
+                    backToTopBtn.classList.remove('show');
+                }
+            };
+
+            // Init
+            changeLang(currentLang);
+
+            // Menú hamburguesa
+            var hamburgerBtn = document.getElementById('hamburgerBtn');
+            var mobileMenu = document.getElementById('mobile-menu');
+            if (hamburgerBtn && mobileMenu) {
+                hamburgerBtn.addEventListener('click', function() {
+                    var isOpen = mobileMenu.classList.toggle('open');
+                    hamburgerBtn.classList.toggle('open', isOpen);
+                    hamburgerBtn.setAttribute('aria-label', isOpen ? 'Cerrar menú' : 'Abrir menú');
+                    document.body.style.overflow = isOpen ? 'hidden' : '';
+                });
+                mobileMenu.querySelectorAll('a').forEach(function(link) {
+                    link.addEventListener('click', function() {
+                        mobileMenu.classList.remove('open');
+                        hamburgerBtn.classList.remove('open');
+                        document.body.style.overflow = '';
+                    });
+                });
+            }
+
+            // Scroll suave
+            document.querySelectorAll('a[href^="#"]').forEach(function(link) {
+                link.addEventListener('click', function(e) {
+                    var hash = this.getAttribute('href');
+                    if (hash === '#') return;
+                    var target = document.querySelector(hash);
+                    if (!target) return;
+                    e.preventDefault();
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                });
+            });
+        });
+    </script>
+
+    <!-- Cookie Consent -->
+    <div id="cookie-consent" class="fixed bottom-0 left-0 w-full z-50 p-4 md:p-6 transform translate-y-full opacity-0 transition-all duration-500" style="display:none;">
+        <div class="max-w-4xl mx-auto bg-[#161616] border border-[#262626] rounded-2xl p-6 md:p-8 shadow-2xl">
+            <div class="flex flex-col md:flex-row items-start md:items-center gap-6">
+                <div class="flex-1">
+                    <p class="text-sm text-gray-300 leading-relaxed">
+                        Este sitio utiliza cookies técnicas para mejorar la experiencia de navegación. Al continuar, aceptas nuestra 
+                        <a href="politica-privacidad.html" class="text-yellow-600 hover:text-yellow-500 underline transition">Política de Privacidad</a>.
+                    </p>
+                </div>
+                <button onclick="acceptCookies()" class="flex-shrink-0 bg-yellow-600 text-black px-6 py-2.5 rounded text-xs font-black uppercase tracking-widest hover:bg-white transition">
+                    Aceptar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function acceptCookies() {
+            localStorage.setItem('cookiesAccepted', 'true');
+            var banner = document.getElementById('cookie-consent');
+            banner.style.transform = 'translateY(100%)';
+            banner.style.opacity = '0';
+            setTimeout(function() { banner.style.display = 'none'; }, 500);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!localStorage.getItem('cookiesAccepted')) {
+                var banner = document.getElementById('cookie-consent');
+                banner.style.display = 'block';
+                setTimeout(function() {
+                    banner.style.transform = 'translateY(0)';
+                    banner.style.opacity = '1';
+                }, 1000);
+            }
+        });
+    </script>
+</body>
+</html>

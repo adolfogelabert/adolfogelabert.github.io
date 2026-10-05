@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adolfo Gelabert | Preguntas Frecuentes</title>
+    <meta name="description" content="Preguntas frecuentes sobre productos digitales, servicios, pagos y entregas de Adolfo Gelabert.">
+    <meta name="robots" content="index, follow">
+    <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Outfit:wght@200;400;900&display=swap');
+        :root { --accent: #ca8a04; --bg-dark: #0a0a0a; --card-dark: #161616; }
+        body { font-family: 'Outfit', sans-serif; background-color: var(--bg-dark); color: #fff; overflow-x: hidden; }
+        h1, h2, h3, .font-heading { font-family: 'Space Grotesk', sans-serif; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-dark); }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+        .lang-btn { border: 1px solid rgba(255,255,255,0.1); transition: all 0.3s ease; }
+        .lang-btn.active { background: var(--accent); color: black; border-color: var(--accent); }
+        .social-link { transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); opacity: 0.7; }
+        .social-link:hover { opacity: 1; color: var(--accent); transform: scale(1.25) translateY(-2px); }
+        .faq-card { background: var(--card-dark); border: 1px solid #262626; border-radius: 1.5rem; margin-bottom: 1rem; transition: border-color 0.3s ease; overflow: hidden; }
+        .faq-card:hover { border-color: var(--accent); }
+        .faq-question { padding: 1.5rem 2rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: background 0.3s ease; }
+        .faq-question:hover { background: rgba(202, 138, 4, 0.05); }
+        .faq-question h3 { font-size: 1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #fff; margin: 0; transition: color 0.3s ease; }
+        .faq-card.active .faq-question h3 { color: var(--accent); }
+        .faq-icon { font-size: 1.2rem; color: var(--accent); transition: transform 0.3s ease; }
+        .faq-card.active .faq-icon { transform: rotate(45deg); }
+        .faq-answer { padding: 0 2rem; max-height: 0; overflow: hidden; transition: all 0.4s ease; }
+        .faq-card.active .faq-answer { padding: 0 2rem 1.5rem 2rem; max-height: 500px; }
+        .faq-answer p { font-size: 0.9rem; color: #9ca3af; line-height: 1.8; margin: 0; }
+        .faq-answer ul { list-style: none; padding: 0; margin: 8px 0 0 0; }
+        .faq-answer li { padding: 4px 0; padding-left: 20px; position: relative; font-size: 0.9rem; color: #9ca3af; line-height: 1.8; }
+        .faq-answer li::before { content: ''; position: absolute; left: 0; top: 12px; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+        #backToTop { opacity: 0; visibility: hidden; transition: all 0.3s ease; }
+        #backToTop.show { opacity: 1; visibility: visible; }
+        .hamburger { display: none; flex-direction: column; justify-content: center; gap: 5px; width: 36px; height: 36px; cursor: pointer; background: transparent; border: none; padding: 4px; z-index: 200; }
+        .hamburger span { display: block; height: 2px; width: 100%; background: #fff; border-radius: 2px; transition: all 0.35s ease; transform-origin: center; }
+        .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+        .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+        #mobile-menu { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: rgba(10,10,10,0.97); backdrop-filter: blur(16px); z-index: 100; flex-direction: column; justify-content: center; align-items: center; gap: 40px; }
+        #mobile-menu.open { display: flex; }
+        #mobile-menu a { font-size: 1.6rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.15em; color: #fff; text-decoration: none; opacity: 0.7; transition: color 0.2s ease, opacity 0.2s ease; }
+        #mobile-menu a:hover { color: var(--accent); opacity: 1; }
+        @media (max-width: 767px) { .hamburger { display: flex; } }
+        .footer-links a { transition: color 0.3s ease; }
+        .footer-links a:hover { color: var(--accent); }
+    </style>
+</head>
+<body>
+
+    <!-- Navegación -->
+    <nav class="fixed top-0 w-full z-50 px-6 py-4 flex justify-between items-center backdrop-blur-md border-b border-white/5">
+        <div class="flex items-center gap-2">
+            <a href="index.html"><img src="images/icon_logo_cv_512px.svg" class="w-8 h-8" alt=""></a>
+            <a href="index.html"><span class="font-heading font-bold tracking-widest text-sm uppercase">Adolfo Gelabert</span></a>
+        </div>
+        <div class="hidden md:flex gap-8 text-xs font-bold tracking-[0.2em] uppercase opacity-70">
+            <a href="index.html" class="hover:text-yellow-500 transition">CV</a>
+            <a href="ventas.html" class="hover:text-yellow-600 transition">Tienda</a>
+            <a href="terminos.html" class="hover:text-yellow-600 transition">Términos</a>
+        </div>
+        <div class="flex items-center gap-4">
+            <div class="flex bg-white/5 p-1 rounded-lg border border-white/10 text-[10px] font-bold">
+                <button onclick="changeLang('es')" id="btn-es" class="lang-btn px-2 py-1 rounded active">ES</button>
+                <button onclick="changeLang('en')" id="btn-en" class="lang-btn px-2 py-1 rounded">EN</button>
+            </div>
+            <a href="https://wa.me/51930562562" target="_blank" class="hidden md:inline-block bg-yellow-600 text-black px-4 py-2 rounded text-xs font-black uppercase hover:bg-white transition">Hablemos</a>
+            <button class="hamburger" id="hamburgerBtn" aria-label="Abrir menú"><span></span><span></span><span></span></button>
+        </div>
+    </nav>
+
+    <!-- Menú Móvil -->
+    <div id="mobile-menu" role="dialog" aria-modal="true">
+        <a href="index.html">CV</a>
+        <a href="ventas.html">Tienda</a>
+        <a href="terminos.html">Términos</a>
+        <a href="https://wa.me/51930562562" target="_blank" style="color:#ffcc00;opacity:1;font-size:1rem;">Hablemos</a>
+    </div>
+
+    <!-- Hero -->
+    <section class="min-h-[40vh] flex flex-col justify-center items-center relative px-6 py-32 text-center">
+        <div class="absolute top-1/4 left-10 w-64 h-64 bg-yellow-600/10 blur-[120px] rounded-full"></div>
+        <span class="inline-block px-4 py-1 rounded-full border border-yellow-600/30 text-yellow-600 text-[10px] font-bold uppercase tracking-[0.3em] mb-6">Ayuda</span>
+        <h1 class="text-5xl md:text-7xl font-black mb-6 tracking-tighter uppercase">
+            Preguntas<br><span class="text-yellow-600 italic">Frecuentes</span>
+        </h1>
+        <p class="max-w-2xl mx-auto text-lg text-gray-400 font-light leading-relaxed">Encuentra respuestas a las dudas más comunes sobre nuestros productos digitales y servicios.</p>
+    </section>
+
+    <!-- Contenido -->
+    <main class="max-w-4xl mx-auto px-6 pb-32">
+
+        <!-- Compra y Productos Digitales -->
+        <h2 class="font-heading text-xl font-bold uppercase tracking-widest text-yellow-600 mb-6">Compra y Productos Digitales</h2>
+
+        <div class="faq-card">
+            <div class="faq-question" onclick="toggleFaq(this)">
+                <h3>¿Cómo compro un producto digital?</h3>
+                <span class="faq-icon">+</span>
+            </div>
+            <div class="faq-answer">
+                <p>Selecciona el producto que deseas en nuestra tienda, haz clic en "Comprar" y elige tu método de pago preferido (Stripe, PayPal, Yape, Plin, Binance o transferencia bancaria). Una vez confirmado el pago, recibirás un enlace de descarga por correo electrónico.</p>
+            </div>
+        </div>
+
+        <div class="faq-card">
+            <div class="faq-question" onclick="toggleFaq(this)">
+                <h3>¿Cómo recibo mi producto digital?</h3>
+                <span class="faq-icon">+</span>
+            </div>
+            <div class="faq-answer">
+                <p>Después de completar el pago, recibirás un correo electrónico con un enlace de descarga. El enlace es válido por 30 días naturales. Te recomendamos descargar y resguardar el archivo inmediatamente.</p>
+            </div>
+        </div>
+
+        <div class="faq-card">
+            <div class="faq-question" onclick="toggleFaq(this)">
+                <h3>¿Puedo pedir un reembolso?</h3>
+                <span class="faq-icon">+</span>
+            </div>
+            <div class="faq-answer">
+                <p>Debido a la naturaleza digital de nuestros productos, no ofrecemos reembolsos una vez completada la descarga. Sin embargo, si el archivo está defectuoso o no se puede descargar, contáctanos dentro de las 48 horas posteriores a la compra para resolver el problema.</p>
+            </div>
+        </div>
+
+        <div class="faq-card">
+            <div class="faq-question" onclick="toggleFaq(this)">
+                <h3>¿Qué incluyen los productos digitales?</h3>
+                <span class="faq-icon">+</span>
+            </div>
+            <div class="faq-answer">
+                <p>Cada producto incluye diferente contenido según su descripción. Por ejemplo:</p>
+                <ul>
+                    <li><strong>Del Lente al Lienzo:</strong> Prompt Maestro estructurado, guía paso a paso, soporte con IA.</li>
+                    <li><strong>Prompts 3D:</strong> Más de 50 prompts, técnicas de texturas, guía de parámetros.</li>
+                    <li><strong>Boceto & Sketch:</strong> Técnicas de bocetado, estilo storyboard, prompts para ilustración.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Métodos de Pago -->
+        <h2 class="font-heading text-xl font-bold uppercase tracking-widest text-yellow-600 mb-6 mt-12">Métodos de Pago</h2>
+
+        <div class="faq-card">
+            <div class="faq-question" onclick="toggleFaq(this)">
+                <h3>¿Qué métodos de pago aceptan?</h3>
+                <span class="faq-icon">+</span>
+            </div>
+            <div class="faq-answer">
+                <p>Aceptamos múltiples métodos de pago para tu comodidad:</p>
+                <ul>
+                    <li><strong>Stripe:</strong> Tarjetas de crédito y débito (Visa, Mastercard, American Express).</li>
+                    <li><strong>PayPal:</strong> Pago seguro con tu cuenta PayPal o tarjeta asociada.</li>
+                    <li><strong>Yape:</strong> Transferencia inmediata vía Yape.</li>
+                    <li><strong>Plin:</strong> Transferencia inmediata vía Plin.</li>
+                    <li><strong>Binance QR:</strong> Pago con criptomonedas vía Binance.</li>
+                    <li><strong>Transferencia bancaria:</strong> Depósito directo a cuenta bancaria.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="faq-card">
+            <div class="faq-question" onclick="toggleFaq(this)">
+                <h3>¿Los precios están en dólares?</h3>
+                <span class="faq-icon">+</span>
+            </div>
+            <div class="faq-answer">
+                <p>Sí, todos nuestros precios están expresados en dólares estadounidenses (USD). Si realizas el pago por transferencia bancaria, puedes consultar el tipo de cambio del día en tu banco.</p>
+            </div>
+        </div>
+
+        <!-- Servicios -->
+        <h2 class="font-heading text-xl font-bold uppercase tracking-widest text-yellow-600 mb-6 mt-12">Servicios</h2>
+
+        <div class="faq-card">
+            <div class="faq-question" onclick="toggleFaq(this)">
+                <h3>¿Cómo agendo una sesión de consultoría?</h3>
+                <span class="faq-icon">+</span>
+            </div>
+            <div class="faq-answer">
+                <p>Contáctanos por correo electrónico (adolfo.1974@gmail.com) o WhatsApp (+51 930 562 562) para coordinar una fecha y hora. Una vez confirmado el pago, agendaremos la sesión en un horario que te convenga.</p>
+            </div>
+        </div>
+
+        <div class="faq-card">
+            <div class="faq-question" onclick="toggleFaq(this)">
+                <h3>¿Cuánto dura una sesión de consultoría?</h3>
+                <span class="faq-icon">+</span>
+            </div>
+            <div class="faq-answer">
+                <p>Las sesiones estándar tienen una duración de 1 hora. Si necesitas más tiempo, podemos acordar una sesión extendida con un costo adicional previo acuerdo por escrito.</p>
+            </div>
+        </div>
+
+        <div class="faq-card">
+            <div class="faq-question" onclick="toggleFaq(this)">
+                <h3>¿Puedo cancelar o reprogramar una sesión?</h3>
+                <span class="faq-icon">+</span>
+            </div>
+            <div class="faq-answer">
+                <p>Sí, puedes cancelar o reprogramar una sesión con al menos 24 horas de anticipación. Las cancelaciones con menos de 24 horas no tienen reembolso.</p>
+            </div>
+        </div>
+
+        <!-- Soporte -->
+        <h2 class="font-heading text-xl font-bold uppercase tracking-widest text-yellow-600 mb-6 mt-12">Soporte</h2>
+
+        <div class="faq-card">
+            <div class="faq-question" onclick="toggleFaq(this)">
+                <h3>¿Tengo algún problema con mi descarga?</h3>
+                <span class="faq-icon">+</span>
+            </div>
+            <div class="faq-answer">
+                <p>Si tienes problemas para descargar tu producto, primero verifica tu conexión a internet. Si el problema persiste, contáctanos por correo electrónico o WhatsApp con tu número de pedido y te enviaremos un nuevo enlace de descarga.</p>
+            </div>
+        </div>
+
+        <div class="faq-card">
+            <div class="faq-question" onclick="toggleFaq(this)">
+                <h3>¿Cómo contacto al soporte?</h3>
+                <span class="faq-icon">+</span>
+            </div>
+            <div class="faq-answer">
+                <p>Puedes contactarnos a través de:</p>
+                <ul>
+                    <li><strong>Email:</strong> adolfo.1974@gmail.com</li>
+                    <li><strong>WhatsApp:</strong> +51 930 562 562</li>
+                    <li><strong>Instagram:</strong> @adolfogelabert</li>
+                </ul>
+                <p>Respondemos en un plazo máximo de 24 horas hábiles.</p>
+            </div>
+        </div>
+
+        <!-- Llamado a la acción -->
+        <div class="mt-16 text-center">
+            <p class="text-gray-400 mb-6">¿No encontraste lo que buscabas?</p>
+            <a href="https://wa.me/51930562562" target="_blank" class="inline-block bg-yellow-600 text-black px-8 py-3 rounded text-sm font-black uppercase hover:bg-white transition">Contáctanos Directamente</a>
+        </div>
+
+    </main>
+
+    <!-- Pie de Página -->
+    <footer class="py-16 px-6 border-t border-white/5">
+        <div class="max-w-6xl mx-auto">
+            <!-- Redes Sociales -->
+            <div class="flex flex-col items-center gap-6 mb-12">
+                <div class="flex flex-wrap justify-center gap-8 text-2xl">
+                    <a href="https://github.com/adolfogelabert" target="_blank" class="social-link" title="Github"><i class="fab fa-github"></i></a>
+                    <a href="https://www.behance.net/adolfogelabert" target="_blank" class="social-link" title="Behance"><i class="fab fa-behance"></i></a>
+                    <a href="https://www.youtube.com/@adolfojosegelabert" target="_blank" class="social-link" title="YouTube"><i class="fab fa-youtube"></i></a>
+                    <a href="https://www.linkedin.com/in/adolfo-gelabert/" target="_blank" class="social-link" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="https://wa.me/51930562562" target="_blank" class="social-link" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                    <a href="https://www.instagram.com/adolfogelabert/" target="_blank" class="social-link" title="Instagram"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            <!-- Links Legales -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center mb-12 footer-links">
+                <div>
+                    <h4 class="font-heading font-bold text-xs uppercase tracking-[0.2em] mb-4 text-white">Términos y Condiciones</h4>
+                    <p class="text-gray-500 text-xs leading-relaxed">Reglas de uso, compra y entrega de productos digitales y servicios.</p>
+                </div>
+                <div>
+                    <h4 class="font-heading font-bold text-xs uppercase tracking-[0.2em] mb-4 text-white">Política de Privacidad</h4>
+                    <p class="text-gray-500 text-xs leading-relaxed">Cómo recopilamos, usamos y protegemos tu información personal.</p>
+                </div>
+                <div>
+                    <h4 class="font-heading font-bold text-xs uppercase tracking-[0.2em] mb-4 text-white">Preguntas Frecuentes</h4>
+                    <p class="text-gray-500 text-xs leading-relaxed">Respuestas a las dudas más comunes sobre productos y servicios.</p>
+                </div>
+            </div>
+            <div class="flex flex-col md:flex-row justify-center gap-6 text-[10px] uppercase tracking-[0.3em] text-gray-500 mb-8">
+                <a href="terminos-condiciones.html" class="hover:text-yellow-600 transition">Términos y Condiciones</a>
+                <span class="hidden md:inline text-gray-700">|</span>
+                <a href="politica-privacidad.html" class="hover:text-yellow-600 transition">Política de Privacidad</a>
+                <span class="hidden md:inline text-gray-700">|</span>
+                <a href="preguntas-frecuentes.html" class="hover:text-yellow-600 transition">Preguntas Frecuentes</a>
+            </div>
+            <p class="text-[10px] uppercase tracking-[0.5em] opacity-20 text-center">© 2026 Lima, Perú - Adolfo Gelabert</p>
+        </div>
+    </footer>
+
+    <!-- Botón Back to Top -->
+    <button id="backToTop" onclick="smoothScrollTo(0, 1200)" class="fixed bottom-8 right-8 w-12 h-12 bg-yellow-600 text-black rounded-full shadow-2xl flex items-center justify-center z-50 hover:bg-white transition-all transform hover:scale-110">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            function smoothScrollTo(targetY, duration) {
+                var startY = window.scrollY;
+                var distance = targetY - startY;
+                var startTime = null;
+                function easeInOutQuart(t) { return t < 0.5 ? 8 * t * t * t * t : 1 - Math.pow(-2 * t + 2, 4) / 2; }
+                function step(timestamp) {
+                    if (!startTime) startTime = timestamp;
+                    var elapsed = timestamp - startTime;
+                    var progress = Math.min(elapsed / duration, 1);
+                    window.scrollTo(0, startY + distance * easeInOutQuart(progress));
+                    if (progress < 1) requestAnimationFrame(step);
+                }
+                requestAnimationFrame(step);
+            }
+            window.smoothScrollTo = smoothScrollTo;
+
+            function changeLang(lang) {
+                document.querySelectorAll('.i18n').forEach(function(el) {
+                    var text = el.getAttribute('data-' + lang);
+                    if (text) {
+                        if (text.indexOf('<br>') !== -1) { el.innerHTML = text; } else { el.innerText = text; }
+                    }
+                });
+                document.getElementById('btn-es').classList.toggle('active', lang === 'es');
+                document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+                localStorage.setItem('preferredLang', lang);
+            }
+            window.changeLang = changeLang;
+            var savedLang = localStorage.getItem('preferredLang') || 'es';
+            changeLang(savedLang);
+
+            var backToTopBtn = document.getElementById('backToTop');
+            window.onscroll = function() {
+                if (document.body.scrollTop > 500 || document.documentElement.scrollTop > 500) { backToTopBtn.classList.add('show'); } else { backToTopBtn.classList.remove('show'); }
+            };
+
+            var hamburgerBtn = document.getElementById('hamburgerBtn');
+            var mobileMenu = document.getElementById('mobile-menu');
+            if (hamburgerBtn && mobileMenu) {
+                hamburgerBtn.addEventListener('click', function() {
+                    var isOpen = mobileMenu.classList.toggle('open');
+                    hamburgerBtn.classList.toggle('open', isOpen);
+                    hamburgerBtn.setAttribute('aria-label', isOpen ? 'Cerrar menú' : 'Abrir menú');
+                    document.body.style.overflow = isOpen ? 'hidden' : '';
+                });
+                mobileMenu.querySelectorAll('a').forEach(function(link) {
+                    link.addEventListener('click', function() {
+                        mobileMenu.classList.remove('open');
+                        hamburgerBtn.classList.remove('open');
+                        document.body.style.overflow = '';
+                    });
+                });
+            }
+        });
+
+        function toggleFaq(element) {
+            var card = element.parentElement;
+            var allCards = document.querySelectorAll('.faq-card');
+            allCards.forEach(function(c) {
+                if (c !== card) c.classList.remove('active');
+            });
+            card.classList.toggle('active');
+        }
+    </script>
+
+    <!-- Cookie Consent -->
+    <div id="cookie-consent" class="fixed bottom-0 left-0 w-full z-50 p-4 md:p-6 transform translate-y-full opacity-0 transition-all duration-500" style="display:none;">
+        <div class="max-w-4xl mx-auto bg-[#161616] border border-[#262626] rounded-2xl p-6 md:p-8 shadow-2xl">
+            <div class="flex flex-col md:flex-row items-start md:items-center gap-6">
+                <div class="flex-1">
+                    <p class="text-sm text-gray-300 leading-relaxed">
+                        Este sitio utiliza cookies técnicas para mejorar la experiencia de navegación. Al continuar, aceptas nuestra 
+                        <a href="politica-privacidad.html" class="text-yellow-600 hover:text-yellow-500 underline transition">Política de Privacidad</a>.
+                    </p>
+                </div>
+                <button onclick="acceptCookies()" class="flex-shrink-0 bg-yellow-600 text-black px-6 py-2.5 rounded text-xs font-black uppercase tracking-widest hover:bg-white transition">
+                    Aceptar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function acceptCookies() {
+            localStorage.setItem('cookiesAccepted', 'true');
+            var banner = document.getElementById('cookie-consent');
+            banner.style.transform = 'translateY(100%)';
+            banner.style.opacity = '0';
+            setTimeout(function() { banner.style.display = 'none'; }, 500);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!localStorage.getItem('cookiesAccepted')) {
+                var banner = document.getElementById('cookie-consent');
+                banner.style.display = 'block';
+                setTimeout(function() {
+                    banner.style.transform = 'translateY(0)';
+                    banner.style.opacity = '1';
+                }, 1000);
+            }
+        });
+    </script>
+</body>
+</html>
