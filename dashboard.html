@@ -1932,12 +1932,22 @@
       currentProductId = null;
     }
 
+    // Borradores de QR (dataURL) hasta guardar por método
+    let qrDraft = {};
+
+    function pintarQRGuardado(previewId, dataUrl) {
+      if (dataUrl) {
+        document.getElementById(previewId).innerHTML = `<img src="${dataUrl}" class="w-full h-full object-contain rounded" alt="QR Code">`;
+      }
+    }
+
     // Preview QR image upload
     function previewQR(input, previewId) {
       if (input.files && input.files[0]) {
         const reader = new FileReader();
         reader.onload = function(e) {
           document.getElementById(previewId).innerHTML = `<img src="${e.target.result}" class="w-full h-full object-contain rounded" alt="QR Code">`;
+          qrDraft[previewId] = e.target.result;
         };
         reader.readAsDataURL(input.files[0]);
       }
@@ -1960,6 +1970,10 @@
       document.getElementById('pay-transf-account').value = config.transfer?.account || '';
       document.getElementById('pay-transf-cci').value = config.transfer?.cci || '';
       document.getElementById('pay-alt-link').value = config.altLink || '';
+      qrDraft = {};
+      pintarQRGuardado('yape-preview', config.yape?.qr);
+      pintarQRGuardado('plin-preview', config.plin?.qr);
+      pintarQRGuardado('binance-preview', config.binance?.qr);
     }
 
     // Guardar configuración del producto en localStorage
@@ -1999,18 +2013,24 @@
         triggerNotification('✅ Configuración PayPal guardada');
       } else if (method === 'yape') {
         allConfigs[currentProductId].yape = {
-          phone: document.getElementById('pay-yape-phone').value.trim()
+          phone: document.getElementById('pay-yape-phone').value.trim(),
+          qr: qrDraft['yape-preview'] || (allConfigs[currentProductId].yape || {}).qr || ''
         };
+        delete qrDraft['yape-preview'];
         triggerNotification('✅ Configuración Yape guardada');
       } else if (method === 'plin') {
         allConfigs[currentProductId].plin = {
-          phone: document.getElementById('pay-plin-phone').value.trim()
+          phone: document.getElementById('pay-plin-phone').value.trim(),
+          qr: qrDraft['plin-preview'] || (allConfigs[currentProductId].plin || {}).qr || ''
         };
+        delete qrDraft['plin-preview'];
         triggerNotification('✅ Configuración Plin guardada');
       } else if (method === 'binance') {
         allConfigs[currentProductId].binance = {
-          wallet: document.getElementById('pay-binance-wallet').value.trim()
+          wallet: document.getElementById('pay-binance-wallet').value.trim(),
+          qr: qrDraft['binance-preview'] || (allConfigs[currentProductId].binance || {}).qr || ''
         };
+        delete qrDraft['binance-preview'];
         triggerNotification('✅ Configuración Binance guardada');
       } else if (method === 'transfer') {
         allConfigs[currentProductId].transfer = {

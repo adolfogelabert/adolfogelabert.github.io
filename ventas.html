@@ -775,7 +775,7 @@
                     <p class="pay-label i18n" data-es="Pago seguro con tarjeta" data-en="Secure card payment">Pago seguro con tarjeta</p>
                     <p class="pay-note i18n" data-es="Serás redirigido a la pasarela de pago segura de Stripe." data-en="You will be redirected to Stripe's secure payment gateway.">Serás redirigido a la pasarela de pago segura de Stripe.</p>
                     <br>
-                    <a href="TU_LINK_STRIPE" target="_blank" class="pay-btn pay-btn-stripe"><i class="fab fa-stripe-s"></i> Pagar con Stripe</a>
+                    <a href="TU_LINK_STRIPE" target="_blank" id="pay-link-stripe" class="pay-btn pay-btn-stripe"><i class="fab fa-stripe-s"></i> Pagar con Stripe</a>
                     <p class="pay-note">Acepta Visa, Mastercard, AMEX</p>
                 </div>
 
@@ -785,7 +785,10 @@
                     <p class="pay-label i18n" data-es="Pago con PayPal" data-en="PayPal payment">Pago con PayPal</p>
                     <p class="pay-note i18n" data-es="Haz clic para pagar de forma segura con tu cuenta PayPal." data-en="Click to pay securely with your PayPal account.">Haz clic para pagar de forma segura con tu cuenta PayPal.</p>
                     <br>
-                    <a href="TU_LINK_PAYPAL" target="_blank" class="pay-btn pay-btn-paypal"><i class="fab fa-paypal"></i> Pagar con PayPal</a>
+                    <a href="https://paypal.me/adolfogelabert?locale.x=es_XC&country.x=VE" target="_blank" id="pay-link-paypal" class="pay-btn pay-btn-paypal"><i class="fab fa-paypal"></i> Pagar con PayPal</a>
+                    <p class="pay-note" style="margin-top:12px;"><span class="i18n" data-es="Cuentas PayPal asociadas:" data-en="Associated PayPal accounts:">Cuentas PayPal asociadas:</span></p>
+                    <p class="pay-note" style="font-weight:700; color:#d1d5db;">adolfo.1974@gmail.com</p>
+                    <p class="pay-note" style="font-weight:700; color:#d1d5db;">adolfo_gelabert@hotmail.com</p>
                 </div>
 
                 <!-- Yape -->
@@ -793,10 +796,10 @@
                     <div class="pay-icon"><i class="fas fa-mobile-alt"></i></div>
                     <p class="pay-label">YAPE</p>
                     <div class="pay-qr">
-                        <img src="images/qr-yape-placeholder.png" alt="QR Yape">
+                        <img src="images/qr_yape-plin.jpg" alt="QR Yape" id="qr-yape-img">
                     </div>
                     <p class="pay-label">Celular Yape</p>
-                    <div class="pay-value" onclick="copyText(this)">+51 999 999 999</div>
+                    <div class="pay-value" id="pay-val-yape" onclick="copyText(this)">+51 989 013 043</div>
                     <button class="pay-btn pay-btn-copy" onclick="copyText(document.querySelector('#panel-yape .pay-value'))"><i class="fas fa-copy"></i> Copiar número</button>
                     <p class="pay-note i18n" data-es="Envía el comprobante a nuestro WhatsApp." data-en="Send the receipt to our WhatsApp.">Envía el comprobante a nuestro WhatsApp.</p>
                 </div>
@@ -806,10 +809,10 @@
                     <div class="pay-icon"><i class="fas fa-wallet"></i></div>
                     <p class="pay-label">PLIN</p>
                     <div class="pay-qr">
-                        <img src="images/qr-plin-placeholder.png" alt="QR Plin">
+                        <img src="images/qr-plin_adolfo_gelabert.jpg" alt="QR Plin" id="qr-plin-img">
                     </div>
                     <p class="pay-label">Celular Plin</p>
-                    <div class="pay-value" onclick="copyText(this)">+51 999 999 999</div>
+                    <div class="pay-value" id="pay-val-plin" onclick="copyText(this)">+51 989 013 043</div>
                     <button class="pay-btn pay-btn-copy" onclick="copyText(document.querySelector('#panel-plin .pay-value'))"><i class="fas fa-copy"></i> Copiar número</button>
                     <p class="pay-note i18n" data-es="Envía el comprobante a nuestro WhatsApp." data-en="Send the receipt to our WhatsApp.">Envía el comprobante a nuestro WhatsApp.</p>
                 </div>
@@ -819,10 +822,10 @@
                     <div class="pay-icon"><i class="fab fa-bitcoin"></i></div>
                     <p class="pay-label">BINANCE PAY</p>
                     <div class="pay-qr">
-                        <img src="images/qr-binance-placeholder.png" alt="QR Binance">
+                        <img src="images/qr_binance.jpg" alt="QR Binance" id="qr-binance-img">
                     </div>
                     <p class="pay-label">Wallet Address (USDT / BTC / BUSD)</p>
-                    <div class="pay-value" onclick="copyText(this)">TU_WALLET_ADDRESS_AQUI</div>
+                    <div class="pay-value" id="pay-val-binance" onclick="copyText(this)">TU_WALLET_ADDRESS_AQUI</div>
                     <button class="pay-btn pay-btn-copy" onclick="copyText(document.querySelector('#panel-binance .pay-value'))"><i class="fas fa-copy"></i> Copiar dirección</button>
                     <p class="pay-note i18n" data-es="Red: ERC-20 o BEP-20. Envía el comprobante a nuestro WhatsApp." data-en="Network: ERC-20 or BEP-20. Send the receipt to our WhatsApp.">Red: ERC-20 o BEP-20. Envía el comprobante a nuestro WhatsApp.</p>
                 </div>
@@ -833,13 +836,13 @@
                     <p class="pay-label i18n" data-es="Transferencia Bancaria" data-en="Bank Transfer">Transferencia Bancaria</p>
                     <div style="text-align:left; padding:12px; background:rgba(255,255,255,0.05); border-radius:10px; border:1px solid #262626; margin-bottom:16px;">
                         <p style="font-size:0.75rem; color:#9ca3af; margin-bottom:4px;">Banco</p>
-                        <p style="font-size:0.9rem; font-weight:700; margin-bottom:12px;">TU_BANCO</p>
+                        <p style="font-size:0.9rem; font-weight:700; margin-bottom:12px;" id="pay-val-bank">Banco de Crédito del Perú</p>
                         <p style="font-size:0.75rem; color:#9ca3af; margin-bottom:4px;">Titular</p>
-                        <p style="font-size:0.9rem; font-weight:700; margin-bottom:12px;">TU_NOMBRE_COMPLETO</p>
-                        <p style="font-size:0.75rem; color:#9ca3af; margin-bottom:4px;">Cuenta</p>
-                        <p style="font-size:0.9rem; font-weight:700; margin-bottom:12px;">TU_NUMERO_DE_CUENTA</p>
+                        <p style="font-size:0.9rem; font-weight:700; margin-bottom:12px;" id="pay-val-name">Adolfo Jose Gelabert Semeco</p>
+                        <p style="font-size:0.75rem; color:#9ca3af; margin-bottom:4px;">Soles (PEN)</p>
+                        <p style="font-size:0.9rem; font-weight:700; margin-bottom:12px;" id="pay-val-account">192-94565740-0-47</p>
                         <p style="font-size:0.75rem; color:#9ca3af; margin-bottom:4px;">CCI</p>
-                        <p style="font-size:0.9rem; font-weight:700;">TU_CCI</p>
+                        <p style="font-size:0.9rem; font-weight:700;" id="pay-val-cci">00219219456574004734</p>
                     </div>
                     <button class="pay-btn pay-btn-copy" onclick="copyText(document.querySelector('#panel-transfer p:nth-child(6)'))"><i class="fas fa-copy"></i> Copiar datos</button>
                     <p class="pay-note i18n" data-es="Envía el comprobante a nuestro WhatsApp para confirmar tu compra." data-en="Send the receipt to our WhatsApp to confirm your purchase.">Envía el comprobante a nuestro WhatsApp para confirmar tu compra.</p>
@@ -1072,6 +1075,45 @@
                 }, 1000);
             }
         });
+    </script>
+
+    <script>
+        // Lee la config de pagos guardada desde el dashboard (localStorage).
+        // Si no hay config, deja los valores fijos (PayPal pre-cargado en el HTML).
+        function aplicarConfigPagosTienda() {
+            var all = {};
+            try { all = JSON.parse(localStorage.getItem('productPaymentConfigs') || '{}'); } catch (e) { return; }
+            var keys = Object.keys(all);
+            if (!keys.length) return;
+            var cfg = all['1'] || all[keys[0]];
+            if (!cfg) return;
+            function setText(id, val) {
+                var el = document.getElementById(id);
+                if (el && val) el.textContent = val;
+            }
+            function setImg(id, val) {
+                var el = document.getElementById(id);
+                if (el && val) el.src = val;
+            }
+            if (cfg.stripe && cfg.stripe.link) {
+                var s = document.getElementById('pay-link-stripe');
+                if (s) s.href = cfg.stripe.link;
+            }
+            if (cfg.paypal && cfg.paypal.link) {
+                var p = document.getElementById('pay-link-paypal');
+                if (p) p.href = cfg.paypal.link;
+            }
+            if (cfg.yape) { setText('pay-val-yape', cfg.yape.phone); setImg('qr-yape-img', cfg.yape.qr); }
+            if (cfg.plin) { setText('pay-val-plin', cfg.plin.phone); setImg('qr-plin-img', cfg.plin.qr); }
+            if (cfg.binance) { setText('pay-val-binance', cfg.binance.wallet); setImg('qr-binance-img', cfg.binance.qr); }
+            if (cfg.transfer) {
+                setText('pay-val-bank', cfg.transfer.bank);
+                setText('pay-val-name', cfg.transfer.name);
+                setText('pay-val-account', cfg.transfer.account);
+                setText('pay-val-cci', cfg.transfer.cci);
+            }
+        }
+        document.addEventListener('DOMContentLoaded', aplicarConfigPagosTienda);
     </script>
 </body>
 </html>
