@@ -32,3 +32,4 @@
 - [x] `ventas.html` lee config del dashboard (`aplicarConfigPagosTienda`, 2026-10-05)
 - [x] QR Yape/Plin/Binance se persisten (`qrDraft` + campo `qr`, 2026-10-05)
 - [x] `ventas.html` renderiza productos desde dashboard (`renderProductosTienda`, `storeProducts` localStorage, 2026-10-05)
+- [x] `ventas.html` muestra 3 productos demo si `storeProducts` está vacío (`PRODUCTOS_DEMO`, 2026-10-05)

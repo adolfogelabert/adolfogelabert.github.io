@@ -971,18 +971,20 @@
     </script>
 
     <script>
-        // Render dinámico de productos desde la config guardada en el dashboard
+        // Fallback por si el dashboard aún no guardó productos en localStorage
+        var PRODUCTOS_DEMO = [
+            { id: 'demo-1', titulo: 'Del Lente al Lienzo', categoria: 'Guía Técnica 001', descripcion: "Transforma retratos reales en obras de arte al óleo. Incluye el 'Prompt Maestro' estructurado para resultados profesionales.", imagen: 'images/producto1.jpg', precioOriginal: '$19.00', precioDescuento: '$7.00', features: 'Prompt Maestro estructurado,Paso a paso detallado,Soporte con IA generativa,Formato PDF descargable', activo: true },
+            { id: 'demo-2', titulo: 'Prompts 3D', categoria: 'Guía Técnica 002', descripcion: 'Domina texturas complejas: desde roca volcánica hasta cristal iridiscente con calidad cinematográfica 8K.', imagen: 'images/producto2.jpg', precioOriginal: '$15.00', precioDescuento: '$7.00', features: 'Más de 50 prompts 3D,Texturas hiperrealistas,Calidad cinematográfica 8K,Guía de parámetros avanzados', activo: true },
+            { id: 'demo-3', titulo: 'Boceto & Sketch', categoria: 'Guía Técnica 003', descripcion: 'Crea ilustraciones con trazo manual y estética de storyboard. El control definitivo sobre el dibujo anatómico.', imagen: 'images/producto3.jpg', precioOriginal: '$12.00', precioDescuento: '$7.00', features: 'Técnicas de bocetado digital,Estilo storyboard profesional,Dibujo anatómico preciso,Prompts para ilustración', activo: true }
+        ];
+
         function renderProductosTienda() {
             var grid = document.getElementById('products-grid');
             if (!grid) return;
             var productos = [];
             try { productos = JSON.parse(localStorage.getItem('storeProducts') || '[]'); } catch (e) {}
             productos = productos.filter(function(p) { return p && p.activo !== false; });
-            if (!productos.length) {
-                grid.innerHTML = '<p class="text-center text-gray-500 col-span-3 py-12">No hay productos disponibles.</p>';
-                productListTienda = [];
-                return;
-            }
+            if (!productos.length) productos = PRODUCTOS_DEMO;
             productListTienda = productos;
             grid.innerHTML = '';
             productos.forEach(function(p, idx) {
