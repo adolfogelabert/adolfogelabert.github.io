@@ -21,6 +21,7 @@
 | 2026-10-05 | `ventas.html:809,812` | QR Plin placeholder + tel genérico | Sin datos reales | `images/qr-plin_adolfo_gelabert.jpg` + `+51 989 013 043` |
 | 2026-10-05 | `ventas.html:822` | QR Binance placeholder | Sin QR real | `images/qr_binance.jpg` |
 | 2026-10-05 | `ventas.html:789` | Solo botón PayPal | Faltaba dato de confianza | Añadidos correos `adolfo.1974@gmail.com` y `adolfo_gelabert@hotmail.com` como info bajo el botón |
+| 2026-10-05 | `ventas.html:825` | Wallet Binance placeholder | Sin address real | `0xd45bad4c27a4e5e1a72ecf73f428f44264be90a3` (USDT BEP-20) |
 | 2026-10-05 | `ventas.html:836-842` | Datos bancarios placeholder | Faltaba info real | BCP, Soles `192-94565740-0-47`, CCI `00219219456574004734`, titular "Adolfo Jose Gelabert Semeco" |
 
 ## Pendientes de corrección (detectados en auditoría, aún no corregidos)
