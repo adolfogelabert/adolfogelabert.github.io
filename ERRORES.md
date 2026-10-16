@@ -31,3 +31,4 @@
 - [ ] Foto de perfil remota `index.html:648` — diferida al final por el dueño
 - [x] `ventas.html` lee config del dashboard (`aplicarConfigPagosTienda`, 2026-10-05)
 - [x] QR Yape/Plin/Binance se persisten (`qrDraft` + campo `qr`, 2026-10-05)
+- [x] `ventas.html` renderiza productos desde dashboard (`renderProductosTienda`, `storeProducts` localStorage, 2026-10-05)

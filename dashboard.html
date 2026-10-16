@@ -797,20 +797,28 @@
       };
 
       state.products.unshift(newProd);
+      guardarProductosTienda();
       triggerNotification("Producto publicado en tienda.");
       renderCurrentTab();
     }
 
     function deleteProduct(id) {
       state.products = state.products.filter(p => p.id !== id);
+      guardarProductosTienda();
       triggerNotification("Producto eliminado.");
       renderCurrentTab();
     }
 
     function toggleProduct(id) {
       state.products = state.products.map(p => p.id === id ? { ...p, activo: !p.activo } : p);
+      guardarProductosTienda();
       triggerNotification("Estado de producto actualizado.");
       renderCurrentTab();
+    }
+
+    // Persiste los productos para que ventas.html los lea
+    function guardarProductosTienda() {
+      try { localStorage.setItem('storeProducts', JSON.stringify(state.products)); } catch (e) {}
     }
 
     // --- INYECTOR DE VISTAS (RENDER ENGINE) ---
@@ -1908,6 +1916,7 @@
 
     // --- CARGA DE ENTRADA INICIAL ---
     window.onload = function() {
+      if (!localStorage.getItem('storeProducts')) guardarProductosTienda();
       updateInboxBadge();
       renderCurrentTab();
     }

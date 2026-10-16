@@ -571,116 +571,9 @@
         </p>
     </section>
 
-    <!-- Grid de Productos -->
+    <!-- Grid de Productos (render dinámico desde localStorage) -->
     <section id="productos" class="max-w-7xl mx-auto px-6 py-20">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-
-            <!-- Producto 1 -->
-            <article class="product-card rounded-3xl overflow-hidden flex flex-col group cursor-pointer"
-                onclick="openModal(0)"
-                data-img="images/producto1.jpg"
-                data-tag="Guía Técnica 001"
-                data-title-es="Del Lente al Lienzo" data-title-en="From Lens to Canvas"
-                data-desc-es="Transforma retratos reales en obras de arte al óleo. Incluye el 'Prompt Maestro' estructurado para resultados profesionales."
-                data-desc-en="Transform real portraits into oil painting artworks. Includes the structured 'Master Prompt' for professional results."
-                data-old="$19.00" data-price="$7.00"
-                data-features-es="Prompt Maestro estructurado,Paso a paso detallado,Soporte con IA generativa,Formato PDF descargable"
-                data-features-en="Structured Master Prompt,Detailed step-by-step,Generative AI support,Downloadable PDF format">
-                <div class="aspect-[4/5] bg-neutral-900 relative overflow-hidden">
-                    <img src="images/producto1.jpg" alt="Del Lente al Lienzo" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 opacity-60 group-hover:opacity-100">
-                    <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent"></div>
-                    <div class="absolute bottom-6 left-8">
-                        <span class="text-[10px] font-bold tracking-widest uppercase text-yellow-600">Guía Técnica 001</span>
-                    </div>
-                </div>
-                <div class="p-8 flex-grow flex flex-col">
-                    <h2 class="text-2xl font-bold mb-3 tracking-tight uppercase font-heading">Del Lente al Lienzo</h2>
-                    <p class="text-gray-400 text-sm mb-8 leading-relaxed font-light flex-grow i18n"
-                        data-es="Transforma retratos reales en obras de arte al óleo. Incluye el 'Prompt Maestro' estructurado para resultados profesionales."
-                        data-en="Transform real portraits into oil painting artworks. Includes the structured 'Master Prompt' for professional results.">
-                        Transforma retratos reales en obras de arte al óleo. Incluye el 'Prompt Maestro' estructurado para resultados profesionales.
-                    </p>
-                    <div class="flex items-center justify-between">
-                        <div class="flex flex-col">
-                            <span class="text-[10px] text-gray-600 line-through mb-1 uppercase tracking-tighter">Normal $19.00</span>
-                            <span class="text-3xl font-black text-yellow-600 tracking-tighter">$7.00</span>
-                        </div>
-                        <button onclick="event.stopPropagation(); closeModal(); openPayModal();" class="btn-glow font-black py-3 px-6 rounded-xl text-xs uppercase tracking-widest i18n cursor-pointer" data-es="Obtener" data-en="Get it">Obtener</button>
-                    </div>
-                </div>
-            </article>
-
-            <!-- Producto 2 -->
-            <article class="product-card rounded-3xl overflow-hidden flex flex-col group cursor-pointer"
-                onclick="openModal(1)"
-                data-img="images/producto2.jpg"
-                data-tag="Guía Técnica 002"
-                data-title-es="Prompts 3D" data-title-en="3D Prompts"
-                data-desc-es="Domina texturas complejas: desde roca volcánica hasta cristal iridiscente con calidad cinematográfica 8K."
-                data-desc-en="Master complex textures: from volcanic rock to iridescent crystal with cinematic 8K quality."
-                data-old="$15.00" data-price="$7.00"
-                data-features-es="Más de 50 prompts 3D,Texturas hiperrealistas,Calidad cinematográfica 8K,Guía de parámetros avanzados"
-                data-features-en="50+ 3D prompts,Hiperrealistic textures,Cinematic 8K quality,Advanced parameters guide">
-                <div class="aspect-[4/5] bg-neutral-900 relative overflow-hidden">
-                    <img src="images/producto2.jpg" alt="Prompts 3D Hiperrealismo" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 opacity-60 group-hover:opacity-100">
-                    <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent"></div>
-                    <div class="absolute bottom-6 left-8">
-                        <span class="text-[10px] font-bold tracking-widest uppercase text-yellow-600">Guía Técnica 002</span>
-                    </div>
-                </div>
-                <div class="p-8 flex-grow flex flex-col">
-                    <h2 class="text-2xl font-bold mb-3 tracking-tight uppercase font-heading">Prompts 3D</h2>
-                    <p class="text-gray-400 text-sm mb-8 leading-relaxed font-light flex-grow i18n"
-                        data-es="Domina texturas complejas: desde roca volcánica hasta cristal iridiscente con calidad cinematográfica 8K."
-                        data-en="Master complex textures: from volcanic rock to iridescent crystal with cinematic 8K quality.">
-                        Domina texturas complejas: desde roca volcánica hasta cristal iridiscente con calidad cinematográfica 8K.
-                    </p>
-                    <div class="flex items-center justify-between">
-                        <div class="flex flex-col">
-                            <span class="text-[10px] text-gray-600 line-through mb-1 uppercase tracking-tighter">Normal $15.00</span>
-                            <span class="text-3xl font-black text-yellow-600 tracking-tighter">$7.00</span>
-                        </div>
-                        <button onclick="event.stopPropagation(); closeModal(); openPayModal();" class="btn-glow font-black py-3 px-6 rounded-xl text-xs uppercase tracking-widest i18n cursor-pointer" data-es="Obtener" data-en="Get it">Obtener</button>
-                    </div>
-                </div>
-            </article>
-
-            <!-- Producto 3 -->
-            <article class="product-card rounded-3xl overflow-hidden flex flex-col group cursor-pointer"
-                onclick="openModal(2)"
-                data-img="images/producto3.jpg"
-                data-tag="Guía Técnica 003"
-                data-title-es="Boceto & Sketch" data-title-en="Sketch & Drawing"
-                data-desc-es="Crea ilustraciones con trazo manual y estética de storyboard. El control definitivo sobre el dibujo anatómico."
-                data-desc-en="Create illustrations with manual strokes and storyboard aesthetics. The ultimate control over anatomical drawing."
-                data-old="$12.00" data-price="$7.00"
-                data-features-es="Técnicas de bocetado digital,Estilo storyboard profesional,Dibujo anatómico preciso,Prompts para ilustración"
-                data-features-en="Digital sketching techniques,Professional storyboard style,Precise anatomical drawing,Illustration prompts">
-                <div class="aspect-[4/5] bg-neutral-900 relative overflow-hidden">
-                    <img src="images/producto3.jpg" alt="Boceto & Sketch" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 opacity-60 group-hover:opacity-100">
-                    <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent"></div>
-                    <div class="absolute bottom-6 left-8">
-                        <span class="text-[10px] font-bold tracking-widest uppercase text-yellow-600">Guía Técnica 003</span>
-                    </div>
-                </div>
-                <div class="p-8 flex-grow flex flex-col">
-                    <h2 class="text-2xl font-bold mb-3 tracking-tight uppercase font-heading">Boceto & Sketch</h2>
-                    <p class="text-gray-400 text-sm mb-8 leading-relaxed font-light flex-grow i18n"
-                        data-es="Crea ilustraciones con trazo manual y estética de storyboard. El control definitivo sobre el dibujo anatómico."
-                        data-en="Create illustrations with manual strokes and storyboard aesthetics. The ultimate control over anatomical drawing.">
-                        Crea ilustraciones con trazo manual y estética de storyboard. El control definitivo sobre el dibujo anatómico.
-                    </p>
-                    <div class="flex items-center justify-between">
-                        <div class="flex flex-col">
-                            <span class="text-[10px] text-gray-600 line-through mb-1 uppercase tracking-tighter">Normal $12.00</span>
-                            <span class="text-3xl font-black text-yellow-600 tracking-tighter">$7.00</span>
-                        </div>
-                        <button onclick="event.stopPropagation(); closeModal(); openPayModal();" class="btn-glow font-black py-3 px-6 rounded-xl text-xs uppercase tracking-widest i18n cursor-pointer" data-es="Obtener" data-en="Get it">Obtener</button>
-                    </div>
-                </div>
-            </article>
-
-        </div>
+        <div id="products-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
     </section>
 
     <!-- Pie de Página -->
@@ -885,23 +778,23 @@
             // --- Modales ---
             var productModal = document.getElementById('productModal');
             var payModal = document.getElementById('payModal');
-            var cards = document.querySelectorAll('.product-card');
+            var productListTienda = []; // lo llena renderProductosTienda()
             var currentLang = localStorage.getItem('preferredLang') || 'es';
 
             function openModal(index) {
-                var card = cards[index];
-                if (!card || !productModal) return;
+                var p = productListTienda[index];
+                if (!p || !productModal) return;
 
-                document.getElementById('modalImg').src = card.dataset.img;
-                document.getElementById('modalImg').alt = card.dataset.titleEs;
-                document.getElementById('modalTag').textContent = card.dataset.tag;
-                document.getElementById('modalTitle').textContent = currentLang === 'es' ? card.dataset.titleEs : card.dataset.titleEn;
-                document.getElementById('modalDesc').textContent = currentLang === 'es' ? card.dataset.descEs : card.dataset.descEn;
-                document.getElementById('modalOld').textContent = card.dataset.old;
-                document.getElementById('modalPrice').textContent = card.dataset.price;
+                document.getElementById('modalImg').src = p.imagen;
+                document.getElementById('modalImg').alt = p.titulo;
+                document.getElementById('modalTag').textContent = p.categoria || '';
+                document.getElementById('modalTitle').textContent = p.titulo;
+                document.getElementById('modalDesc').textContent = p.descripcion || '';
+                document.getElementById('modalOld').textContent = p.precioOriginal || '';
+                document.getElementById('modalPrice').textContent = p.precioDescuento || '';
 
-                var features = currentLang === 'es' ? card.dataset.featuresEs.split(',') : card.dataset.featuresEn.split(',');
-                document.getElementById('modalFeatures').innerHTML = features.map(function(f) {
+                var feats = (p.features || 'Incluido').toString().split(',');
+                document.getElementById('modalFeatures').innerHTML = feats.map(function(f) {
                     return '<li><i class="fas fa-check-circle"></i> ' + f.trim() + '</li>';
                 }).join('');
 
@@ -1075,6 +968,52 @@
                 }, 1000);
             }
         });
+    </script>
+
+    <script>
+        // Render dinámico de productos desde la config guardada en el dashboard
+        function renderProductosTienda() {
+            var grid = document.getElementById('products-grid');
+            if (!grid) return;
+            var productos = [];
+            try { productos = JSON.parse(localStorage.getItem('storeProducts') || '[]'); } catch (e) {}
+            productos = productos.filter(function(p) { return p && p.activo !== false; });
+            if (!productos.length) {
+                grid.innerHTML = '<p class="text-center text-gray-500 col-span-3 py-12">No hay productos disponibles.</p>';
+                productListTienda = [];
+                return;
+            }
+            productListTienda = productos;
+            grid.innerHTML = '';
+            productos.forEach(function(p, idx) {
+                var article = document.createElement('article');
+                article.className = 'product-card rounded-3xl overflow-hidden flex flex-col group cursor-pointer';
+                article.setAttribute('onclick', 'openModal(' + idx + ')');
+                article.innerHTML =
+                    '<div class="aspect-[4/5] bg-neutral-900 relative overflow-hidden">' +
+                        '<img src="' + (p.imagen || 'images/producto1.jpg') + '" alt="' + p.titulo + '" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 opacity-60 group-hover:opacity-100">' +
+                        '<div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent"></div>' +
+                        '<div class="absolute bottom-6 left-8">' +
+                            '<span class="text-[10px] font-bold tracking-widest uppercase text-yellow-600">' + (p.categoria || '') + '</span>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="p-8 flex-grow flex flex-col">' +
+                        '<h2 class="text-2xl font-bold mb-3 tracking-tight uppercase font-heading">' + p.titulo + '</h2>' +
+                        '<p class="text-gray-400 text-sm mb-8 leading-relaxed font-light flex-grow">' + (p.descripcion || '') + '</p>' +
+                        '<div class="flex items-center justify-between">' +
+                            '<div class="flex flex-col">' +
+                                (p.precioOriginal && p.precioOriginal !== p.precioDescuento
+                                    ? '<span class="text-[10px] text-gray-600 line-through mb-1 uppercase tracking-tighter">Normal ' + p.precioOriginal + '</span>'
+                                    : '') +
+                                '<span class="text-3xl font-black text-yellow-600 tracking-tighter">' + (p.precioDescuento || '') + '</span>' +
+                            '</div>' +
+                            '<button onclick="event.stopPropagation(); closeModal(); openPayModal();" class="btn-glow font-black py-3 px-6 rounded-xl text-xs uppercase tracking-widest cursor-pointer">Obtener</button>' +
+                        '</div>' +
+                    '</div>';
+                grid.appendChild(article);
+            });
+        }
+        document.addEventListener('DOMContentLoaded', renderProductosTienda);
     </script>
 
     <script>
