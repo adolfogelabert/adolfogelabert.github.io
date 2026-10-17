@@ -838,6 +838,52 @@
       document.getElementById('compiled-prompt-box').innerText = getGeneratedPrompt();
     }
 
+    // ID del producto en edición; null cuando el form está en modo "nuevo"
+    let editingProductId = null;
+
+    function editProduct(id) {
+      const p = state.products.find(x => String(x.id) === String(id));
+      if (!p) { triggerNotification('❌ Producto no encontrado'); return; }
+      editingProductId = p.id;
+      document.getElementById('prod-tipo').value = p.tipo || 'Producto Digital';
+      document.getElementById('prod-titulo').value = p.titulo || '';
+      document.getElementById('prod-categoria').value = p.categoria || 'Guía Técnica';
+      document.getElementById('prod-precio-original').value = p.precioOriginal || '';
+      document.getElementById('prod-precio-descuento').value = p.precioDescuento || '';
+      document.getElementById('prod-desc').value = p.descripcion || '';
+      document.getElementById('prod-imagen').value = p.imagen || '';
+      document.getElementById('prod-features').value = p.features || '';
+      document.getElementById('prod-link').value = p.link || '';
+      const previewWrap = document.getElementById('prod-imagen-preview-wrap');
+      const preview = document.getElementById('prod-imagen-preview');
+      if (p.imagen) { preview.src = p.imagen; previewWrap.classList.remove('hidden'); }
+      else { previewWrap.classList.add('hidden'); }
+      // Cambiar aspecto del form: título + botón submit + botón cancelar
+      const formTitle = document.getElementById('prod-form-title');
+      if (formTitle) formTitle.textContent = 'Editar Ítem';
+      const submitLabel = document.getElementById('prod-submit-label');
+      if (submitLabel) submitLabel.textContent = 'Actualizar Ítem';
+      const cancelBtn = document.getElementById('prod-cancel-edit');
+      if (cancelBtn) cancelBtn.classList.remove('hidden');
+      // Scroll al form y focus en el primer campo
+      const tituloField = document.getElementById('prod-titulo');
+      if (tituloField) { tituloField.focus(); tituloField.scrollIntoView({behavior:'smooth', block:'center'}); }
+      triggerNotification('✏️ Editando: ' + p.titulo);
+    }
+
+    function cancelEdit() {
+      editingProductId = null;
+      const form = document.querySelector('form[onsubmit*="handleAddProduct"]');
+      if (form) form.reset();
+      clearProductImage();
+      const formTitle = document.getElementById('prod-form-title');
+      if (formTitle) formTitle.textContent = 'Agregar Nuevo Ítem';
+      const submitLabel = document.getElementById('prod-submit-label');
+      if (submitLabel) submitLabel.textContent = 'Publicar Ítem';
+      const cancelBtn = document.getElementById('prod-cancel-edit');
+      if (cancelBtn) cancelBtn.classList.add('hidden');
+    }
+
     function handleAddProduct(e) {
       e.preventDefault();
       const titulo = document.getElementById('prod-titulo').value.trim();
@@ -855,6 +901,31 @@
         return;
       }
 
+      // MODO EDICIÓN: actualizar producto existente
+      if (editingProductId != null) {
+        const updated = {
+          id: editingProductId,
+          titulo,
+          tipo,
+          categoria,
+          descripcion,
+          imagen: imagen || "images/producto1.jpg",
+          precioOriginal: precioOriginal || precioDescuento,
+          precioDescuento,
+          features: features || "Incluido",
+          link: link || "TU_HOTLINK_AQUI",
+          activo: state.products.find(p => String(p.id) === String(editingProductId))?.activo ?? true
+        };
+        state.products = state.products.map(p => String(p.id) === String(editingProductId) ? { ...p, ...updated } : p);
+        guardarProductosTienda();
+        if (window.fbSaveProduct) window.fbSaveProduct(updated).catch(e => console.error('[Firestore update]', e));
+        triggerNotification('✅ Producto actualizado');
+        cancelEdit();
+        renderCurrentTab();
+        return;
+      }
+
+      // MODO CREAR: añadir producto nuevo
       const newProd = {
         id: Date.now(),
         titulo,
@@ -1406,6 +1477,9 @@
                 </div>
               </div>
               <div class="flex items-center gap-2 w-full md:w-auto justify-end">
+                <button onclick="editProduct(${p.id})" class="p-1.5 bg-zinc-900 hover:bg-sky-950 border border-zinc-800 text-zinc-500 hover:text-sky-400 rounded transition-colors" title="Editar producto">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                </button>
                 <button onclick="abrirModalPagos(${p.id}, '${p.titulo.replace(/'/g, "\\'")}')" class="p-1.5 bg-zinc-900 hover:bg-amber-950 border border-zinc-800 text-zinc-500 hover:text-amber-500 rounded transition-colors" title="Configurar pagos">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" /></svg>
                 </button>
@@ -1428,7 +1502,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
               <!-- Formulario -->
               <div class="bg-zinc-950 p-6 rounded border border-zinc-900 h-fit space-y-6">
-                <h3 class="text-xs font-bold text-white tracking-widest uppercase pb-2 border-b border-zinc-900">Agregar Nuevo Ítem</h3>
+                <h3 id="prod-form-title" class="text-xs font-bold text-white tracking-widest uppercase pb-2 border-b border-zinc-900">Agregar Nuevo Ítem</h3>
                 <form onsubmit="handleAddProduct(event)" class="space-y-4">
                   <div>
                     <label class="block text-[8px] font-bold tracking-widest text-zinc-500 uppercase mb-1">Tipo de Ítem *</label>
@@ -1492,10 +1566,15 @@
                     <label class="block text-[8px] font-bold tracking-widest text-zinc-500 uppercase mb-1">Enlace de Compra</label>
                     <input type="text" id="prod-link" placeholder="TU_LINK_AQUI" class="w-full bg-zinc-900 border border-zinc-800 rounded px-3 py-2 text-xs text-zinc-300 focus:outline-none focus:border-amber-500" />
                   </div>
-                  <button type="submit" class="w-full bg-amber-500 hover:bg-amber-400 text-black font-black py-2.5 px-4 rounded text-[9px] tracking-widest uppercase transition-all flex items-center justify-center gap-1.5">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
-                    <span>Publicar Ítem</span>
-                  </button>
+                  <div class="flex gap-2">
+                    <button type="submit" class="flex-1 bg-amber-500 hover:bg-amber-400 text-black font-black py-2.5 px-4 rounded text-[9px] tracking-widest uppercase transition-all flex items-center justify-center gap-1.5">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+                      <span id="prod-submit-label">Publicar Ítem</span>
+                    </button>
+                    <button type="button" id="prod-cancel-edit" onclick="cancelEdit()" class="hidden shrink-0 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white font-bold py-2.5 px-4 rounded text-[9px] tracking-widest uppercase transition-all border border-zinc-800" title="Cancelar edición">
+                      Cancelar
+                    </button>
+                  </div>
                 </form>
               </div>
 
