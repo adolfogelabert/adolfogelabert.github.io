@@ -508,6 +508,24 @@
         }
         .footer-links a { transition: color 0.3s ease; }
         .footer-links a:hover { color: var(--accent); }
+
+        /* === CARRITO DE COMPRAS === */
+        #cartDrawer {
+            position: fixed; top: 0; right: 0; height: 100vh; width: 100%; max-width: 440px;
+            background: #0a0a0a; border-left: 1px solid rgba(255,255,255,0.1);
+            z-index: 100; transform: translateX(100%); transition: transform 0.3s ease;
+            display: flex; flex-direction: column; box-shadow: -10px 0 40px rgba(0,0,0,0.6);
+        }
+        #cartDrawer.open { transform: translateX(0); }
+        #cartOverlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); z-index: 99; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+        #cartOverlay.open { opacity: 1; pointer-events: auto; }
+        .cart-item { display: flex; gap: 12px; padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); align-items: center; }
+        .cart-item img { width: 60px; height: 60px; object-fit: cover; border-radius: 8px; flex-shrink: 0; }
+        .cart-qty-btn { width: 28px; height: 28px; border-radius: 6px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.1); color: white; cursor: pointer; font-weight: 900; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+        .cart-qty-btn:hover { background: #ca8a04; color: black; border-color: #ca8a04; }
+        @media (max-width: 640px) {
+            #cartDrawer { max-width: 100%; }
+        }
     </style>
 </head>
 <body>
@@ -530,6 +548,11 @@
                 <button onclick="changeLang('es')" id="btn-es" class="lang-btn px-2 py-1 rounded active">ES</button>
                 <button onclick="changeLang('en')" id="btn-en" class="lang-btn px-2 py-1 rounded">EN</button>
             </div>
+
+            <button onclick="openCartDrawer()" id="cart-icon-btn" class="relative bg-white/5 hover:bg-yellow-600/20 border border-white/10 hover:border-yellow-600/50 text-white px-3 py-2 rounded transition-all" title="Ver carrito" aria-label="Ver carrito">
+                <i class="fas fa-shopping-cart text-sm"></i>
+                <span id="cart-badge" class="hidden absolute -top-1 -right-1 bg-yellow-600 text-black text-[9px] font-black rounded-full w-5 h-5 flex items-center justify-center">0</span>
+            </button>
 
             <a href="https://wa.me/51930562562" target="_blank" class="hidden md:inline-block bg-yellow-600 text-black px-4 py-2 rounded text-xs font-black uppercase hover:bg-white transition i18n" data-es="Hablemos" data-en="Let's Talk">
                 Hablemos
@@ -776,6 +799,36 @@
             </div>
         </div>
     </div>
+
+    <!-- ============================================ -->
+    <!-- CARRITO DE COMPRAS (drawer lateral)         -->
+    <!-- ============================================ -->
+    <div id="cartOverlay" onclick="closeCartDrawer()"></div>
+    <aside id="cartDrawer" aria-label="Carrito de compras">
+        <div style="padding:20px; border-bottom:1px solid rgba(255,255,255,0.1); display:flex; justify-content:space-between; align-items:center;">
+            <h3 class="font-heading text-base font-black text-white tracking-widest uppercase">🛒 Tu Carrito</h3>
+            <button onclick="closeCartDrawer()" style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#fff; width:36px; height:36px; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center;" aria-label="Cerrar carrito">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div id="cartItems" style="flex:1; overflow-y:auto; padding:8px 0;"></div>
+        <div style="padding:20px; border-top:1px solid rgba(255,255,255,0.1); background:rgba(0,0,0,0.5);">
+            <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:0.75rem; color:#9ca3af; text-transform:uppercase; letter-spacing:0.1em;">
+                <span>Subtotal</span>
+                <span id="cartSubtotal" style="color:#ca8a04; font-weight:900;">$0.00</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:16px; font-size:0.7rem; color:#6b7280;">
+                <span id="cartItemCount">0 items</span>
+                <span>Los métodos de pago se eligen en el siguiente paso</span>
+            </div>
+            <button onclick="proceedToCheckout()" id="cartCheckoutBtn" disabled style="width:100%; background:#ca8a04; color:#000; font-weight:900; padding:14px 16px; border-radius:10px; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.1em; cursor:pointer; border:none; opacity:0.4; transition:opacity 0.2s;">
+                Proceder al pago →
+            </button>
+            <button onclick="clearCart()" style="width:100%; background:transparent; color:#9ca3af; font-weight:700; padding:10px; border-radius:8px; font-size:0.7rem; text-transform:uppercase; letter-spacing:0.1em; cursor:pointer; border:none; margin-top:6px;">
+                Vaciar carrito
+            </button>
+        </div>
+    </aside>
 
     <!-- Botón Back to Top -->
     <button id="backToTop" onclick="smoothScrollTo(0, 1200)" class="fixed bottom-8 right-8 w-12 h-12 bg-yellow-600 text-black rounded-full shadow-2xl flex items-center justify-center z-50 hover:bg-white transition-all transform hover:scale-110">
@@ -1062,7 +1115,8 @@
                                     : '') +
                                 '<span class="text-3xl font-black text-yellow-600 tracking-tighter">' + (p.precioDescuento || '') + '</span>' +
                             '</div>' +
-                            '<button onclick="event.stopPropagation(); prepareOrder(' + idx + ');" class="btn-glow font-black py-3 px-6 rounded-xl text-xs uppercase tracking-widest cursor-pointer">Obtener</button>' +
+                            '<button onclick="event.stopPropagation(); addToCart(productListTienda[' + idx + ']);" class="w-full bg-yellow-600 hover:bg-yellow-500 text-black font-black py-3 px-6 rounded-xl text-xs uppercase tracking-widest cursor-pointer transition-all">+ Añadir al carrito</button>' +
+                            '<button onclick="event.stopPropagation(); openModal(' + idx + ');" class="w-full mt-2 bg-transparent hover:bg-white/5 text-gray-400 hover:text-white font-bold py-2 px-6 rounded-xl text-[10px] uppercase tracking-widest cursor-pointer transition-all">Ver detalles</button>' +
                         '</div>' +
                     '</div>';
                 grid.appendChild(article);
@@ -1126,6 +1180,212 @@
     <script>
         var currentReceiptUrl = null;
 
+        // ===== CARRITO DE COMPRAS =====
+        function getCart() {
+            try { return JSON.parse(localStorage.getItem('cart') || '[]'); }
+            catch (e) { return []; }
+        }
+
+        function saveCart(cart) {
+            try { localStorage.setItem('cart', JSON.stringify(cart)); } catch (e) {}
+            updateCartBadge();
+        }
+
+        function parsePrice(p) {
+            if (typeof p === 'number') return p;
+            return parseFloat(String(p || '0').replace(/[^0-9.]/g, '')) || 0;
+        }
+
+        function addToCart(product, qty) {
+            if (!product) return;
+            qty = qty || 1;
+            var cart = getCart();
+            var existing = cart.find(function (c) { return String(c.id) === String(product.id); });
+            if (existing) {
+                existing.qty = (existing.qty || 1) + qty;
+            } else {
+                cart.push({
+                    id: product.id,
+                    titulo: product.titulo,
+                    imagen: product.imagen,
+                    categoria: product.categoria,
+                    precioDescuento: product.precioDescuento,
+                    qty: qty
+                });
+            }
+            saveCart(cart);
+            renderCartDrawer();
+            if (typeof triggerNotification === 'function') triggerNotification('🛒 Añadido: ' + (product.titulo || 'producto'));
+            // Mini feedback visual en el icono
+            var icon = document.getElementById('cart-icon-btn');
+            if (icon) {
+                icon.classList.add('scale-110');
+                setTimeout(function () { icon.classList.remove('scale-110'); }, 200);
+            }
+        }
+
+        function updateCartQty(id, delta) {
+            var cart = getCart();
+            var item = cart.find(function (c) { return String(c.id) === String(id); });
+            if (item) {
+                item.qty = (item.qty || 1) + delta;
+                if (item.qty <= 0) {
+                    cart = cart.filter(function (c) { return String(c.id) !== String(id); });
+                }
+                saveCart(cart);
+                renderCartDrawer();
+            }
+        }
+
+        function removeFromCart(id) {
+            var cart = getCart().filter(function (c) { return String(c.id) !== String(id); });
+            saveCart(cart);
+            renderCartDrawer();
+        }
+
+        function clearCart() {
+            saveCart([]);
+            renderCartDrawer();
+        }
+
+        function cartTotal() {
+            return getCart().reduce(function (sum, c) {
+                return sum + parsePrice(c.precioDescuento) * (c.qty || 1);
+            }, 0);
+        }
+
+        function updateCartBadge() {
+            var cart = getCart();
+            var count = cart.reduce(function (sum, c) { return sum + (c.qty || 1); }, 0);
+            var badge = document.getElementById('cart-badge');
+            if (badge) {
+                if (count > 0) { badge.textContent = count; badge.classList.remove('hidden'); }
+                else { badge.classList.add('hidden'); }
+            }
+        }
+
+        function renderCartDrawer() {
+            var container = document.getElementById('cartItems');
+            var subtotalEl = document.getElementById('cartSubtotal');
+            var countEl = document.getElementById('cartItemCount');
+            var checkoutBtn = document.getElementById('cartCheckoutBtn');
+            if (!container) return;
+            var cart = getCart();
+            if (!cart.length) {
+                container.innerHTML = '<div style="padding:48px 24px; text-align:center; color:#6b7280; font-size:0.8rem;">' +
+                    '<div style="font-size:2.5rem; margin-bottom:12px;">🛒</div>' +
+                    'Tu carrito está vacío.<br>Agrega productos desde la tienda.' +
+                    '</div>';
+                if (subtotalEl) subtotalEl.textContent = '$0.00';
+                if (countEl) countEl.textContent = '0 items';
+                if (checkoutBtn) { checkoutBtn.disabled = true; checkoutBtn.style.opacity = '0.4'; }
+                return;
+            }
+            container.innerHTML = cart.map(function (c) {
+                var lineTotal = parsePrice(c.precioDescuento) * (c.qty || 1);
+                return '<div class="cart-item">' +
+                    '<img src="' + (c.imagen || 'images/producto1.jpg') + '" alt="' + (c.titulo || '') + '">' +
+                    '<div style="flex:1; min-width:0;">' +
+                        '<p style="font-size:0.8rem; font-weight:700; color:#fff; margin-bottom:4px; line-height:1.2;">' + (c.titulo || 'Sin título') + '</p>' +
+                        '<p style="font-size:0.7rem; color:#9ca3af; margin-bottom:6px;">' + (c.precioDescuento || '') + ' c/u</p>' +
+                        '<div style="display:flex; align-items:center; gap:8px;">' +
+                            '<button class="cart-qty-btn" onclick="updateCartQty(\'' + c.id + '\', -1)">−</button>' +
+                            '<span style="color:#fff; font-weight:900; min-width:20px; text-align:center;">' + (c.qty || 1) + '</span>' +
+                            '<button class="cart-qty-btn" onclick="updateCartQty(\'' + c.id + '\', 1)">+</button>' +
+                            '<span style="flex:1; text-align:right; color:#ca8a04; font-weight:900; font-size:0.85rem;">$' + lineTotal.toFixed(2) + '</span>' +
+                        '</div>' +
+                    '</div>' +
+                    '<button onclick="removeFromCart(\'' + c.id + '\')" style="background:transparent; border:none; color:#6b7280; cursor:pointer; padding:4px;" title="Quitar">' +
+                        '<i class="fas fa-trash text-xs"></i>' +
+                    '</button>' +
+                '</div>';
+            }).join('');
+            if (subtotalEl) subtotalEl.textContent = '$' + cartTotal().toFixed(2);
+            if (countEl) countEl.textContent = cart.reduce(function (s, c) { return s + (c.qty || 1); }, 0) + ' items';
+            if (checkoutBtn) { checkoutBtn.disabled = false; checkoutBtn.style.opacity = '1'; }
+        }
+
+        function openCartDrawer() {
+            renderCartDrawer();
+            document.getElementById('cartDrawer').classList.add('open');
+            document.getElementById('cartOverlay').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeCartDrawer() {
+            document.getElementById('cartDrawer').classList.remove('open');
+            document.getElementById('cartOverlay').classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        function proceedToCheckout() {
+            var cart = getCart();
+            if (!cart.length) return;
+            currentProductForOrder = null; // pedido desde carrito
+            closeCartDrawer();
+            // Resetear form de pedido
+            var form = document.querySelector('#order-section');
+            if (form) {
+                var custName = document.getElementById('cust-name');
+                if (custName) custName.value = '';
+                var custEmail = document.getElementById('cust-email');
+                if (custEmail) custEmail.value = '';
+                var custPhone = document.getElementById('cust-phone');
+                if (custPhone) custPhone.value = '';
+                currentReceiptUrl = null;
+                var previewWrap = document.getElementById('receipt-preview');
+                if (previewWrap) previewWrap.classList.add('hidden');
+                var receiptStatus = document.getElementById('receipt-status');
+                if (receiptStatus) { receiptStatus.textContent = ''; receiptStatus.style.color = '#9ca3af'; }
+                if (typeof validateOrderForm === 'function') validateOrderForm();
+            }
+            // Mostrar resumen del carrito dentro del pay modal
+            renderOrderSummary();
+            if (typeof openPayModal === 'function') openPayModal();
+        }
+
+        function renderOrderSummary() {
+            var section = document.getElementById('order-section');
+            if (!section) return;
+            // Eliminar resumen previo si existe
+            var oldSummary = document.getElementById('order-cart-summary');
+            if (oldSummary) oldSummary.remove();
+            var cart = getCart();
+            if (!cart.length) return;
+            var itemsHtml = cart.map(function (c) {
+                var lineTotal = parsePrice(c.precioDescuento) * (c.qty || 1);
+                return '<div style="display:flex; justify-content:space-between; padding:6px 0; font-size:0.75rem; border-bottom:1px solid rgba(255,255,255,0.05);">' +
+                    '<span style="color:#fff; flex:1;">' + (c.titulo || '') + ' × ' + (c.qty || 1) + '</span>' +
+                    '<span style="color:#ca8a04; font-weight:700;">$' + lineTotal.toFixed(2) + '</span>' +
+                '</div>';
+            }).join('');
+            var totalHtml = '<div style="display:flex; justify-content:space-between; padding:10px 0 4px; font-size:0.85rem; font-weight:900;">' +
+                '<span style="color:#fff; text-transform:uppercase; letter-spacing:0.1em;">Total</span>' +
+                '<span style="color:#ca8a04;">$' + cartTotal().toFixed(2) + '</span>' +
+            '</div>';
+            var summaryDiv = document.createElement('div');
+            summaryDiv.id = 'order-cart-summary';
+            summaryDiv.style.cssText = 'background:rgba(202,138,4,0.05); border:1px solid rgba(202,138,4,0.2); border-radius:8px; padding:12px; margin-bottom:12px;';
+            summaryDiv.innerHTML = '<p style="font-size:0.7rem; color:#ca8a04; text-transform:uppercase; letter-spacing:0.1em; font-weight:900; margin-bottom:8px;">📋 Resumen del pedido</p>' + itemsHtml + totalHtml;
+            // Insertar antes de los inputs de cliente
+            var firstInput = section.querySelector('input[type="text"]');
+            if (firstInput) {
+                firstInput.parentElement.insertBefore(summaryDiv, firstInput);
+            } else {
+                section.insertBefore(summaryDiv, section.firstChild);
+            }
+        }
+
+        // Sincronización entre pestañas (cuando el dashboard escribe en localStorage)
+        window.addEventListener('storage', function (e) {
+            if (e.key === 'storeProducts') {
+                try {
+                    var productos = JSON.parse(e.newValue || '[]');
+                    if (typeof renderProductosTienda === 'function') renderProductosTienda();
+                } catch (err) { console.warn('[storage event ventas]', err); }
+            }
+        });
+
         function validateOrderForm() {
             var name = document.getElementById('cust-name');
             var email = document.getElementById('cust-email');
@@ -1141,6 +1401,8 @@
             var e = document.getElementById('cust-email');
             if (n) n.addEventListener('input', validateOrderForm);
             if (e) e.addEventListener('input', validateOrderForm);
+            updateCartBadge();
+            renderCartDrawer();
         });
 
         async function uploadReceipt() {
@@ -1206,16 +1468,38 @@
             var name = document.getElementById('cust-name').value.trim();
             var email = document.getElementById('cust-email').value.trim();
             var phone = document.getElementById('cust-phone').value.trim();
-            if (!currentProductForOrder) { alert('No hay producto seleccionado'); return; }
+            var cart = getCart();
+            var fromCart = cart.length > 0;
+            if (!fromCart && !currentProductForOrder) { alert('No hay productos para enviar'); return; }
             if (!name || !email) { alert('Completa nombre y correo'); return; }
             btn.disabled = true;
             btn.textContent = 'Registrando pedido...';
             try {
+                var items;
+                var totalStr;
+                if (fromCart) {
+                    items = cart.map(function (c) {
+                        return {
+                            productId: String(c.id || ''),
+                            productTitle: c.titulo || 'Sin título',
+                            amount: c.precioDescuento || '',
+                            qty: c.qty || 1
+                        };
+                    });
+                    totalStr = '$' + cartTotal().toFixed(2);
+                } else {
+                    items = [{
+                        productId: String(currentProductForOrder.id || ''),
+                        productTitle: currentProductForOrder.titulo || 'Sin título',
+                        amount: currentProductForOrder.precioDescuento || '',
+                        qty: 1
+                    }];
+                    totalStr = currentProductForOrder.precioDescuento || '';
+                }
                 var orderData = {
-                    productId: String(currentProductForOrder.id || ''),
-                    productTitle: currentProductForOrder.titulo || 'Sin título',
+                    items: items,
+                    total: totalStr,
                     paymentMethod: currentPaymentMethod,
-                    amount: currentProductForOrder.precioDescuento || '',
                     customerName: name,
                     customerEmail: email,
                     customerPhone: phone,
@@ -1226,17 +1510,23 @@
                 } else {
                     console.warn('[sendOrder] Firestore no inicializado; orden NO registrada en la nube');
                 }
-                var msg = '¡Hola Adolfo! 👋\n\nQuiero confirmar mi compra:\n' +
-                    '• Producto: ' + orderData.productTitle + '\n' +
-                    '• Precio: ' + orderData.amount + '\n' +
-                    '• Método: ' + orderData.paymentMethod.toUpperCase() + '\n\n' +
-                    'Mis datos:\n' +
-                    '• Nombre: ' + name + '\n' +
-                    '• Email: ' + email + '\n' +
-                    (phone ? '• Tel: ' + phone + '\n' : '') +
-                    (currentReceiptUrl ? '\n📎 Comprobante: ' + currentReceiptUrl : '\n(Sin comprobante adjunto)');
+                var msg = '¡Hola Adolfo! 👋\n\nQuiero confirmar mi compra:\n';
+                items.forEach(function (i) {
+                    msg += '• ' + i.productTitle + (i.qty > 1 ? ' (x' + i.qty + ')' : '') + ' — ' + i.amount + '\n';
+                });
+                msg += '\n💰 Total: ' + totalStr + '\n' +
+                       '💳 Método: ' + currentPaymentMethod.toUpperCase() + '\n\n' +
+                       'Mis datos:\n' +
+                       '• Nombre: ' + name + '\n' +
+                       '• Email: ' + email + '\n' +
+                       (phone ? '• Tel: ' + phone + '\n' : '') +
+                       (currentReceiptUrl ? '\n📎 Comprobante: ' + currentReceiptUrl : '\n(Sin comprobante adjunto)');
                 var waUrl = 'https://wa.me/51930562562?text=' + encodeURIComponent(msg);
                 window.open(waUrl, '_blank');
+                if (fromCart) {
+                    clearCart();
+                    currentProductForOrder = null;
+                }
                 btn.textContent = '✅ Pedido enviado';
                 setTimeout(function() { btn.textContent = '🛒 Enviar pedido por WhatsApp'; btn.disabled = false; }, 2000);
             } catch (e) {
@@ -1249,6 +1539,14 @@
         window.uploadReceipt = uploadReceipt;
         window.sendOrder = sendOrder;
         window.validateOrderForm = validateOrderForm;
+        window.addToCart = addToCart;
+        window.updateCartQty = updateCartQty;
+        window.removeFromCart = removeFromCart;
+        window.clearCart = clearCart;
+        window.openCartDrawer = openCartDrawer;
+        window.closeCartDrawer = closeCartDrawer;
+        window.proceedToCheckout = proceedToCheckout;
+        window.getCart = getCart;
     </script>
 
     <!-- Firebase + Firestore: cargar productos desde la nube (fuente de verdad) -->

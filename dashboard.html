@@ -1980,6 +1980,16 @@
               <button onclick="confirmOrder('${o.id}')" class="bg-emerald-500/10 hover:bg-emerald-500 hover:text-black text-emerald-400 px-2 py-1 rounded text-[9px] font-bold uppercase tracking-widest border border-emerald-500/20">Confirmar</button>
               <button onclick="rejectOrder('${o.id}')" class="bg-rose-500/10 hover:bg-rose-500 hover:text-white text-rose-400 px-2 py-1 rounded text-[9px] font-bold uppercase tracking-widest border border-rose-500/20">Rechazar</button>
             </div>` : `<span class="text-[9px] text-zinc-600">—</span>`;
+          // Soportar formato nuevo (items array) y antiguo (productTitle plano)
+          let productCell, amountCell;
+          if (Array.isArray(o.items) && o.items.length > 0) {
+            const itemsText = o.items.map(i => escapeHtml(i.productTitle) + (i.qty > 1 ? ' ×' + i.qty : '')).join(', ');
+            productCell = `<span class="text-[10px] text-zinc-300">${itemsText}</span>`;
+            amountCell = `<span class="text-[10px] text-amber-500 font-mono whitespace-nowrap">${escapeHtml(o.total || '')}</span>`;
+          } else {
+            productCell = `<span class="text-[10px] text-zinc-300">${escapeHtml(o.productTitle || '—')}</span>`;
+            amountCell = `<span class="text-[10px] text-amber-500 font-mono whitespace-nowrap">${escapeHtml(o.amount || '—')}</span>`;
+          }
           return `
             <tr class="border-b border-zinc-900 hover:bg-zinc-950/50">
               <td class="py-3 px-3 text-[10px] text-zinc-400 font-mono whitespace-nowrap">${fecha}</td>
@@ -1987,8 +1997,8 @@
                 <p class="text-[10px] text-white">${escapeHtml(o.customerName || '—')}</p>
                 <p class="text-[9px] text-zinc-500">${escapeHtml(o.customerEmail || '')}</p>
               </td>
-              <td class="py-3 px-3 text-[10px] text-zinc-300">${escapeHtml(o.productTitle || '—')}</td>
-              <td class="py-3 px-3 text-[10px] text-amber-500 font-mono whitespace-nowrap">${escapeHtml(o.amount || '—')}</td>
+              <td class="py-3 px-3">${productCell}</td>
+              <td class="py-3 px-3">${amountCell}</td>
               <td class="py-3 px-3 text-[10px] text-zinc-400">${escapeHtml(o.paymentMethod || '—')}</td>
               <td class="py-3 px-3">${receipt}</td>
               <td class="py-3 px-3"><span class="px-2 py-1 rounded text-[9px] font-bold uppercase tracking-widest border ${statusClass}">${status}</span></td>
