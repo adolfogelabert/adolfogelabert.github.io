@@ -507,7 +507,7 @@
 
     async function uploadProductImage() {
       const fileInput = document.getElementById('prod-imagen-file');
-      const label = document.getElementById('prod-imagen-file-label');
+      const labelSpan = document.getElementById('prod-imagen-file-label');
       const urlField = document.getElementById('prod-imagen');
       const previewWrap = document.getElementById('prod-imagen-preview-wrap');
       const preview = document.getElementById('prod-imagen-preview');
@@ -519,8 +519,8 @@
         triggerNotification('❌ Cloudinary no inicializado');
         return;
       }
-      const originalLabel = label.textContent;
-      label.textContent = 'Subiendo...';
+      const originalLabel = labelSpan ? labelSpan.textContent : 'Subir';
+      if (labelSpan) labelSpan.textContent = 'Subiendo...';
       fileInput.disabled = true;
       try {
         const url = await window.uploadToCloudinary(fileInput.files[0]);
@@ -532,7 +532,7 @@
         console.error('[Cloudinary product image]', e);
         triggerNotification('❌ Error al subir: ' + e.message);
       } finally {
-        label.textContent = originalLabel;
+        if (labelSpan) labelSpan.textContent = originalLabel;
         fileInput.disabled = false;
         fileInput.value = '';
       }
@@ -1530,14 +1530,12 @@
                     </div>
                     <div>
                       <label class="block text-[8px] font-bold tracking-widest text-zinc-500 uppercase mb-1">Imagen del Producto</label>
-                      <div class="flex gap-2">
-                        <input type="text" id="prod-imagen" placeholder="URL o sube un archivo →" class="flex-1 min-w-0 bg-zinc-900 border border-zinc-800 rounded px-3 py-2 text-xs text-zinc-300 focus:outline-none focus:border-amber-500" />
-                        <input type="file" id="prod-imagen-file" accept="image/*" class="hidden" onchange="if(this.files[0]) window.uploadProductImage()" />
-                        <button type="button" onclick="document.getElementById('prod-imagen-file').click()" class="shrink-0 bg-amber-500 hover:bg-amber-400 text-black px-3 py-2 rounded text-[9px] font-bold uppercase tracking-widest border border-amber-500 transition-all" title="Subir imagen a Cloudinary">
-                          📁 Subir
-                        </button>
-                      </div>
-                      <p class="text-[7px] text-zinc-600 mt-1">Opciones: <span class="text-zinc-400">① pega una URL</span> · <span class="text-amber-500">② click "Subir" para elegir archivo (Cloudinary)</span></p>
+                      <input type="text" id="prod-imagen" placeholder="Pega una URL o sube un archivo ↓" class="w-full bg-zinc-900 border border-zinc-800 rounded px-3 py-2 text-xs text-zinc-300 focus:outline-none focus:border-amber-500 mb-2" />
+                      <input type="file" id="prod-imagen-file" accept="image/*" class="sr-only" onchange="if(this.files[0]) uploadProductImage()" />
+                      <label for="prod-imagen-file" class="block w-full bg-amber-500 hover:bg-amber-400 text-black font-black py-2.5 px-4 rounded text-[10px] tracking-widest uppercase transition-all text-center cursor-pointer border border-amber-500">
+                        📁 <span id="prod-imagen-file-label">Subir imagen a Cloudinary</span>
+                      </label>
+                      <p class="text-[7px] text-zinc-600 mt-1">Click en el botón amarillo → abre explorador → selecciona imagen → sube sola y rellena la URL arriba.</p>
                       <div id="prod-imagen-preview-wrap" class="hidden mt-2 relative">
                         <img id="prod-imagen-preview" class="w-full h-32 object-cover rounded border border-zinc-800" alt="preview" />
                         <button type="button" onclick="clearProductImage()" class="absolute top-1 right-1 bg-black/80 hover:bg-rose-600 text-white w-6 h-6 rounded text-xs flex items-center justify-center">×</button>
