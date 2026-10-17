@@ -1458,7 +1458,7 @@
         <i class="fas fa-gear text-sm"></i>
     </button>
 
-    <!-- Modal login sitio (temporal hasta Firebase) -->
+    <!-- Modal login sitio (Firebase Auth, Etapa 5) -->
     <div class="modal-overlay" id="siteLoginModal">
         <div class="modal-content" style="max-width:420px;">
             <button class="modal-close" onclick="closeSiteLogin()" aria-label="Cerrar">
@@ -1474,15 +1474,22 @@
                 </div>
                 <form onsubmit="handleSiteLoginSubmit(event)" class="space-y-4">
                     <div>
-                        <label class="block text-[8px] font-bold tracking-widest text-gray-500 uppercase mb-1">Usuario</label>
-                        <input type="text" id="site-login-user" autocomplete="username" placeholder="USUARIO" class="w-full bg-white/5 border border-white/10 rounded px-3 py-2.5 text-xs text-white focus:outline-none focus:border-yellow-600 font-mono uppercase" required />
+                        <label class="block text-[8px] font-bold tracking-widest text-gray-500 uppercase mb-1">Correo electrónico</label>
+                        <input type="email" id="site-login-user" autocomplete="email" placeholder="CORREO@EMAIL.COM" class="w-full bg-white/5 border border-white/10 rounded px-3 py-2.5 text-xs text-white focus:outline-none focus:border-yellow-600 font-mono" required />
                     </div>
                     <div>
                         <label class="block text-[8px] font-bold tracking-widest text-gray-500 uppercase mb-1">Contraseña</label>
                         <input type="password" id="site-login-pass" autocomplete="current-password" placeholder="••••••••" class="w-full bg-white/5 border border-white/10 rounded px-3 py-2.5 text-xs text-white focus:outline-none focus:border-yellow-600 font-mono" required />
                     </div>
-                    <p id="site-login-error" class="hidden text-[10px] font-mono text-rose-400 tracking-widest uppercase text-center">❌ Usuario o contraseña incorrectos</p>
-                    <button type="submit" class="w-full bg-yellow-600 hover:bg-white text-black font-black py-3 rounded-lg text-[10px] tracking-widest uppercase transition-all">
+                    <div class="flex items-center justify-between gap-2 pt-1">
+                        <label class="flex items-center gap-2 cursor-pointer select-none">
+                            <input type="checkbox" id="site-login-remember" checked class="w-3 h-3 accent-yellow-600 cursor-pointer" />
+                            <span class="text-[9px] text-gray-500 tracking-widest uppercase font-mono">Recordarme</span>
+                        </label>
+                        <button type="button" onclick="forgotSitePassword()" class="text-[9px] text-yellow-600/90 hover:text-yellow-500 tracking-widest uppercase font-mono underline underline-offset-2 cursor-pointer">Olvidé mi contraseña</button>
+                    </div>
+                    <p id="site-login-error" class="hidden text-[10px] font-mono text-rose-400 tracking-widest uppercase text-center">❌ Correo o contraseña incorrectos</p>
+                    <button type="submit" id="site-login-btn" class="w-full bg-yellow-600 hover:bg-white text-black font-black py-3 rounded-lg text-[10px] tracking-widest uppercase transition-all disabled:opacity-60 disabled:cursor-wait">
                         Ingresar al panel
                     </button>
                 </form>
@@ -1843,8 +1850,7 @@
     </script>
 
     <script>
-        // --- LOGIN SITIO (temporal hasta Firebase, mismas credenciales que dashboard) ---
-        var SITE_AUTH_TEMP = { user: 'admin', pass: 'gelabert2026' };
+        // --- LOGIN SITIO (manejo de UI; la autenticación es Firebase, ver módulo abajo) ---
 
         function openSiteLogin() {
             document.getElementById('siteLoginModal').classList.add('open');
@@ -1856,19 +1862,6 @@
             document.body.style.overflow = '';
         }
 
-        function handleSiteLoginSubmit(e) {
-            e.preventDefault();
-            var u = document.getElementById('site-login-user').value.trim();
-            var p = document.getElementById('site-login-pass').value;
-            var err = document.getElementById('site-login-error');
-            if (u === SITE_AUTH_TEMP.user && p === SITE_AUTH_TEMP.pass) {
-                sessionStorage.setItem('dash_auth', '1');
-                window.location.href = 'dashboard.html';
-            } else if (err) {
-                err.classList.remove('hidden');
-            }
-        }
-
         document.getElementById('siteLoginModal').addEventListener('click', function(e) {
             if (e.target.id === 'siteLoginModal') closeSiteLogin();
         });
@@ -1877,6 +1870,91 @@
             var m = document.getElementById('siteLoginModal');
             if (e.key === 'Escape' && m && m.classList.contains('open')) closeSiteLogin();
         });
+    </script>
+
+    <!-- ============================================ -->
+    <!-- FIREBASE AUTH — ETAPA 5 (login real)         -->
+    <!-- ============================================ -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js';
+        import {
+            getAuth, signInWithEmailAndPassword, sendPasswordResetEmail,
+            setPersistence, browserLocalPersistence, browserSessionPersistence
+        } from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDXvD55QfZ0ugr5RfYTQvl1rjzu3r4GgSY",
+            authDomain: "cv-interactivo-ajgs.firebaseapp.com",
+            projectId: "cv-interactivo-ajgs",
+            storageBucket: "cv-interactivo-ajgs.firebasestorage.app",
+            messagingSenderId: "128839958582",
+            appId: "1:128839958582:web:3e0cda91d160d2a8d9d897"
+        };
+
+        const auth = getAuth(initializeApp(firebaseConfig));
+        auth.languageCode = 'es';
+
+        function authErrMsg(e) {
+            switch (e && e.code) {
+                case 'auth/invalid-credential':
+                case 'auth/wrong-password':
+                case 'auth/user-not-found':
+                    return '❌ Correo o contraseña incorrectos';
+                case 'auth/invalid-email':
+                    return '❌ Correo no válido';
+                case 'auth/missing-password':
+                    return '❌ Ingresa tu contraseña';
+                case 'auth/too-many-requests':
+                    return '❌ Demasiados intentos. Intenta más tarde';
+                case 'auth/network-request-failed':
+                    return '❌ Sin conexión con Firebase';
+                default:
+                    return '❌ ' + ((e && e.message) || 'Error de autenticación');
+            }
+        }
+
+        function showSiteError(msg) {
+            var err = document.getElementById('site-login-error');
+            if (!err) return;
+            if (msg) { err.textContent = msg; err.classList.remove('hidden'); }
+            else { err.classList.add('hidden'); }
+        }
+
+        window.handleSiteLoginSubmit = async function (e) {
+            e.preventDefault();
+            var email = document.getElementById('site-login-user').value.trim();
+            var pass = document.getElementById('site-login-pass').value;
+            var remember = document.getElementById('site-login-remember').checked;
+            var btn = document.getElementById('site-login-btn');
+            showSiteError(null);
+            if (btn) { btn.disabled = true; btn.textContent = 'Verificando...'; }
+            try {
+                await setPersistence(auth, remember ? browserLocalPersistence : browserSessionPersistence);
+                await signInWithEmailAndPassword(auth, email, pass);
+                window.location.href = 'dashboard.html';
+            } catch (ex) {
+                console.error('[Firebase login]', ex.code, ex.message);
+                showSiteError(authErrMsg(ex));
+                if (btn) { btn.disabled = false; btn.textContent = 'Ingresar al panel'; }
+            }
+        };
+
+        window.forgotSitePassword = async function () {
+            var email = document.getElementById('site-login-user').value.trim();
+            if (!email) { showSiteError('⚠️ Escribe tu correo primero'); return; }
+            showSiteError(null);
+            try {
+                await sendPasswordResetEmail(auth, email);
+                showSiteError('📩 Te enviamos un enlace a tu correo');
+            } catch (ex) {
+                console.error('[Firebase reset]', ex.code, ex.message);
+                if (ex.code === 'auth/user-not-found') {
+                    showSiteError('📩 Si el correo existe, te enviamos un enlace');
+                } else {
+                    showSiteError(authErrMsg(ex));
+                }
+            }
+        };
     </script>
 </body>
 </html>

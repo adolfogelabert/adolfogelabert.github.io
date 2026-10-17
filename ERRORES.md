@@ -23,6 +23,9 @@
 | 2026-10-05 | `ventas.html:789` | Solo botón PayPal | Faltaba dato de confianza | Añadidos correos `adolfo.1974@gmail.com` y `adolfo_gelabert@hotmail.com` como info bajo el botón |
 | 2026-10-05 | `ventas.html:825` | Wallet Binance placeholder | Sin address real | `0xd45bad4c27a4e5e1a72ecf73f428f44264be90a3` (USDT BEP-20) |
 | 2026-10-05 | `ventas.html:836-842` | Datos bancarios placeholder | Faltaba info real | BCP, Soles `192-94565740-0-47`, CCI `00219219456574004734`, titular "Adolfo Jose Gelabert Semeco" |
+| 2026-10-16 | `dashboard.html` / `index.html` | Login temporal con credenciales en texto plano (`admin`/`gelabert2026`, `sessionStorage.dash_auth`) | Auth provisional (fila 2026-09-17) | Reemplazado por Firebase Auth 13.0.0 modular: `signInWithEmailAndPassword`, persistencia local/session ("Recordarme"), `sendPasswordResetEmail`, `signOut`. Eliminados `DASH_AUTH_TEMP`/`SITE_AUTH_TEMP` |
+| 2026-10-16 | Firebase `apiKey` (prueba `accounts:signInWithPassword` + `firebaseinstallations`) | Google responde `400 API_KEY_INVALID` en 2 APIs distintas | La key pegada tenía 3 caracteres mal copiados (`V`→`v`, `F`→`f`, `I`→`l` antes de `1`) | Reemplazada por `AIzaSyDXvD55QfZ0ugr5RfYTQvl1rjzu3r4GgSY` (verificada: ya no devuelve `API_KEY_INVALID`) |
+| 2026-10-16 | Firebase proyecto `cv-interactivo-ajgs` | `accounts:signInWithPassword` responde `CONFIGURATION_NOT_FOUND` con la key válida | Authentication no aprovisionado (no se hizo click real en "Get started" en el panel Auth) | **BLOQUEADO**: pedir al dueño confirmar en Firebase Console → Build → Authentication → que Email/Password esté en estado "Enabled" |
 
 ## Pendientes de corrección (detectados en auditoría, aún no corregidos)
 - [x] URLs YouTube mock reemplazadas por reales el 2026-10-05 en `dashboard.html:345,354,363,372`
@@ -34,3 +37,5 @@
 - [x] `ventas.html` renderiza productos desde dashboard (`renderProductosTienda`, `storeProducts` localStorage, 2026-10-05)
 - [x] `ventas.html` muestra 3 productos demo si `storeProducts` está vacío (`PRODUCTOS_DEMO`, 2026-10-05)
 - [x] Dashboard: acción Duplicar producto (`duplicateProduct`, 2026-10-05)
+- [x] Login real con Firebase Auth en `dashboard.html` + `index.html` (Etapa 5, 2026-10-16) — **pendiente validar `apiKey`**
+- [ ] Añadir dominios autorizados en Firebase → Authentication → Settings → Authorized domains: `localhost` y `adolfogelabert.github.io` (necesario para enlaces de recuperación de contraseña)

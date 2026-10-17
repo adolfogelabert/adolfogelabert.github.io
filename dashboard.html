@@ -60,7 +60,7 @@
     <span id="toast-text">Notificación del sistema</span>
   </div>
 
-  <!-- --- PUERTA DE ACCESO (login temporal hasta Firebase) --- -->
+  <!-- --- PUERTA DE ACCESO (Firebase Auth, Etapa 5) --- -->
   <div id="login-gate" class="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/95 backdrop-blur-sm">
     <div class="relative bg-zinc-950 border border-zinc-800 rounded-2xl shadow-2xl shadow-black/80 w-full max-w-md p-8 space-y-6">
       <div class="flex flex-col items-center gap-3">
@@ -72,15 +72,22 @@
       </div>
       <form onsubmit="handleLoginSubmit(event)" class="space-y-4">
         <div>
-          <label class="block text-[8px] font-bold tracking-widest text-zinc-500 uppercase mb-1">Usuario</label>
-          <input type="text" id="login-user" autocomplete="username" placeholder="USUARIO" class="w-full bg-zinc-900 border border-zinc-800 rounded px-3 py-2.5 text-xs text-zinc-300 focus:outline-none focus:border-amber-500 font-mono uppercase" required />
+          <label class="block text-[8px] font-bold tracking-widest text-zinc-500 uppercase mb-1">Correo electrónico</label>
+          <input type="email" id="login-user" autocomplete="email" placeholder="CORREO@EMAIL.COM" class="w-full bg-zinc-900 border border-zinc-800 rounded px-3 py-2.5 text-xs text-zinc-300 focus:outline-none focus:border-amber-500 font-mono" required />
         </div>
         <div>
           <label class="block text-[8px] font-bold tracking-widest text-zinc-500 uppercase mb-1">Contraseña</label>
           <input type="password" id="login-pass" autocomplete="current-password" placeholder="••••••••" class="w-full bg-zinc-900 border border-zinc-800 rounded px-3 py-2.5 text-xs text-zinc-300 focus:outline-none focus:border-amber-500 font-mono" required />
         </div>
-        <p id="login-error" class="hidden text-[10px] font-mono text-rose-400 tracking-widest uppercase text-center">❌ Usuario o contraseña incorrectos</p>
-        <button type="submit" class="w-full bg-amber-500 hover:bg-amber-400 text-black font-black py-3 rounded-lg text-[10px] tracking-widest uppercase transition-all">
+        <div class="flex items-center justify-between gap-2 pt-1">
+          <label class="flex items-center gap-2 cursor-pointer select-none">
+            <input type="checkbox" id="login-remember" checked class="w-3 h-3 accent-amber-500 cursor-pointer" />
+            <span class="text-[9px] text-zinc-500 tracking-widest uppercase font-mono">Recordarme</span>
+          </label>
+          <button type="button" onclick="forgotPassword()" class="text-[9px] text-amber-500/80 hover:text-amber-400 tracking-widest uppercase font-mono underline underline-offset-2 cursor-pointer">Olvidé mi contraseña</button>
+        </div>
+        <p id="login-error" class="hidden text-[10px] font-mono text-rose-400 tracking-widest uppercase text-center">❌ Correo o contraseña incorrectos</p>
+        <button type="submit" id="login-btn" class="w-full bg-amber-500 hover:bg-amber-400 text-black font-black py-3 rounded-lg text-[10px] tracking-widest uppercase transition-all disabled:opacity-60 disabled:cursor-wait">
           Ingresar al panel
         </button>
       </form>
@@ -2104,45 +2111,114 @@
       });
     }
 
-    // --- PUERTA DE ACCESO (temporal hasta Firebase, no es seguridad real) ---
-    const DASH_AUTH_TEMP = { user: 'admin', pass: 'gelabert2026' };
+    // --- FIN bloque auth clásico (reemplazado por Firebase Auth, ver módulo abajo) ---
+  </script>
 
-    function checkDashAuth() {
+  <!-- ============================================ -->
+  <!-- FIREBASE AUTH — ETAPA 5 (login real)         -->
+  <!-- ============================================ -->
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js';
+    import {
+      getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut,
+      sendPasswordResetEmail, setPersistence, browserLocalPersistence, browserSessionPersistence
+    } from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js';
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDXvD55QfZ0ugr5RfYTQvl1rjzu3r4GgSY",
+      authDomain: "cv-interactivo-ajgs.firebaseapp.com",
+      projectId: "cv-interactivo-ajgs",
+      storageBucket: "cv-interactivo-ajgs.firebasestorage.app",
+      messagingSenderId: "128839958582",
+      appId: "1:128839958582:web:3e0cda91d160d2a8d9d897"
+    };
+
+    const auth = getAuth(initializeApp(firebaseConfig));
+    auth.languageCode = 'es';
+
+    function authErrMsg(e) {
+      switch (e && e.code) {
+        case 'auth/invalid-credential':
+        case 'auth/wrong-password':
+        case 'auth/user-not-found':
+          return '❌ Correo o contraseña incorrectos';
+        case 'auth/invalid-email':
+          return '❌ Correo no válido';
+        case 'auth/missing-password':
+          return '❌ Ingresa tu contraseña';
+        case 'auth/too-many-requests':
+          return '❌ Demasiados intentos. Intenta más tarde';
+        case 'auth/network-request-failed':
+          return '❌ Sin conexión con Firebase';
+        default:
+          return '❌ ' + ((e && e.message) || 'Error de autenticación');
+      }
+    }
+
+    function setGateOpen(open) {
       const gate = document.getElementById('login-gate');
       if (!gate) return;
-      if (sessionStorage.getItem('dash_auth') === '1') {
-        gate.classList.add('hidden');
-        document.body.style.overflow = '';
-      } else {
-        gate.classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
-      }
+      gate.classList.toggle('hidden', !open);
+      document.body.style.overflow = open ? 'hidden' : '';
     }
 
-    function handleLoginSubmit(e) {
-      e.preventDefault();
-      const u = document.getElementById('login-user').value.trim();
-      const p = document.getElementById('login-pass').value;
+    function showError(msg) {
       const err = document.getElementById('login-error');
-      if (u === DASH_AUTH_TEMP.user && p === DASH_AUTH_TEMP.pass) {
-        sessionStorage.setItem('dash_auth', '1');
-        if (err) err.classList.add('hidden');
-        checkDashAuth();
-        triggerNotification('✅ Bienvenido al panel');
-      } else if (err) {
-        err.classList.remove('hidden');
-      }
+      if (!err) return;
+      if (msg) { err.textContent = msg; err.classList.remove('hidden'); }
+      else { err.classList.add('hidden'); }
     }
 
-    function logoutDashboard() {
-      sessionStorage.removeItem('dash_auth');
+    onAuthStateChanged(auth, function (user) {
+      setGateOpen(!user);
+    });
+
+    window.handleLoginSubmit = async function (e) {
+      e.preventDefault();
+      const email = document.getElementById('login-user').value.trim();
+      const pass = document.getElementById('login-pass').value;
+      const remember = document.getElementById('login-remember').checked;
+      const btn = document.getElementById('login-btn');
+      showError(null);
+      if (btn) { btn.disabled = true; btn.textContent = 'Verificando...'; }
+      try {
+        await setPersistence(auth, remember ? browserLocalPersistence : browserSessionPersistence);
+        await signInWithEmailAndPassword(auth, email, pass);
+        document.getElementById('login-pass').value = '';
+        triggerNotification('✅ Bienvenido al panel');
+      } catch (ex) {
+        console.error('[Firebase login]', ex.code, ex.message);
+        showError(authErrMsg(ex));
+      } finally {
+        if (btn) { btn.disabled = false; btn.textContent = 'Ingresar al panel'; }
+      }
+    };
+
+    window.forgotPassword = async function () {
+      const email = document.getElementById('login-user').value.trim();
+      if (!email) { showError('⚠️ Escribe tu correo primero'); return; }
+      showError(null);
+      try {
+        await sendPasswordResetEmail(auth, email);
+        triggerNotification('📩 Revisa tu correo para restablecer la contraseña');
+        showError('📩 Te enviamos un enlace a tu correo');
+      } catch (ex) {
+        console.error('[Firebase reset]', ex.code, ex.message);
+        if (ex.code === 'auth/user-not-found') {
+          showError('📩 Si el correo existe, te enviamos un enlace');
+        } else {
+          showError(authErrMsg(ex));
+        }
+      }
+    };
+
+    window.logoutDashboard = async function () {
+      try { await signOut(auth); }
+      catch (ex) { console.error('[Firebase logout]', ex.code, ex.message); }
       const passInput = document.getElementById('login-pass');
       if (passInput) passInput.value = '';
-      checkDashAuth();
       triggerNotification('Sesión cerrada');
-    }
-
-    document.addEventListener('DOMContentLoaded', checkDashAuth);
+    };
   </script>
 
   <!-- ============================================ -->
