@@ -1562,7 +1562,7 @@
         });
 
         // ===== MODAL PRODUCTOS =====
-        const productData = [
+        window.productData = [
             {
                 img: 'images/producto1.jpg',
                 tag: 'Guía Técnica 001',
@@ -1602,19 +1602,32 @@
         ];
 
         function openProductModal(index) {
-            const p = productData[index];
             const lang = localStorage.getItem('preferredLang') || 'es';
+            const products = (window.indexProductsLive && window.indexProductsLive.length > 0)
+                ? window.indexProductsLive
+                : (window.productData || []).map(normalizeProduct);
+            const p = products[index];
+            if (!p) return;
 
-            document.getElementById('modalImg').src = p.img;
-            document.getElementById('modalImg').alt = lang === 'es' ? p.titleEs : p.titleEn;
-            document.getElementById('modalTag').textContent = p.tag;
-            document.getElementById('modalTitle').textContent = lang === 'es' ? p.titleEs : p.titleEn;
-            document.getElementById('modalDesc').textContent = lang === 'es' ? p.descEs : p.descEn;
-            document.getElementById('modalOld').textContent = p.old;
-            document.getElementById('modalPrice').textContent = p.price;
+            document.getElementById('modalImg').src = p.imagen || p.img;
+            document.getElementById('modalImg').alt = p.titulo || (lang === 'es' ? p.titleEs : p.titleEn) || '';
+            document.getElementById('modalTag').textContent = p.categoria || p.tag || '';
+            document.getElementById('modalTitle').textContent = p.titulo || (lang === 'es' ? p.titleEs : p.titleEn) || '';
+            document.getElementById('modalDesc').textContent = p.descripcion || (lang === 'es' ? p.descEs : p.descEn) || '';
+            document.getElementById('modalOld').textContent = p.precioOriginal || p.old || '';
+            document.getElementById('modalPrice').textContent = p.precioDescuento || p.price || '';
 
-            const features = lang === 'es' ? p.featuresEs : p.featuresEn;
-            document.getElementById('modalFeatures').innerHTML = features.map(f => '<li><i class="fas fa-check-circle"></i> ' + f + '</li>').join('');
+            let features;
+            if (typeof p.features === 'string') {
+                features = p.features.split(',').map(s => s.trim()).filter(Boolean);
+            } else if (Array.isArray(p.features)) {
+                features = p.features;
+            } else if (lang === 'es') {
+                features = p.featuresEs || [];
+            } else {
+                features = p.featuresEn || [];
+            }
+            document.getElementById('modalFeatures').innerHTML = features.map(f => '<li><i class="fas fa-check-circle"></i> ' + escapeHtml(f) + '</li>').join('');
 
             document.getElementById('productModal').classList.add('open');
             document.body.style.overflow = 'hidden';
@@ -1881,6 +1894,9 @@
             getAuth, signInWithEmailAndPassword, sendPasswordResetEmail,
             setPersistence, browserLocalPersistence, browserSessionPersistence
         } from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js';
+        import {
+            getFirestore, collection, getDocs
+        } from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js';
 
         const firebaseConfig = {
             apiKey: "AIzaSyDXvD55QfZ0ugr5RfYTQvl1rjzu3r4GgSY",
@@ -1891,8 +1907,98 @@
             appId: "1:128839958582:web:3e0cda91d160d2a8d9d897"
         };
 
-        const auth = getAuth(initializeApp(firebaseConfig));
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
         auth.languageCode = 'es';
+
+        // ===== SINCRONIZACIÓN DE PRODUCTOS (Firestore + localStorage) =====
+        function escapeHtml(s) {
+            return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+        }
+
+        function normalizeProduct(p) {
+            if (!p) return null;
+            return {
+                id: p.id,
+                titulo: p.titulo || p.titleEs || '',
+                descripcion: p.descripcion || p.descEs || '',
+                imagen: p.imagen || p.img || 'images/producto1.jpg',
+                categoria: p.categoria || p.tag || '',
+                precioOriginal: p.precioOriginal || p.old || '',
+                precioDescuento: p.precioDescuento || p.price || '',
+                features: typeof p.features === 'string' ? p.features : (p.featuresEs ? p.featuresEs.join(', ') : 'Incluido'),
+                activo: p.activo !== false
+            };
+        }
+
+        window.indexProductsLive = [];
+
+        function renderIndexSlider() {
+            const track = document.getElementById('sliderTrack');
+            if (!track) return;
+            const products = window.indexProductsLive.length > 0
+                ? window.indexProductsLive
+                : (window.productData || []).map(normalizeProduct);
+            if (!products.length) {
+                track.innerHTML = '<div class="text-center py-12 text-zinc-500 w-full">No hay productos disponibles.</div>';
+                return;
+            }
+            track.innerHTML = products.slice(0, 5).map((p, i) => `
+                <div class="slide-card" onclick="openProductModal(${i})" style="cursor:pointer">
+                    <div class="card-bg" style="background-image: url('${escapeHtml(p.imagen)}');"></div>
+                    <div>
+                        <span class="card-tag i18n">${escapeHtml(p.categoria)}</span>
+                        <span class="card-title i18n">${escapeHtml(p.titulo)}</span>
+                        <span class="card-cta i18n" data-es="Ver detalles →" data-en="View details →">Ver detalles →</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function syncIndexProductsFromCloud() {
+            // 1) localStorage (rápido, mismo navegador)
+            let productos = [];
+            try { productos = JSON.parse(localStorage.getItem('storeProducts') || '[]'); } catch (e) {}
+            // 2) Firestore (cross-browser, si no hay en localStorage o si la lista está vacía)
+            if (!productos.length) {
+                try {
+                    const snap = await getDocs(collection(db, 'products'));
+                    if (snap.docs.length > 0) {
+                        productos = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                        try { localStorage.setItem('storeProducts', JSON.stringify(productos)); } catch (e) {}
+                    }
+                } catch (e) {
+                    console.warn('[Firestore index sync]', e.message);
+                }
+            }
+            const activos = (productos || []).filter(p => p && p.activo !== false);
+            if (activos.length > 0) {
+                window.indexProductsLive = activos.map(normalizeProduct);
+                renderIndexSlider();
+            }
+        }
+
+        // Render inicial (productos hardcodeados como fallback)
+        document.addEventListener('DOMContentLoaded', function () {
+            if (window.productData && window.productData.length > 0) {
+                window.indexProductsLive = [];
+                renderIndexSlider();
+            }
+            syncIndexProductsFromCloud();
+        });
+
+        // Sincronización entre pestañas (cuando el dashboard escribe en localStorage)
+        window.addEventListener('storage', function (e) {
+            if (e.key === 'storeProducts') {
+                try {
+                    const productos = JSON.parse(e.newValue || '[]');
+                    const activos = (productos || []).filter(p => p && p.activo !== false);
+                    window.indexProductsLive = activos.map(normalizeProduct);
+                    renderIndexSlider();
+                } catch (err) { console.warn('[storage event]', err); }
+            }
+        });
 
         function authErrMsg(e) {
             switch (e && e.code) {

@@ -1069,6 +1069,16 @@
             });
         }
         document.addEventListener('DOMContentLoaded', renderProductosTienda);
+
+        // Sincronización entre pestañas: cuando el dashboard escribe en localStorage
+        window.addEventListener('storage', function (e) {
+            if (e.key === 'storeProducts') {
+                try {
+                    var productos = JSON.parse(e.newValue || '[]');
+                    if (typeof renderProductosTienda === 'function') renderProductosTienda();
+                } catch (err) { console.warn('[storage event ventas]', err); }
+            }
+        });
     </script>
 
     <script>
