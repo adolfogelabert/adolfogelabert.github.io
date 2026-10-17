@@ -741,6 +741,30 @@
                     <p class="pay-note i18n" data-es="Envía el comprobante a nuestro WhatsApp para confirmar tu compra." data-en="Send the receipt to our WhatsApp to confirm your purchase.">Envía el comprobante a nuestro WhatsApp para confirmar tu compra.</p>
                 </div>
             </div>
+
+            <!-- SECCIÓN: DATOS DEL CLIENTE + COMPROBANTE (Etapa 6) -->
+            <div id="order-section" style="margin-top:24px; padding-top:24px; border-top:1px solid rgba(255,255,255,0.1);">
+              <p class="pay-label" style="margin-bottom:14px;">📋 TUS DATOS Y COMPROBANTE</p>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;">
+                <input type="text" id="cust-name" placeholder="Tu nombre" class="pay-input" style="background:rgba(255,255,255,0.05); border:1px solid #262626; border-radius:8px; padding:10px 12px; color:#fff; font-size:0.8rem;" />
+                <input type="email" id="cust-email" placeholder="Tu correo" class="pay-input" style="background:rgba(255,255,255,0.05); border:1px solid #262626; border-radius:8px; padding:10px 12px; color:#fff; font-size:0.8rem;" />
+                <input type="tel" id="cust-phone" placeholder="+51 999 999 999" class="pay-input" style="background:rgba(255,255,255,0.05); border:1px solid #262626; border-radius:8px; padding:10px 12px; color:#fff; font-size:0.8rem; grid-column:1 / -1;" />
+              </div>
+              <p class="pay-label" style="font-size:0.7rem; color:#9ca3af; margin-bottom:6px;">Comprobante de pago (imagen)</p>
+              <div style="display:flex; gap:8px; align-items:center; margin-bottom:8px;">
+                <input type="file" id="receipt-file" accept="image/*" style="flex:1; color:#9ca3af; font-size:0.75rem;" />
+                <button type="button" id="upload-receipt-btn" onclick="uploadReceipt()" style="background:#ca8a04; color:#000; font-weight:900; padding:8px 14px; border-radius:8px; font-size:0.7rem; text-transform:uppercase; letter-spacing:0.1em; cursor:pointer; border:none;">☁ Subir</button>
+              </div>
+              <div id="receipt-status" style="font-size:0.7rem; color:#9ca3af; margin-bottom:8px; min-height:18px;"></div>
+              <div id="receipt-preview" class="hidden" style="margin-bottom:12px;">
+                <img id="receipt-preview-img" style="max-width:200px; max-height:200px; border-radius:8px; border:1px solid #262626;" alt="comprobante" />
+                <p class="pay-note" id="receipt-url-display" style="font-size:0.65rem; word-break:break-all; color:#ca8a04; margin-top:4px;"></p>
+              </div>
+              <button type="button" id="send-order-btn" onclick="sendOrder()" disabled style="width:100%; background:#ca8a04; color:#000; font-weight:900; padding:14px 16px; border-radius:10px; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.1em; cursor:pointer; border:none; opacity:0.4; transition:opacity 0.2s;">
+                🛒 Enviar pedido por WhatsApp
+              </button>
+              <p class="pay-note" style="font-size:0.65rem; color:#6b7280; margin-top:8px; text-align:center;">Tu pedido se registra en Firestore y se abre WhatsApp con el resumen + link al comprobante.</p>
+            </div>
         </div>
     </div>
 
@@ -780,10 +804,13 @@
             var payModal = document.getElementById('payModal');
             var productListTienda = []; // lo llena renderProductosTienda()
             var currentLang = localStorage.getItem('preferredLang') || 'es';
+            var currentProductForOrder = null; // producto actualmente en pay modal
+            var currentPaymentMethod = 'stripe'; // método de pago seleccionado
 
             function openModal(index) {
                 var p = productListTienda[index];
                 if (!p || !productModal) return;
+                currentProductForOrder = p;
 
                 document.getElementById('modalImg').src = p.imagen;
                 document.getElementById('modalImg').alt = p.titulo;
@@ -810,12 +837,28 @@
             function openPayModal() {
                 if (payModal) payModal.classList.add('open');
                 document.body.style.overflow = 'hidden';
+                // Resetear sección de pedido
+                var custEmail = document.getElementById('cust-email');
+                if (custEmail) validateOrderForm();
             }
 
             function closePayModal() {
                 if (payModal) payModal.classList.remove('open');
                 document.body.style.overflow = '';
             }
+
+            // Prepara el pedido: setea producto, cierra modal de producto, abre pay modal
+            function prepareOrder(index) {
+                currentProductForOrder = productListTienda[index] || null;
+                closeModal();
+                if (!currentProductForOrder) {
+                    alert('Producto no disponible');
+                    return;
+                }
+                openPayModal();
+            }
+
+            window.prepareOrder = prepareOrder;
 
             // Cerrar modales con click afuera
             if (productModal) {
@@ -847,6 +890,7 @@
                 el.classList.add('active');
                 var panel = document.getElementById('panel-' + method);
                 if (panel) panel.classList.add('active');
+                currentPaymentMethod = method;
             }
 
             // Copiar texto
@@ -1009,7 +1053,7 @@
                                     : '') +
                                 '<span class="text-3xl font-black text-yellow-600 tracking-tighter">' + (p.precioDescuento || '') + '</span>' +
                             '</div>' +
-                            '<button onclick="event.stopPropagation(); closeModal(); openPayModal();" class="btn-glow font-black py-3 px-6 rounded-xl text-xs uppercase tracking-widest cursor-pointer">Obtener</button>' +
+                            '<button onclick="event.stopPropagation(); prepareOrder(' + idx + ');" class="btn-glow font-black py-3 px-6 rounded-xl text-xs uppercase tracking-widest cursor-pointer">Obtener</button>' +
                         '</div>' +
                     '</div>';
                 grid.appendChild(article);
@@ -1055,6 +1099,179 @@
             }
         }
         document.addEventListener('DOMContentLoaded', aplicarConfigPagosTienda);
+    </script>
+
+    <!-- ============================================ -->
+    <!-- ETAPA 6: PEDIDOS (Cloudinary + Firestore)   -->
+    <!-- ============================================ -->
+    <script>
+        var currentReceiptUrl = null;
+
+        function validateOrderForm() {
+            var name = document.getElementById('cust-name');
+            var email = document.getElementById('cust-email');
+            var btn = document.getElementById('send-order-btn');
+            if (!btn) return;
+            var ok = name && name.value.trim() && email && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email.value.trim());
+            btn.disabled = !ok;
+            btn.style.opacity = ok ? '1' : '0.4';
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var n = document.getElementById('cust-name');
+            var e = document.getElementById('cust-email');
+            if (n) n.addEventListener('input', validateOrderForm);
+            if (e) e.addEventListener('input', validateOrderForm);
+        });
+
+        async function uploadReceipt() {
+            var fileInput = document.getElementById('receipt-file');
+            var btn = document.getElementById('upload-receipt-btn');
+            var status = document.getElementById('receipt-status');
+            var previewWrap = document.getElementById('receipt-preview');
+            var previewImg = document.getElementById('receipt-preview-img');
+            var urlDisplay = document.getElementById('receipt-url-display');
+            if (!fileInput.files || !fileInput.files[0]) {
+                status.textContent = '⚠️ Selecciona una imagen primero';
+                status.style.color = '#fbbf24';
+                return;
+            }
+            if (!window.uploadToCloudinary) {
+                status.textContent = '❌ Cloudinary no inicializado aún, espera 1s y reintenta';
+                status.style.color = '#f87171';
+                return;
+            }
+            var originalText = btn.textContent;
+            btn.textContent = 'Subiendo...';
+            btn.disabled = true;
+            status.textContent = 'Subiendo a Cloudinary...';
+            status.style.color = '#9ca3af';
+            try {
+                var url = await window.uploadToCloudinary(fileInput.files[0]);
+                currentReceiptUrl = url;
+                previewImg.src = url;
+                urlDisplay.textContent = url;
+                previewWrap.classList.remove('hidden');
+                status.textContent = '✅ Comprobante subido';
+                status.style.color = '#34d399';
+            } catch (e) {
+                console.error('[Cloudinary receipt]', e);
+                status.textContent = '❌ Error: ' + e.message;
+                status.style.color = '#f87171';
+            } finally {
+                btn.textContent = originalText;
+                btn.disabled = false;
+            }
+        }
+
+        async function sendOrder() {
+            var btn = document.getElementById('send-order-btn');
+            var name = document.getElementById('cust-name').value.trim();
+            var email = document.getElementById('cust-email').value.trim();
+            var phone = document.getElementById('cust-phone').value.trim();
+            if (!currentProductForOrder) { alert('No hay producto seleccionado'); return; }
+            if (!name || !email) { alert('Completa nombre y correo'); return; }
+            btn.disabled = true;
+            btn.textContent = 'Registrando pedido...';
+            try {
+                var orderData = {
+                    productId: String(currentProductForOrder.id || ''),
+                    productTitle: currentProductForOrder.titulo || 'Sin título',
+                    paymentMethod: currentPaymentMethod,
+                    amount: currentProductForOrder.precioDescuento || '',
+                    customerName: name,
+                    customerEmail: email,
+                    customerPhone: phone,
+                    receiptUrl: currentReceiptUrl || null
+                };
+                if (window.fbSaveOrderTienda) {
+                    await window.fbSaveOrderTienda(orderData);
+                } else {
+                    console.warn('[sendOrder] Firestore no inicializado; orden NO registrada en la nube');
+                }
+                var msg = '¡Hola Adolfo! 👋\n\nQuiero confirmar mi compra:\n' +
+                    '• Producto: ' + orderData.productTitle + '\n' +
+                    '• Precio: ' + orderData.amount + '\n' +
+                    '• Método: ' + orderData.paymentMethod.toUpperCase() + '\n\n' +
+                    'Mis datos:\n' +
+                    '• Nombre: ' + name + '\n' +
+                    '• Email: ' + email + '\n' +
+                    (phone ? '• Tel: ' + phone + '\n' : '') +
+                    (currentReceiptUrl ? '\n📎 Comprobante: ' + currentReceiptUrl : '\n(Sin comprobante adjunto)');
+                var waUrl = 'https://wa.me/51930562562?text=' + encodeURIComponent(msg);
+                window.open(waUrl, '_blank');
+                btn.textContent = '✅ Pedido enviado';
+                setTimeout(function() { btn.textContent = '🛒 Enviar pedido por WhatsApp'; btn.disabled = false; }, 2000);
+            } catch (e) {
+                console.error('[sendOrder]', e);
+                btn.textContent = '❌ Error - reintenta';
+                setTimeout(function() { btn.textContent = '🛒 Enviar pedido por WhatsApp'; btn.disabled = false; }, 2500);
+            }
+        }
+
+        window.uploadReceipt = uploadReceipt;
+        window.sendOrder = sendOrder;
+        window.validateOrderForm = validateOrderForm;
+    </script>
+
+    <!-- Firebase + Firestore: cargar productos desde la nube (fuente de verdad) -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js';
+        import {
+            getFirestore, collection, getDocs, doc, setDoc, serverTimestamp
+        } from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDXvD55QfZ0ugr5RfYTQvl1rjzu3r4GgSY",
+            authDomain: "cv-interactivo-ajgs.firebaseapp.com",
+            projectId: "cv-interactivo-ajgs",
+            storageBucket: "cv-interactivo-ajgs.firebasestorage.app",
+            messagingSenderId: "128839958582",
+            appId: "1:128839958582:web:3e0cda91d160d2a8d9d897"
+        };
+
+        try {
+            const app = initializeApp(firebaseConfig, 'cv-ventas');
+            const db = getFirestore(app);
+
+            window.uploadToCloudinary = async function (file) {
+                const fd = new FormData();
+                fd.append('file', file);
+                fd.append('upload_preset', 'cv_ventas_preset');
+                const r = await fetch('https://api.cloudinary.com/v1_1/szfgq5x6/image/upload', { method: 'POST', body: fd });
+                if (!r.ok) {
+                    const t = await r.text();
+                    throw new Error('Cloudinary ' + r.status + ': ' + t.substring(0, 200));
+                }
+                const data = await r.json();
+                if (!data.secure_url) throw new Error('Cloudinary sin secure_url');
+                return data.secure_url;
+            };
+
+            window.fbSaveOrderTienda = async function (order) {
+                const ref = doc(collection(db, 'orders'));
+                await setDoc(ref, { ...order, createdAt: serverTimestamp(), status: 'pendiente' });
+                return ref.id;
+            };
+
+            (async function syncProductsFromCloud() {
+                try {
+                    const snap = await getDocs(collection(db, 'products'));
+                    if (snap.docs.length > 0) {
+                        const cloud = snap.docs.map(function (d) {
+                            const data = d.data();
+                            return Object.assign({ id: isNaN(Number(d.id)) ? d.id : Number(d.id) }, data);
+                        });
+                        try { localStorage.setItem('storeProducts', JSON.stringify(cloud)); } catch (e) {}
+                        if (typeof renderProductosTienda === 'function') renderProductosTienda();
+                    }
+                } catch (e) {
+                    console.warn('[Firestore ventas syncProductsFromCloud]', e.message);
+                }
+            })();
+        } catch (e) {
+            console.warn('[Firebase ventas init]', e.message);
+        }
     </script>
 </body>
 </html>

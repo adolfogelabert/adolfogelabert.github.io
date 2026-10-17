@@ -179,6 +179,16 @@
         </div>
       </button>
 
+      <button onclick="switchTab('orders')" id="btn-orders" class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded text-xs tracking-wider transition-all uppercase text-zinc-400 hover:text-white hover:bg-zinc-900/40">
+        <div class="flex-1 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
+            <span>ÓRDENES DE COMPRA</span>
+          </div>
+          <span id="badge-orders" class="bg-amber-500 text-black text-[9px] font-black px-1.5 py-0.5 rounded hidden">0</span>
+        </div>
+      </button>
+
       <p class="pt-6 px-3 text-[9px] uppercase tracking-widest text-zinc-600 font-extrabold mb-2 font-mono">HERRAMIENTAS CREATIVAS</p>
 
       <button onclick="switchTab('promptHelper')" id="btn-promptHelper" class="nav-btn w-full flex items-center gap-3 px-3 py-2 rounded text-xs tracking-wider transition-all uppercase text-zinc-400 hover:text-white hover:bg-zinc-900/40">
@@ -265,7 +275,7 @@
   <!-- --- JAVASCRIPT: LÓGICA DE ESTADOS Y RENDERIZADO --- -->
   <script>
     // --- BASE DE DATOS LOCAL SIMULADA (STATE) ---
-    const state = {
+    window.state = {
       currentTab: 'dashboard',
       searchTerm: '',
       profile: {
@@ -490,6 +500,61 @@
       }, 3500);
     }
 
+    // --- HELPERS GLOBALES (Etapa 6: Cloudinary + Firestore) ---
+    function escapeHtml(s) {
+      return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+
+    async function uploadProductImage() {
+      const fileInput = document.getElementById('prod-imagen-file');
+      const label = document.getElementById('prod-imagen-file-label');
+      const urlField = document.getElementById('prod-imagen');
+      const previewWrap = document.getElementById('prod-imagen-preview-wrap');
+      const preview = document.getElementById('prod-imagen-preview');
+      if (!fileInput.files || !fileInput.files[0]) {
+        triggerNotification('⚠️ Selecciona una imagen primero');
+        return;
+      }
+      if (!window.uploadToCloudinary) {
+        triggerNotification('❌ Cloudinary no inicializado');
+        return;
+      }
+      const originalLabel = label.textContent;
+      label.textContent = 'Subiendo...';
+      fileInput.disabled = true;
+      try {
+        const url = await window.uploadToCloudinary(fileInput.files[0]);
+        urlField.value = url;
+        preview.src = url;
+        previewWrap.classList.remove('hidden');
+        triggerNotification('✅ Imagen subida a Cloudinary');
+      } catch (e) {
+        console.error('[Cloudinary product image]', e);
+        triggerNotification('❌ Error al subir: ' + e.message);
+      } finally {
+        label.textContent = originalLabel;
+        fileInput.disabled = false;
+        fileInput.value = '';
+      }
+    }
+
+    function clearProductImage() {
+      document.getElementById('prod-imagen').value = '';
+      document.getElementById('prod-imagen-preview-wrap').classList.add('hidden');
+      document.getElementById('prod-imagen-preview').src = '';
+    }
+
+    async function confirmOrder(id) {
+      if (!window.fbUpdateOrderStatus) return;
+      try { await window.fbUpdateOrderStatus(id, 'confirmado'); triggerNotification('✅ Orden confirmada'); }
+      catch (e) { console.error(e); triggerNotification('❌ Error al confirmar'); }
+    }
+    async function rejectOrder(id) {
+      if (!window.fbUpdateOrderStatus) return;
+      try { await window.fbUpdateOrderStatus(id, 'rechazado'); triggerNotification('Orden rechazada'); }
+      catch (e) { console.error(e); triggerNotification('❌ Error al rechazar'); }
+    }
+
     // --- CAMBIADOR DE PESTAÑAS (ROUTING SIMULADO) ---
     function switchTab(tabId) {
       state.currentTab = tabId;
@@ -516,6 +581,7 @@
         trayectoria: "Historial Cronológico de Trayectoria",
         referencias: "Gestión de Referencias y Testimonios",
         messages: "Bandeja de Consultas de Clientes",
+        orders: "Órdenes de Compra y Comprobantes",
         promptHelper: "Herramienta de Generación de Prompts con IA",
         settings: "Configuración Global de Identidad"
       };
@@ -805,6 +871,7 @@
 
       state.products.unshift(newProd);
       guardarProductosTienda();
+      if (window.fbSaveProduct) window.fbSaveProduct(newProd).catch(e => console.error('[Firestore saveProduct]', e));
       triggerNotification("Producto publicado en tienda.");
       renderCurrentTab();
     }
@@ -812,6 +879,7 @@
     function deleteProduct(id) {
       state.products = state.products.filter(p => p.id !== id);
       guardarProductosTienda();
+      if (window.fbDeleteProduct) window.fbDeleteProduct(id).catch(e => console.error('[Firestore deleteProduct]', e));
       triggerNotification("Producto eliminado.");
       renderCurrentTab();
     }
@@ -819,6 +887,8 @@
     function toggleProduct(id) {
       state.products = state.products.map(p => p.id === id ? { ...p, activo: !p.activo } : p);
       guardarProductosTienda();
+      const updated = state.products.find(p => p.id === id);
+      if (updated && window.fbSaveProduct) window.fbSaveProduct(updated).catch(e => console.error('[Firestore toggle]', e));
       triggerNotification("Estado de producto actualizado.");
       renderCurrentTab();
     }
@@ -829,6 +899,7 @@
       const copia = { ...orig, id: Date.now(), titulo: 'Copia de ' + orig.titulo, activo: true };
       state.products.unshift(copia);
       guardarProductosTienda();
+      if (window.fbSaveProduct) window.fbSaveProduct(copia).catch(e => console.error('[Firestore duplicate]', e));
       triggerNotification("Producto duplicado.");
       renderCurrentTab();
     }
@@ -1385,7 +1456,18 @@
                     </div>
                     <div>
                       <label class="block text-[8px] font-bold tracking-widest text-zinc-500 uppercase mb-1">Ruta de Imagen</label>
-                      <input type="text" id="prod-imagen" placeholder="images/producto1.jpg" class="w-full bg-zinc-900 border border-zinc-800 rounded px-3 py-2 text-xs text-zinc-300 focus:outline-none focus:border-amber-500" />
+                      <div class="flex gap-2">
+                        <input type="text" id="prod-imagen" placeholder="images/producto1.jpg o URL Cloudinary" class="flex-1 min-w-0 bg-zinc-900 border border-zinc-800 rounded px-3 py-2 text-xs text-zinc-300 focus:outline-none focus:border-amber-500" />
+                        <input type="file" id="prod-imagen-file" accept="image/*" class="hidden" />
+                        <button type="button" onclick="uploadProductImage()" class="shrink-0 bg-zinc-800 hover:bg-amber-500 hover:text-black text-zinc-300 px-3 py-2 rounded text-[9px] font-bold uppercase tracking-widest border border-zinc-700 transition-all disabled:opacity-50 disabled:cursor-wait" title="Subir a Cloudinary">
+                          <span id="prod-imagen-file-label">☁ Subir</span>
+                        </button>
+                      </div>
+                      <div id="prod-imagen-preview-wrap" class="hidden mt-2 relative">
+                        <img id="prod-imagen-preview" class="w-full h-32 object-cover rounded border border-zinc-800" alt="preview" />
+                        <button type="button" onclick="clearProductImage()" class="absolute top-1 right-1 bg-black/80 hover:bg-rose-600 text-white w-6 h-6 rounded text-xs flex items-center justify-center">×</button>
+                      </div>
+                      <p class="text-[7px] text-zinc-600 mt-1">Cloudinary preset: cv_ventas_preset · folder: cv_interactivo</p>
                     </div>
                   </div>
                   <div class="grid grid-cols-2 gap-3">
@@ -1779,7 +1861,68 @@
         `;
       }
 
-      // --- 6. AI PROMPT HELPER VIEW ---
+      // --- 6. ÓRDENES DE COMPRA (Firestore) ---
+      else if (state.currentTab === 'orders') {
+        const orders = window.stateOrders || [];
+        const pendientes = orders.filter(o => (o.status || 'pendiente') === 'pendiente');
+        const rows = orders.length ? orders.map(o => {
+          const fecha = o.createdAt && o.createdAt.toDate ? o.createdAt.toDate().toLocaleString('es-PE', {dateStyle:'short', timeStyle:'short'}) : '—';
+          const status = o.status || 'pendiente';
+          const statusClass = status === 'confirmado' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : status === 'rechazado' ? 'bg-rose-500/10 text-rose-400 border-rose-500/20' : 'bg-amber-500/10 text-amber-500 border-amber-500/20';
+          const receipt = o.receiptUrl ? `<a href="${o.receiptUrl}" target="_blank" rel="noopener" class="text-amber-500 hover:underline text-[9px]">Ver comprobante ↗</a>` : '<span class="text-zinc-700 text-[9px]">—</span>';
+          const actions = status === 'pendiente' ? `
+            <div class="flex gap-1">
+              <button onclick="confirmOrder('${o.id}')" class="bg-emerald-500/10 hover:bg-emerald-500 hover:text-black text-emerald-400 px-2 py-1 rounded text-[9px] font-bold uppercase tracking-widest border border-emerald-500/20">Confirmar</button>
+              <button onclick="rejectOrder('${o.id}')" class="bg-rose-500/10 hover:bg-rose-500 hover:text-white text-rose-400 px-2 py-1 rounded text-[9px] font-bold uppercase tracking-widest border border-rose-500/20">Rechazar</button>
+            </div>` : `<span class="text-[9px] text-zinc-600">—</span>`;
+          return `
+            <tr class="border-b border-zinc-900 hover:bg-zinc-950/50">
+              <td class="py-3 px-3 text-[10px] text-zinc-400 font-mono whitespace-nowrap">${fecha}</td>
+              <td class="py-3 px-3">
+                <p class="text-[10px] text-white">${escapeHtml(o.customerName || '—')}</p>
+                <p class="text-[9px] text-zinc-500">${escapeHtml(o.customerEmail || '')}</p>
+              </td>
+              <td class="py-3 px-3 text-[10px] text-zinc-300">${escapeHtml(o.productTitle || '—')}</td>
+              <td class="py-3 px-3 text-[10px] text-amber-500 font-mono whitespace-nowrap">${escapeHtml(o.amount || '—')}</td>
+              <td class="py-3 px-3 text-[10px] text-zinc-400">${escapeHtml(o.paymentMethod || '—')}</td>
+              <td class="py-3 px-3">${receipt}</td>
+              <td class="py-3 px-3"><span class="px-2 py-1 rounded text-[9px] font-bold uppercase tracking-widest border ${statusClass}">${status}</span></td>
+              <td class="py-3 px-3">${actions}</td>
+            </tr>`;
+        }).join('') : '';
+        area.innerHTML = `
+          <div class="space-y-6">
+            <div class="flex items-center justify-between bg-zinc-950 px-5 py-3 rounded border border-zinc-900">
+              <div class="flex items-center gap-3">
+                <div class="w-2 h-2 bg-amber-500 rounded-full"></div>
+                <span class="text-[9px] font-mono text-zinc-500 uppercase tracking-widest">Órdenes Recibidas (${orders.length}) · Pendientes (${pendientes.length})</span>
+              </div>
+              <span class="text-[9px] bg-zinc-900 text-amber-500 border border-zinc-800 px-3 py-1 rounded font-bold uppercase tracking-widest">Firestore · cv-interactivo-ajgs</span>
+            </div>
+            <div class="bg-zinc-950 border border-zinc-900 rounded overflow-hidden">
+              <div class="overflow-x-auto">
+                <table class="w-full">
+                  <thead>
+                    <tr class="bg-zinc-900/50 border-b border-zinc-900">
+                      <th class="text-left py-3 px-3 text-[8px] font-black text-zinc-500 uppercase tracking-widest">Fecha</th>
+                      <th class="text-left py-3 px-3 text-[8px] font-black text-zinc-500 uppercase tracking-widest">Cliente</th>
+                      <th class="text-left py-3 px-3 text-[8px] font-black text-zinc-500 uppercase tracking-widest">Producto</th>
+                      <th class="text-left py-3 px-3 text-[8px] font-black text-zinc-500 uppercase tracking-widest">Monto</th>
+                      <th class="text-left py-3 px-3 text-[8px] font-black text-zinc-500 uppercase tracking-widest">Método</th>
+                      <th class="text-left py-3 px-3 text-[8px] font-black text-zinc-500 uppercase tracking-widest">Comprobante</th>
+                      <th class="text-left py-3 px-3 text-[8px] font-black text-zinc-500 uppercase tracking-widest">Estado</th>
+                      <th class="text-left py-3 px-3 text-[8px] font-black text-zinc-500 uppercase tracking-widest">Acción</th>
+                    </tr>
+                  </thead>
+                  <tbody>${rows || '<tr><td colspan="8" class="text-center py-12 text-zinc-600 font-mono text-xs uppercase">Aún no hay órdenes. Las compras desde ventas.html aparecerán aquí en tiempo real.</td></tr>'}</tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      // --- 7. AI PROMPT HELPER VIEW ---
       else if (state.currentTab === 'promptHelper') {
         area.innerHTML = `
           <div class="space-y-6">
@@ -2123,6 +2266,10 @@
       getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut,
       sendPasswordResetEmail, setPersistence, browserLocalPersistence, browserSessionPersistence
     } from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js';
+    import {
+      getFirestore, collection, doc, setDoc, deleteDoc, getDoc, getDocs,
+      onSnapshot, serverTimestamp, query, orderBy
+    } from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js';
 
     const firebaseConfig = {
       apiKey: "AIzaSyDXvD55QfZ0ugr5RfYTQvl1rjzu3r4GgSY",
@@ -2133,9 +2280,95 @@
       appId: "1:128839958582:web:3e0cda91d160d2a8d9d897"
     };
 
-    const auth = getAuth(initializeApp(firebaseConfig));
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
     auth.languageCode = 'es';
 
+    // --- CLOUDINARY UPLOADER (presignado) ---
+    window.uploadToCloudinary = async function (file) {
+      const fd = new FormData();
+      fd.append('file', file);
+      fd.append('upload_preset', 'cv_ventas_preset');
+      const r = await fetch('https://api.cloudinary.com/v1_1/szfgq5x6/image/upload', { method: 'POST', body: fd });
+      if (!r.ok) {
+        const t = await r.text();
+        throw new Error('Cloudinary ' + r.status + ': ' + t.substring(0, 200));
+      }
+      const data = await r.json();
+      if (!data.secure_url) throw new Error('Cloudinary sin secure_url');
+      return data.secure_url;
+    };
+
+    // --- FIRESTORE: PRODUCTS (espejo de localStorage, fuente de verdad) ---
+    window.fbSaveProduct = async function (product) {
+      const ref = doc(db, 'products', String(product.id));
+      const { id, ...rest } = product;
+      const payload = { ...rest, id: String(id), updatedAt: serverTimestamp() };
+      const docSnap = await getDoc(ref);
+      if (!docSnap.exists()) payload.createdAt = serverTimestamp();
+      await setDoc(ref, payload);
+    };
+
+    window.fbDeleteProduct = async function (id) {
+      await deleteDoc(doc(db, 'products', String(id)));
+    };
+
+    window.fbLoadProducts = async function () {
+      const snap = await getDocs(collection(db, 'products'));
+      return snap.docs.map(d => ({ id: isNaN(Number(d.id)) ? d.id : Number(d.id), ...d.data() }));
+    };
+
+    // --- FIRESTORE: ORDERS (tienda → dashboard) ---
+    window.fbSaveOrder = async function (order) {
+      const ref = doc(collection(db, 'orders'));
+      await setDoc(ref, { ...order, createdAt: serverTimestamp(), status: 'pendiente' });
+      return ref.id;
+    };
+
+    window.fbUpdateOrderStatus = async function (id, status) {
+      await setDoc(doc(db, 'orders', id), { status, updatedAt: serverTimestamp() }, { merge: true });
+    };
+
+    function refreshOrdersBadge(orders) {
+      const badge = document.getElementById('badge-orders');
+      if (!badge) return;
+      const pendientes = orders.filter(o => (o.status || 'pendiente') === 'pendiente').length;
+      if (pendientes > 0) { badge.textContent = pendientes; badge.classList.remove('hidden'); }
+      else { badge.classList.add('hidden'); }
+    }
+
+    function startOrdersListener() {
+      try {
+        onSnapshot(query(collection(db, 'orders'), orderBy('createdAt', 'desc')), (snap) => {
+          window.stateOrders = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+          refreshOrdersBadge(window.stateOrders);
+          if (window.state && window.state.currentTab === 'orders' && typeof renderCurrentTab === 'function') {
+            renderCurrentTab();
+          }
+        }, (err) => {
+          console.warn('[Firestore orders listener]', err.message);
+        });
+      } catch (e) {
+        console.warn('[Firestore orders init]', e.message);
+      }
+    }
+
+    async function loadProductsFromCloud() {
+      if (!window.state) return;
+      try {
+        const cloud = await window.fbLoadProducts();
+        if (cloud.length > 0) {
+          window.state.products = cloud;
+          if (typeof guardarProductosTienda === 'function') guardarProductosTienda();
+          if (typeof renderCurrentTab === 'function') renderCurrentTab();
+        }
+      } catch (e) {
+        console.warn('[Firestore products load]', e.message);
+      }
+    }
+
+    // --- AUTH helpers (Etapa 5, sin cambios) ---
     function authErrMsg(e) {
       switch (e && e.code) {
         case 'auth/invalid-credential':
@@ -2171,6 +2404,10 @@
 
     onAuthStateChanged(auth, function (user) {
       setGateOpen(!user);
+      if (user) {
+        startOrdersListener();
+        loadProductsFromCloud();
+      }
     });
 
     window.handleLoginSubmit = async function (e) {
