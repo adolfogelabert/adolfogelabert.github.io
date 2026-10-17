@@ -871,7 +871,8 @@
 
             function openModal(index) {
                 var p = productListTienda[index];
-                if (!p || !productModal) return;
+                if (!productModal) return;
+                if (!p) { console.warn('[openModal] producto no disponible en índice', index, 'productListTienda=', productListTienda); return; }
                 currentProductForOrder = p;
 
                 document.getElementById('modalImg').src = p.imagen;
@@ -1117,6 +1118,7 @@
                             '</div>' +
                             '<button onclick="event.stopPropagation(); addToCart(productListTienda[' + idx + ']);" class="w-full bg-yellow-600 hover:bg-yellow-500 text-black font-black py-3 px-6 rounded-xl text-xs uppercase tracking-widest cursor-pointer transition-all">+ Añadir al carrito</button>' +
                             '<button onclick="event.stopPropagation(); openModal(' + idx + ');" class="w-full mt-2 bg-transparent hover:bg-white/5 text-gray-400 hover:text-white font-bold py-2 px-6 rounded-xl text-[10px] uppercase tracking-widest cursor-pointer transition-all">Ver detalles</button>' +
+                            '<button onclick="event.stopPropagation(); comprarAhora(' + idx + ');" class="w-full mt-2 bg-white/5 hover:bg-white/10 text-yellow-600 hover:text-yellow-500 font-bold py-2 px-6 rounded-xl text-[10px] uppercase tracking-widest cursor-pointer transition-all border border-yellow-600/30">⚡ Comprar ahora</button>' +
                         '</div>' +
                     '</div>';
                 grid.appendChild(article);
@@ -1197,7 +1199,7 @@
         }
 
         function addToCart(product, qty) {
-            if (!product) return;
+            if (!product) { console.warn('[addToCart] producto vacío'); return; }
             qty = qty || 1;
             var cart = getCart();
             var existing = cart.find(function (c) { return String(c.id) === String(product.id); });
@@ -1316,6 +1318,40 @@
             document.getElementById('cartDrawer').classList.remove('open');
             document.getElementById('cartOverlay').classList.remove('open');
             document.body.style.overflow = '';
+        }
+
+        // Compra directa de un solo producto (atajo, sin pasar por el carrito)
+        function comprarAhora(idx) {
+            var p = (typeof productListTienda !== 'undefined' && productListTienda) ? productListTienda[idx] : null;
+            if (!p) {
+                // Reintento: leer de localStorage si la lista aún no se pintó
+                try {
+                    var stored = JSON.parse(localStorage.getItem('storeProducts') || '[]');
+                    if (stored.length) {
+                        productListTienda = stored;
+                        p = productListTienda[idx];
+                    }
+                } catch (e) {}
+            }
+            if (!p) {
+                if (typeof triggerNotification === 'function') triggerNotification('❌ Producto no disponible, recarga la página');
+                else alert('Producto no disponible. Por favor recarga la página (Ctrl + F5).');
+                return;
+            }
+            currentProductForOrder = p;
+            // Resetear form
+            var cn = document.getElementById('cust-name'); if (cn) cn.value = '';
+            var ce = document.getElementById('cust-email'); if (ce) ce.value = '';
+            var cp = document.getElementById('cust-phone'); if (cp) cp.value = '';
+            currentReceiptUrl = null;
+            var previewWrap = document.getElementById('receipt-preview');
+            if (previewWrap) previewWrap.classList.add('hidden');
+            var receiptStatus = document.getElementById('receipt-status');
+            if (receiptStatus) { receiptStatus.textContent = ''; receiptStatus.style.color = '#9ca3af'; }
+            // Eliminar resumen del carrito si existía (compra directa, no carrito)
+            var oldSummary = document.getElementById('order-cart-summary');
+            if (oldSummary) oldSummary.remove();
+            if (typeof openPayModal === 'function') openPayModal();
         }
 
         function proceedToCheckout() {
@@ -1547,6 +1583,7 @@
         window.closeCartDrawer = closeCartDrawer;
         window.proceedToCheckout = proceedToCheckout;
         window.getCart = getCart;
+        window.comprarAhora = comprarAhora;
     </script>
 
     <!-- Firebase + Firestore: cargar productos desde la nube (fuente de verdad) -->
