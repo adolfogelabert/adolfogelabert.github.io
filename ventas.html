@@ -755,6 +755,15 @@
                 <input type="file" id="receipt-file" accept="image/*" style="flex:1; color:#9ca3af; font-size:0.75rem;" />
                 <button type="button" id="upload-receipt-btn" onclick="uploadReceipt()" style="background:#ca8a04; color:#000; font-weight:900; padding:8px 14px; border-radius:8px; font-size:0.7rem; text-transform:uppercase; letter-spacing:0.1em; cursor:pointer; border:none;">☁ Subir</button>
               </div>
+              <div id="receipt-progress" style="display:none; margin-bottom:8px;">
+                <div style="display:flex; justify-content:space-between; font-size:0.65rem; color:#9ca3af; margin-bottom:4px; font-family:monospace;">
+                  <span id="receipt-progress-msg">Subiendo…</span>
+                  <span id="receipt-progress-pct">0%</span>
+                </div>
+                <div style="width:100%; height:6px; background:rgba(255,255,255,0.1); border-radius:6px; overflow:hidden;">
+                  <div id="receipt-progress-bar" style="height:100%; background:linear-gradient(90deg,#ca8a04,#facc15); border-radius:6px; width:0%; transition:width 0.2s ease-out;"></div>
+                </div>
+              </div>
               <div id="receipt-status" style="font-size:0.7rem; color:#9ca3af; margin-bottom:8px; min-height:18px;"></div>
               <div id="receipt-preview" class="hidden" style="margin-bottom:12px;">
                 <img id="receipt-preview-img" style="max-width:200px; max-height:200px; border-radius:8px; border:1px solid #262626;" alt="comprobante" />
@@ -1131,6 +1140,10 @@
             var previewWrap = document.getElementById('receipt-preview');
             var previewImg = document.getElementById('receipt-preview-img');
             var urlDisplay = document.getElementById('receipt-url-display');
+            var progressWrap = document.getElementById('receipt-progress');
+            var progressBar = document.getElementById('receipt-progress-bar');
+            var progressPct = document.getElementById('receipt-progress-pct');
+            var progressMsg = document.getElementById('receipt-progress-msg');
             if (!fileInput.files || !fileInput.files[0]) {
                 status.textContent = '⚠️ Selecciona una imagen primero';
                 status.style.color = '#fbbf24';
@@ -1144,20 +1157,34 @@
             var originalText = btn.textContent;
             btn.textContent = 'Subiendo...';
             btn.disabled = true;
-            status.textContent = 'Subiendo a Cloudinary...';
-            status.style.color = '#9ca3af';
+            status.textContent = '';
+            if (progressWrap) progressWrap.style.display = 'block';
+            if (progressBar) progressBar.style.width = '0%';
+            if (progressPct) progressPct.textContent = '0%';
+            if (progressMsg) progressMsg.textContent = 'Subiendo…';
             try {
-                var url = await window.uploadToCloudinary(fileInput.files[0]);
+                var sizeMB = (fileInput.files[0].size / 1024 / 1024).toFixed(2);
+                var url = await window.uploadToCloudinary(fileInput.files[0], function (pct) {
+                    if (progressBar) progressBar.style.width = pct.toFixed(0) + '%';
+                    if (progressPct) progressPct.textContent = pct.toFixed(0) + '%';
+                    if (progressMsg && pct < 100) progressMsg.textContent = 'Subiendo… ' + sizeMB + ' MB';
+                });
+                if (progressBar) progressBar.style.width = '100%';
+                if (progressPct) progressPct.textContent = '100%';
+                if (progressMsg) progressMsg.textContent = '✅ Completado';
                 currentReceiptUrl = url;
                 previewImg.src = url;
                 urlDisplay.textContent = url;
                 previewWrap.classList.remove('hidden');
                 status.textContent = '✅ Comprobante subido';
                 status.style.color = '#34d399';
+                setTimeout(function () { if (progressWrap) progressWrap.style.display = 'none'; }, 1500);
             } catch (e) {
                 console.error('[Cloudinary receipt]', e);
+                if (progressMsg) progressMsg.textContent = '❌ ' + e.message;
                 status.textContent = '❌ Error: ' + e.message;
                 status.style.color = '#f87171';
+                setTimeout(function () { if (progressWrap) progressWrap.style.display = 'none'; }, 4000);
             } finally {
                 btn.textContent = originalText;
                 btn.disabled = false;
@@ -1234,18 +1261,32 @@
             const app = initializeApp(firebaseConfig, 'cv-ventas');
             const db = getFirestore(app);
 
-            window.uploadToCloudinary = async function (file) {
-                const fd = new FormData();
-                fd.append('file', file);
-                fd.append('upload_preset', 'cv_ventas_preset');
-                const r = await fetch('https://api.cloudinary.com/v1_1/szfgq5x6/image/upload', { method: 'POST', body: fd });
-                if (!r.ok) {
-                    const t = await r.text();
-                    throw new Error('Cloudinary ' + r.status + ': ' + t.substring(0, 200));
-                }
-                const data = await r.json();
-                if (!data.secure_url) throw new Error('Cloudinary sin secure_url');
-                return data.secure_url;
+            window.uploadToCloudinary = function (file, onProgress) {
+                return new Promise(function (resolve, reject) {
+                    const xhr = new XMLHttpRequest();
+                    const fd = new FormData();
+                    fd.append('file', file);
+                    fd.append('upload_preset', 'cv_ventas_preset');
+                    xhr.open('POST', 'https://api.cloudinary.com/v1_1/szfgq5x6/image/upload');
+                    xhr.upload.onprogress = function (e) {
+                        if (e.lengthComputable && typeof onProgress === 'function') {
+                            onProgress((e.loaded / e.total) * 100);
+                        }
+                    };
+                    xhr.onload = function () {
+                        if (xhr.status >= 200 && xhr.status < 300) {
+                            try {
+                                const data = JSON.parse(xhr.responseText);
+                                if (data.secure_url) resolve(data.secure_url);
+                                else reject(new Error('Cloudinary sin secure_url'));
+                            } catch (e) { reject(new Error('Respuesta inválida de Cloudinary')); }
+                        } else {
+                            reject(new Error('Cloudinary HTTP ' + xhr.status));
+                        }
+                    };
+                    xhr.onerror = function () { reject(new Error('Error de red al subir')); };
+                    xhr.send(fd);
+                });
             };
 
             window.fbSaveOrderTienda = async function (order) {

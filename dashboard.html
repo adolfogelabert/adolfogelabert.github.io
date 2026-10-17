@@ -511,6 +511,10 @@
       const urlField = document.getElementById('prod-imagen');
       const previewWrap = document.getElementById('prod-imagen-preview-wrap');
       const preview = document.getElementById('prod-imagen-preview');
+      const progressWrap = document.getElementById('prod-imagen-progress');
+      const progressBar = document.getElementById('prod-imagen-progress-bar');
+      const progressPct = document.getElementById('prod-imagen-progress-pct');
+      const progressMsg = document.getElementById('prod-imagen-progress-msg');
       if (!fileInput.files || !fileInput.files[0]) {
         triggerNotification('⚠️ Selecciona una imagen primero');
         return;
@@ -522,15 +526,29 @@
       const originalLabel = labelSpan ? labelSpan.textContent : 'Subir';
       if (labelSpan) labelSpan.textContent = 'Subiendo...';
       fileInput.disabled = true;
+      if (progressWrap) progressWrap.classList.remove('hidden');
+      if (progressBar) progressBar.style.width = '0%';
+      if (progressPct) progressPct.textContent = '0%';
+      if (progressMsg) progressMsg.textContent = 'Subiendo…';
       try {
-        const url = await window.uploadToCloudinary(fileInput.files[0]);
+        const url = await window.uploadToCloudinary(fileInput.files[0], function (pct) {
+          if (progressBar) progressBar.style.width = pct.toFixed(0) + '%';
+          if (progressPct) progressPct.textContent = pct.toFixed(0) + '%';
+          if (progressMsg && pct < 100) progressMsg.textContent = 'Subiendo… ' + (fileInput.files[0].size / 1024 / 1024).toFixed(2) + ' MB';
+        });
+        if (progressBar) progressBar.style.width = '100%';
+        if (progressPct) progressPct.textContent = '100%';
+        if (progressMsg) progressMsg.textContent = '✅ Completado';
         urlField.value = url;
         preview.src = url;
         previewWrap.classList.remove('hidden');
         triggerNotification('✅ Imagen subida a Cloudinary');
+        setTimeout(function () { if (progressWrap) progressWrap.classList.add('hidden'); }, 1500);
       } catch (e) {
         console.error('[Cloudinary product image]', e);
+        if (progressMsg) progressMsg.textContent = '❌ ' + e.message;
         triggerNotification('❌ Error al subir: ' + e.message);
+        setTimeout(function () { if (progressWrap) progressWrap.classList.add('hidden'); }, 4000);
       } finally {
         if (labelSpan) labelSpan.textContent = originalLabel;
         fileInput.disabled = false;
@@ -1535,6 +1553,15 @@
                       <label for="prod-imagen-file" class="block w-full bg-amber-500 hover:bg-amber-400 text-black font-black py-2.5 px-4 rounded text-[10px] tracking-widest uppercase transition-all text-center cursor-pointer border border-amber-500">
                         📁 <span id="prod-imagen-file-label">Subir imagen a Cloudinary</span>
                       </label>
+                      <div id="prod-imagen-progress" class="hidden mt-2">
+                        <div class="flex justify-between items-center text-[8px] text-zinc-400 mb-1 font-mono">
+                          <span id="prod-imagen-progress-msg">Subiendo…</span>
+                          <span id="prod-imagen-progress-pct">0%</span>
+                        </div>
+                        <div class="w-full h-2 bg-zinc-800 rounded-full overflow-hidden border border-zinc-900">
+                          <div id="prod-imagen-progress-bar" class="h-full bg-gradient-to-r from-amber-500 to-yellow-400 rounded-full transition-all duration-200 ease-out" style="width: 0%"></div>
+                        </div>
+                      </div>
                       <p class="text-[7px] text-zinc-600 mt-1">Click en el botón amarillo → abre explorador → selecciona imagen → sube sola y rellena la URL arriba.</p>
                       <div id="prod-imagen-preview-wrap" class="hidden mt-2 relative">
                         <img id="prod-imagen-preview" class="w-full h-32 object-cover rounded border border-zinc-800" alt="preview" />
@@ -2363,19 +2390,33 @@
     const db = getFirestore(app);
     auth.languageCode = 'es';
 
-    // --- CLOUDINARY UPLOADER (presignado) ---
-    window.uploadToCloudinary = async function (file) {
-      const fd = new FormData();
-      fd.append('file', file);
-      fd.append('upload_preset', 'cv_ventas_preset');
-      const r = await fetch('https://api.cloudinary.com/v1_1/szfgq5x6/image/upload', { method: 'POST', body: fd });
-      if (!r.ok) {
-        const t = await r.text();
-        throw new Error('Cloudinary ' + r.status + ': ' + t.substring(0, 200));
-      }
-      const data = await r.json();
-      if (!data.secure_url) throw new Error('Cloudinary sin secure_url');
-      return data.secure_url;
+    // --- CLOUDINARY UPLOADER (XHR con progreso) ---
+    window.uploadToCloudinary = function (file, onProgress) {
+      return new Promise(function (resolve, reject) {
+        const xhr = new XMLHttpRequest();
+        const fd = new FormData();
+        fd.append('file', file);
+        fd.append('upload_preset', 'cv_ventas_preset');
+        xhr.open('POST', 'https://api.cloudinary.com/v1_1/szfgq5x6/image/upload');
+        xhr.upload.onprogress = function (e) {
+          if (e.lengthComputable && typeof onProgress === 'function') {
+            onProgress((e.loaded / e.total) * 100);
+          }
+        };
+        xhr.onload = function () {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            try {
+              const data = JSON.parse(xhr.responseText);
+              if (data.secure_url) resolve(data.secure_url);
+              else reject(new Error('Cloudinary sin secure_url'));
+            } catch (e) { reject(new Error('Respuesta inválida de Cloudinary')); }
+          } else {
+            reject(new Error('Cloudinary HTTP ' + xhr.status));
+          }
+        };
+        xhr.onerror = function () { reject(new Error('Error de red al subir')); };
+        xhr.send(fd);
+      });
     };
 
     // --- FIRESTORE: PRODUCTS (espejo de localStorage, fuente de verdad) ---
