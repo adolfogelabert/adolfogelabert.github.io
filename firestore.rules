@@ -1,0 +1,45 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // PRODUCTOS: lectura pública (home + tienda), escritura solo admin
+    match /products/{productId} {
+      allow read: if true;
+      allow create, update: if isSignedIn();
+      allow delete: if isSignedIn();
+    }
+
+    // ORDENES: el cliente crea su pedido sin login (siempre 'pendiente'),
+    // solo el admin autenticado lee, confirma o rechaza
+    match /orders/{orderId} {
+      allow read: if isSignedIn();
+      allow create: if request.resource.data.status == 'pendiente'
+                    && request.resource.data.keys().hasAll([
+                         'items', 'total', 'customerName',
+                         'customerEmail', 'status'
+                       ])
+                    && request.resource.data.items is list
+                    && request.resource.data.items.size() > 0
+                    && request.resource.data.items.size() <= 50
+                    && request.resource.data.customerName is string
+                    && request.resource.data.customerName.size() > 0
+                    && request.resource.data.customerName.size() <= 120
+                    && request.resource.data.customerEmail is string
+                    && request.resource.data.customerEmail.size() <= 200
+                    && request.resource.data.total is string
+                    && request.resource.data.total.size() <= 40
+                    && request.resource.data.status == 'pendiente';
+      allow update, delete: if isSignedIn();
+    }
+
+    // Todo lo demás cerrado
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
