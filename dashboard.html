@@ -740,9 +740,33 @@
 
     function updateMessageStatus(id, newStatus) {
       state.messages = state.messages.map(m => m.id === id ? { ...m, estado: newStatus } : m);
+      persistMessages();
       triggerNotification(`📬 Lead marcado como: ${newStatus}`);
       updateInboxBadge();
       renderCurrentTab();
+    }
+
+    function deleteMessage(id) {
+      const m = state.messages.find(x => x.id === id);
+      if (!m) return;
+      if (!confirm(`¿Eliminar la consulta de "${m.nombre}"?\n\nEsta acción no se puede deshacer.`)) return;
+      state.messages = state.messages.filter(x => x.id !== id);
+      persistMessages();
+      triggerNotification('🗑️ Consulta eliminada.');
+      updateInboxBadge();
+      renderCurrentTab();
+    }
+
+    // Persiste la bandeja para que borrados y estados sobrevivan a la recarga
+    function persistMessages() {
+      try { localStorage.setItem('dashMessages', JSON.stringify(state.messages)); } catch (e) {}
+    }
+
+    function loadPersistedMessages() {
+      try {
+        const saved = JSON.parse(localStorage.getItem('dashMessages') || 'null');
+        if (Array.isArray(saved)) state.messages = saved;
+      } catch (e) {}
     }
 
     function updateInboxBadge() {
@@ -2019,7 +2043,10 @@
               <div class="p-6">
                 <p class="text-xs text-zinc-300 leading-relaxed font-light">${escapeHtml(m.mensaje)}</p>
               </div>
-              <div class="px-6 py-3 bg-zinc-900/5 border-t border-zinc-900/40 flex justify-end">
+              <div class="px-6 py-3 bg-zinc-900/5 border-t border-zinc-900/40 flex justify-end gap-2">
+                <button onclick="deleteMessage(${Number(m.id)})" class="bg-zinc-900 hover:bg-rose-950 text-zinc-500 hover:text-rose-400 text-[9px] font-bold tracking-widest uppercase px-4 py-2 rounded border border-zinc-800 hover:border-rose-900 transition-colors inline-flex items-center gap-1.5">
+                  🗑️ Eliminar
+                </button>
                 <a href="mailto:${escapeHtml(m.email)}?subject=RE: ${encodeURIComponent(m.asunto)}" onclick="updateMessageStatus(${Number(m.id)}, 'Contactado')" class="bg-zinc-900 hover:bg-zinc-800 text-zinc-300 text-[9px] font-bold tracking-widest uppercase px-4 py-2 rounded border border-zinc-800 transition-colors inline-flex items-center gap-1.5">
                   📬 Responder por Correo
                 </a>
@@ -2277,6 +2304,7 @@
     window.onload = function() {
       if (!localStorage.getItem('storeProducts')) guardarProductosTienda();
       loadPersistedMetrics();
+      loadPersistedMessages();
       updateInboxBadge();
       renderCurrentTab();
     }
