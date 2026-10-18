@@ -294,6 +294,11 @@
         conversion: "10.95%",
         alcance: "8.1k"
       },
+      siteMetrics: {
+        trafico: { valor: "1,240", trend: "+12%", trendUp: true, label: "Visitas Únicas vía GitHub" },
+        behance: { valor: "843", trend: "+8.5%", trendUp: true, label: "Interés en casos de estudio" },
+        youtube: { valor: "9,120", trend: "-2%", trendUp: false, label: "Vistas totales del canal" }
+      },
       skills: [
         { id: 1, nombre: "Branding y Diseños Visuales", porcentaje: 100 },
         { id: 2, nombre: "Diseño de Interfaces / UXUI", porcentaje: 90 },
@@ -451,7 +456,7 @@
           precioOriginal: "$19.00",
           precioDescuento: "$7.00",
           features: "Prompt Maestro estructurado,Paso a paso detallado,Soporte con IA generativa,Formato PDF descargable",
-          link: "TU_HOTLINK_AQUI",
+          link: "",
           activo: true
         },
         {
@@ -464,7 +469,7 @@
           precioOriginal: "$15.00",
           precioDescuento: "$7.00",
           features: "Más de 50 prompts 3D,Texturas hiperrealistas,Calidad cinematográfica 8K,Guía de parámetros avanzados",
-          link: "TU_HOTLINK_AQUI",
+          link: "",
           activo: true
         },
         {
@@ -477,7 +482,7 @@
           precioOriginal: "$12.00",
           precioDescuento: "$7.00",
           features: "Técnicas de bocetado digital,Estilo storyboard profesional,Dibujo anatómico preciso,Prompts para ilustración",
-          link: "TU_HOTLINK_AQUI",
+          link: "",
           activo: true
         }
       ]
@@ -772,8 +777,40 @@
       state.brandMetrics.horasProyectos = document.getElementById('bm-horas').value;
       state.brandMetrics.conversion = document.getElementById('bm-conversion').value;
       state.brandMetrics.alcance = document.getElementById('bm-alcance').value;
-      triggerNotification("📊 KPIs de marca actualizados.");
+      persistMetrics();
+      triggerNotification("✅ KPIs de marca actualizados.");
       renderCurrentTab();
+    }
+
+    function handleSiteMetricsSave(e) {
+      e.preventDefault();
+      state.siteMetrics.trafico.valor = document.getElementById('sm-trafico-valor').value;
+      state.siteMetrics.trafico.trend = document.getElementById('sm-trafico-trend').value;
+      state.siteMetrics.trafico.trendUp = !String(state.siteMetrics.trafico.trend).trim().startsWith('-');
+      state.siteMetrics.behance.valor = document.getElementById('sm-behance-valor').value;
+      state.siteMetrics.youtube.valor = document.getElementById('sm-youtube-valor').value;
+      persistMetrics();
+      triggerNotification("✅ Métricas de tráfico actualizadas.");
+      renderCurrentTab();
+    }
+
+    // Persiste las métricas editables del home para que sobrevivan a la recarga
+    function persistMetrics() {
+      try {
+        localStorage.setItem('dashMetrics', JSON.stringify({
+          brandMetrics: state.brandMetrics,
+          siteMetrics: state.siteMetrics
+        }));
+      } catch (e) {}
+    }
+
+    function loadPersistedMetrics() {
+      try {
+        const saved = JSON.parse(localStorage.getItem('dashMetrics') || 'null');
+        if (!saved) return;
+        if (saved.brandMetrics) Object.assign(state.brandMetrics, saved.brandMetrics);
+        if (saved.siteMetrics) Object.assign(state.siteMetrics, saved.siteMetrics);
+      } catch (e) {}
     }
 
     function updateSkill(id, value) {
@@ -931,7 +968,7 @@
           precioOriginal: precioOriginal || precioDescuento,
           precioDescuento,
           features: features || "Incluido",
-          link: link || "TU_HOTLINK_AQUI",
+          link: link || "",
           activo: state.products.find(p => String(p.id) === String(editingProductId))?.activo ?? true
         };
         state.products = state.products.map(p => String(p.id) === String(editingProductId) ? { ...p, ...updated } : p);
@@ -954,7 +991,7 @@
         precioOriginal: precioOriginal || precioDescuento,
         precioDescuento,
         features: features || "Incluido",
-        link: link || "TU_HOTLINK_AQUI",
+        link: link || "",
         activo: true
       };
 
@@ -1029,43 +1066,85 @@
             </div>
 
             <!-- Grid de Tarjetas de Métricas -->
+            <div class="bg-zinc-950 p-6 rounded border border-zinc-900">
+              <div class="flex items-center justify-between mb-4">
+                <div>
+                  <h4 class="text-xs font-bold text-white tracking-widest uppercase">Tráfico y Alcance</h4>
+                  <p class="text-[9px] text-zinc-500 uppercase tracking-widest mt-0.5">Cifras del sitio y canales</p>
+                </div>
+                <button onclick="document.getElementById('sm-form').classList.toggle('hidden')" class="p-2 bg-zinc-900 hover:bg-zinc-800 rounded border border-zinc-800 text-zinc-400 hover:text-amber-500 transition-colors" title="Editar métricas">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                </button>
+              </div>
+
+              <!-- Formulario editable (oculto por defecto) -->
+              <div id="sm-form" class="hidden mb-6 p-4 bg-zinc-900/50 rounded border border-zinc-800">
+                <form onsubmit="handleSiteMetricsSave(event)" class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div>
+                    <label class="block text-[8px] font-bold tracking-widest text-zinc-500 uppercase mb-1">Visitas sitio (valor)</label>
+                    <input type="text" id="sm-trafico-valor" value="${state.siteMetrics.trafico.valor}" class="w-full bg-zinc-900 border border-zinc-800 rounded px-3 py-2 text-xs text-zinc-300 focus:outline-none focus:border-amber-500 font-mono" />
+                  </div>
+                  <div>
+                    <label class="block text-[8px] font-bold tracking-widest text-zinc-500 uppercase mb-1">Visitas sitio (variación)</label>
+                    <input type="text" id="sm-trafico-trend" value="${state.siteMetrics.trafico.trend}" class="w-full bg-zinc-900 border border-zinc-800 rounded px-3 py-2 text-xs text-zinc-300 focus:outline-none focus:border-amber-500 font-mono" />
+                  </div>
+                  <div>
+                    <label class="block text-[8px] font-bold tracking-widest text-zinc-500 uppercase mb-1">Behance (valor)</label>
+                    <input type="text" id="sm-behance-valor" value="${state.siteMetrics.behance.valor}" class="w-full bg-zinc-900 border border-zinc-800 rounded px-3 py-2 text-xs text-zinc-300 focus:outline-none focus:border-amber-500 font-mono" />
+                  </div>
+                  <div>
+                    <label class="block text-[8px] font-bold tracking-widest text-zinc-500 uppercase mb-1">YouTube (valor)</label>
+                    <input type="text" id="sm-youtube-valor" value="${state.siteMetrics.youtube.valor}" class="w-full bg-zinc-900 border border-zinc-800 rounded px-3 py-2 text-xs text-zinc-300 focus:outline-none focus:border-amber-500 font-mono" />
+                  </div>
+                  <div class="col-span-2 lg:col-span-4 flex justify-end">
+                    <button type="submit" class="bg-amber-500 hover:bg-amber-400 text-black font-black px-4 py-1.5 rounded text-[9px] tracking-widest uppercase transition-colors">
+                      Guardar Métricas
+                    </button>
+                  </div>
+                </form>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="bg-zinc-950 p-6 rounded border border-zinc-900">
+                  <div class="flex items-center justify-between">
+                    <span class="text-[9px] font-mono text-zinc-500 uppercase tracking-widest">Tráfico del sitio</span>
+                    <span class="p-1 bg-amber-500/10 rounded text-amber-400">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" /></svg>
+                    </span>
+                  </div>
+                  <h4 class="text-xl font-black text-white mt-4 font-mono">${state.siteMetrics.trafico.valor} <span class="text-xs ${state.siteMetrics.trafico.trendUp ? 'text-emerald-500' : 'text-rose-500'}">${state.siteMetrics.trafico.trend}</span></h4>
+                  <p class="text-[9px] text-zinc-600 uppercase tracking-widest mt-1">${state.siteMetrics.trafico.label}</p>
+                </div>
+
+                <div class="bg-zinc-950 p-6 rounded border border-zinc-900">
+                  <div class="flex items-center justify-between">
+                    <span class="text-[9px] font-mono text-zinc-500 uppercase tracking-widest">Clics en Behance</span>
+                    <span class="p-1 bg-amber-500/10 rounded text-amber-400">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                    </span>
+                  </div>
+                  <h4 class="text-xl font-black text-white mt-4 font-mono">${state.siteMetrics.behance.valor} <span class="text-xs ${state.siteMetrics.behance.trendUp ? 'text-emerald-500' : 'text-rose-500'}">${state.siteMetrics.behance.trend}</span></h4>
+                  <p class="text-[9px] text-zinc-600 uppercase tracking-widest mt-1">${state.siteMetrics.behance.label}</p>
+                </div>
+
+                <div class="bg-zinc-950 p-6 rounded border border-zinc-900">
+                  <div class="flex items-center justify-between">
+                    <span class="text-[9px] font-mono text-zinc-500 uppercase tracking-widest">Vistas de YouTube</span>
+                    <span class="p-1 bg-amber-500/10 rounded text-amber-400">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+                    </span>
+                  </div>
+                  <h4 class="text-xl font-black text-white mt-4 font-mono">${state.siteMetrics.youtube.valor} <span class="text-xs ${state.siteMetrics.youtube.trendUp ? 'text-emerald-500' : 'text-rose-500'}">${state.siteMetrics.youtube.trend}</span></h4>
+                  <p class="text-[9px] text-zinc-600 uppercase tracking-widest mt-1">${state.siteMetrics.youtube.label}</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Grid de Tarjetas de Métricas: Leads (dinámico) -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div class="bg-zinc-950 p-6 rounded border border-zinc-900">
+              <div class="bg-zinc-950 p-6 rounded border border-zinc-900 sm:col-span-2 lg:col-span-4">
                 <div class="flex items-center justify-between">
-                  <span class="text-[9px] font-mono text-zinc-500 uppercase tracking-widest">Tráfico del sitio</span>
-                  <span class="p-1 bg-amber-500/10 rounded text-amber-400">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" /></svg>
-                  </span>
-                </div>
-                <h4 class="text-xl font-black text-white mt-4 font-mono">1,240 <span class="text-xs text-emerald-500">+12%</span></h4>
-                <p class="text-[9px] text-zinc-600 uppercase tracking-widest mt-1">Visitas Únicas vía GitHub</p>
-              </div>
-
-              <div class="bg-zinc-950 p-6 rounded border border-zinc-900">
-                <div class="flex items-center justify-between">
-                  <span class="text-[9px] font-mono text-zinc-500 uppercase tracking-widest">Clics en Behance</span>
-                  <span class="p-1 bg-amber-500/10 rounded text-amber-400">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                  </span>
-                </div>
-                <h4 class="text-xl font-black text-white mt-4 font-mono">843 <span class="text-xs text-emerald-500">+8.5%</span></h4>
-                <p class="text-[9px] text-zinc-600 uppercase tracking-widest mt-1">Interés en casos de estudio</p>
-              </div>
-
-              <div class="bg-zinc-950 p-6 rounded border border-zinc-900">
-                <div class="flex items-center justify-between">
-                  <span class="text-[9px] font-mono text-zinc-500 uppercase tracking-widest">Vistas de YouTube</span>
-                  <span class="p-1 bg-amber-500/10 rounded text-amber-400">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
-                  </span>
-                </div>
-                <h4 class="text-xl font-black text-white mt-4 font-mono">9,120 <span class="text-xs text-rose-500">-2%</span></h4>
-                <p class="text-[9px] text-zinc-600 uppercase tracking-widest mt-1">Vistas totales del canal</p>
-              </div>
-
-              <div class="bg-zinc-950 p-6 rounded border border-zinc-900">
-                <div class="flex items-center justify-between">
-                  <span class="text-[9px] font-mono text-zinc-500 uppercase tracking-widest">Leads Activos</span>
+                  <span class="text-[9px] font-mono text-zinc-500 uppercase tracking-widest">Resumen</span>
                   <span class="p-1 bg-amber-500/10 rounded text-amber-400">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
                   </span>
@@ -1589,8 +1668,8 @@
                     <input type="text" id="prod-features" placeholder="Característica 1,Característica 2,Característica 3" class="w-full bg-zinc-900 border border-zinc-800 rounded px-3 py-2 text-xs text-zinc-300 focus:outline-none focus:border-amber-500" />
                   </div>
                   <div>
-                    <label class="block text-[8px] font-bold tracking-widest text-zinc-500 uppercase mb-1">Enlace de Compra</label>
-                    <input type="text" id="prod-link" placeholder="TU_LINK_AQUI" class="w-full bg-zinc-900 border border-zinc-800 rounded px-3 py-2 text-xs text-zinc-300 focus:outline-none focus:border-amber-500" />
+                    <label class="block text-[8px] font-bold tracking-widest text-zinc-500 uppercase mb-1">Enlace de Compra (opcional)</label>
+                    <input type="url" id="prod-link" placeholder="https://pay.hotmart.com/... o https://buy.stripe.com/..." class="w-full bg-zinc-900 border border-zinc-800 rounded px-3 py-2 text-xs text-zinc-300 focus:outline-none focus:border-amber-500" />
                   </div>
                   <div class="flex gap-2">
                     <button type="submit" class="flex-1 bg-amber-500 hover:bg-amber-400 text-black font-black py-2.5 px-4 rounded text-[9px] tracking-widest uppercase transition-all flex items-center justify-center gap-1.5">
@@ -1921,16 +2000,16 @@
               <div class="px-6 py-4 bg-zinc-900/10 border-b border-zinc-900/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
                   <div class="flex items-center gap-2 flex-wrap">
-                    <h4 class="text-xs font-bold text-white uppercase tracking-wider">${m.nombre}</h4>
-                    <span class="text-zinc-600 font-mono text-[10px]">(${m.email})</span>
+                    <h4 class="text-xs font-bold text-white uppercase tracking-wider">${escapeHtml(m.nombre)}</h4>
+                    <span class="text-zinc-600 font-mono text-[10px]">(${escapeHtml(m.email)})</span>
                   </div>
-                  <p class="text-[10px] text-amber-500 font-medium mt-0.5 uppercase tracking-wider">REQU: ${m.asunto}</p>
+                  <p class="text-[10px] text-amber-500 font-medium mt-0.5 uppercase tracking-wider">REQU: ${escapeHtml(m.asunto)}</p>
                 </div>
                 <div class="flex items-center gap-3">
-                  <span class="text-[9px] font-mono text-zinc-600 tracking-widest">${m.fecha}</span>
+                  <span class="text-[9px] font-mono text-zinc-600 tracking-widest">${escapeHtml(m.fecha)}</span>
                   <div class="flex gap-1.5">
                     ${['Nuevo', 'Contactado', 'Completado'].map(status => `
-                      <button onclick="updateMessageStatus(${m.id}, '${status}')" class="px-2 py-1 rounded text-[8px] font-mono uppercase tracking-widest transition-all ${m.estado === status ? 'bg-amber-500 text-black font-black' : 'bg-zinc-900 text-zinc-500 hover:text-zinc-300 border border-zinc-800'}">
+                      <button onclick="updateMessageStatus(${Number(m.id)}, '${status}')" class="px-2 py-1 rounded text-[8px] font-mono uppercase tracking-widest transition-all ${m.estado === status ? 'bg-amber-500 text-black font-black' : 'bg-zinc-900 text-zinc-500 hover:text-zinc-300 border border-zinc-800'}">
                         ${status}
                       </button>
                     `).join('')}
@@ -1938,10 +2017,10 @@
                 </div>
               </div>
               <div class="p-6">
-                <p class="text-xs text-zinc-300 leading-relaxed font-light">${m.mensaje}</p>
+                <p class="text-xs text-zinc-300 leading-relaxed font-light">${escapeHtml(m.mensaje)}</p>
               </div>
               <div class="px-6 py-3 bg-zinc-900/5 border-t border-zinc-900/40 flex justify-end">
-                <a href="mailto:${m.email}?subject=RE: ${encodeURIComponent(m.asunto)}" onclick="updateMessageStatus(${m.id}, 'Contactado')" class="bg-zinc-900 hover:bg-zinc-800 text-zinc-300 text-[9px] font-bold tracking-widest uppercase px-4 py-2 rounded border border-zinc-800 transition-colors inline-flex items-center gap-1.5">
+                <a href="mailto:${escapeHtml(m.email)}?subject=RE: ${encodeURIComponent(m.asunto)}" onclick="updateMessageStatus(${Number(m.id)}, 'Contactado')" class="bg-zinc-900 hover:bg-zinc-800 text-zinc-300 text-[9px] font-bold tracking-widest uppercase px-4 py-2 rounded border border-zinc-800 transition-colors inline-flex items-center gap-1.5">
                   📬 Responder por Correo
                 </a>
               </div>
@@ -1974,7 +2053,9 @@
           const fecha = o.createdAt && o.createdAt.toDate ? o.createdAt.toDate().toLocaleString('es-PE', {dateStyle:'short', timeStyle:'short'}) : '—';
           const status = o.status || 'pendiente';
           const statusClass = status === 'confirmado' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : status === 'rechazado' ? 'bg-rose-500/10 text-rose-400 border-rose-500/20' : 'bg-amber-500/10 text-amber-500 border-amber-500/20';
-          const receipt = o.receiptUrl ? `<a href="${o.receiptUrl}" target="_blank" rel="noopener" class="text-amber-500 hover:underline text-[9px]">Ver comprobante ↗</a>` : '<span class="text-zinc-700 text-[9px]">—</span>';
+          // receiptUrl lo escribe el comprador anónimo: solo permitir http(s), bloquear javascript: y datos:
+          const receiptOk = typeof o.receiptUrl === 'string' && /^https?:\/\//i.test(o.receiptUrl);
+          const receipt = receiptOk ? `<a href="${escapeHtml(o.receiptUrl)}" target="_blank" rel="noopener" class="text-amber-500 hover:underline text-[9px]">Ver comprobante ↗</a>` : '<span class="text-zinc-700 text-[9px]">—</span>';
           const actions = status === 'pendiente' ? `
             <div class="flex gap-1">
               <button onclick="confirmOrder('${o.id}')" class="bg-emerald-500/10 hover:bg-emerald-500 hover:text-black text-emerald-400 px-2 py-1 rounded text-[9px] font-bold uppercase tracking-widest border border-emerald-500/20">Confirmar</button>
@@ -2001,7 +2082,7 @@
               <td class="py-3 px-3">${amountCell}</td>
               <td class="py-3 px-3 text-[10px] text-zinc-400">${escapeHtml(o.paymentMethod || '—')}</td>
               <td class="py-3 px-3">${receipt}</td>
-              <td class="py-3 px-3"><span class="px-2 py-1 rounded text-[9px] font-bold uppercase tracking-widest border ${statusClass}">${status}</span></td>
+              <td class="py-3 px-3"><span class="px-2 py-1 rounded text-[9px] font-bold uppercase tracking-widest border ${statusClass}">${escapeHtml(status)}</span></td>
               <td class="py-3 px-3">${actions}</td>
             </tr>`;
         }).join('') : '';
@@ -2182,11 +2263,11 @@
         container.innerHTML += `
           <div class="p-3 bg-zinc-900/40 rounded border border-zinc-900 hover:border-zinc-800 transition-colors">
             <div class="flex justify-between items-start">
-              <span class="text-[10px] font-bold text-zinc-200">${m.nombre}</span>
-              <span class="text-[8px] font-mono uppercase px-1.5 py-0.5 rounded ${m.estado === 'Nuevo' ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' : 'bg-zinc-800 text-zinc-400'}">${m.estado}</span>
+              <span class="text-[10px] font-bold text-zinc-200">${escapeHtml(m.nombre)}</span>
+              <span class="text-[8px] font-mono uppercase px-1.5 py-0.5 rounded ${m.estado === 'Nuevo' ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' : 'bg-zinc-800 text-zinc-400'}">${escapeHtml(m.estado)}</span>
             </div>
-            <p class="text-[9px] text-zinc-400 font-medium mt-1 truncate">${m.asunto}</p>
-            <p class="text-[8px] text-zinc-600 font-mono mt-0.5">${m.fecha}</p>
+            <p class="text-[9px] text-zinc-400 font-medium mt-1 truncate">${escapeHtml(m.asunto)}</p>
+            <p class="text-[8px] text-zinc-600 font-mono mt-0.5">${escapeHtml(m.fecha)}</p>
           </div>
         `;
       });
@@ -2195,6 +2276,7 @@
     // --- CARGA DE ENTRADA INICIAL ---
     window.onload = function() {
       if (!localStorage.getItem('storeProducts')) guardarProductosTienda();
+      loadPersistedMetrics();
       updateInboxBadge();
       renderCurrentTab();
     }
@@ -2488,6 +2570,8 @@
       try {
         const cloud = await window.fbLoadProducts();
         if (cloud.length > 0) {
+          // Normaliza placeholders heredados para que no aparezcan en la UI
+          cloud.forEach(p => { if (p && typeof p.link === 'string' && /^TU_[A-Z_]+$/.test(p.link.trim())) p.link = ''; });
           window.state.products = cloud;
           if (typeof guardarProductosTienda === 'function') guardarProductosTienda();
           if (typeof renderCurrentTab === 'function') renderCurrentTab();

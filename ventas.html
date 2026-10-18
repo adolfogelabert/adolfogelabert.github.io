@@ -679,8 +679,8 @@
             </div>
 
             <div class="pay-tabs">
-                <button class="pay-tab active" onclick="showPayTab('stripe', this)"><i class="fab fa-stripe-s"></i> Stripe</button>
-                <button class="pay-tab" onclick="showPayTab('paypal', this)"><i class="fab fa-paypal"></i> PayPal</button>
+                <button class="pay-tab active" id="pay-tab-stripe" onclick="showPayTab('stripe', this)"><i class="fab fa-stripe-s"></i> Stripe</button>
+                <button class="pay-tab" id="pay-tab-paypal" onclick="showPayTab('paypal', this)"><i class="fab fa-paypal"></i> PayPal</button>
                 <button class="pay-tab" onclick="showPayTab('yape', this)"><i class="fas fa-mobile-alt"></i> Yape</button>
                 <button class="pay-tab" onclick="showPayTab('plin', this)"><i class="fas fa-wallet"></i> Plin</button>
                 <button class="pay-tab" onclick="showPayTab('binance', this)"><i class="fab fa-bitcoin"></i> Binance</button>
@@ -694,7 +694,7 @@
                     <p class="pay-label i18n" data-es="Pago seguro con tarjeta" data-en="Secure card payment">Pago seguro con tarjeta</p>
                     <p class="pay-note i18n" data-es="Serás redirigido a la pasarela de pago segura de Stripe." data-en="You will be redirected to Stripe's secure payment gateway.">Serás redirigido a la pasarela de pago segura de Stripe.</p>
                     <br>
-                    <a href="TU_LINK_STRIPE" target="_blank" id="pay-link-stripe" class="pay-btn pay-btn-stripe"><i class="fab fa-stripe-s"></i> Pagar con Stripe</a>
+                    <a href="#" id="pay-link-stripe" class="pay-btn pay-btn-stripe"><i class="fab fa-stripe-s"></i> Pagar con Stripe</a>
                     <p class="pay-note">Acepta Visa, Mastercard, AMEX</p>
                 </div>
 
@@ -839,6 +839,12 @@
     </button>
 
     <script>
+        // Estado compartido entre bloques <script>: debe ser global porque lo usan
+        // openModal/showPayTab (este bloque) y sendOrder/comprarAhora (bloque posterior)
+        var productListTienda = []; // lo llena renderProductosTienda()
+        var currentProductForOrder = null; // producto actualmente en pay modal
+        var currentPaymentMethod = 'stripe'; // método de pago seleccionado
+
         document.addEventListener('DOMContentLoaded', function() {
             // Scroll suave personalizado
             function smoothScrollTo(targetY, duration) {
@@ -867,10 +873,7 @@
             // --- Modales ---
             var productModal = document.getElementById('productModal');
             var payModal = document.getElementById('payModal');
-            var productListTienda = []; // lo llena renderProductosTienda()
             var currentLang = localStorage.getItem('preferredLang') || 'es';
-            var currentProductForOrder = null; // producto actualmente en pay modal
-            var currentPaymentMethod = 'stripe'; // método de pago seleccionado
 
             function openModal(index) {
                 var p = productListTienda[index];
@@ -1161,6 +1164,17 @@
             if (cfg.stripe && cfg.stripe.link) {
                 var s = document.getElementById('pay-link-stripe');
                 if (s) s.href = cfg.stripe.link;
+            } else {
+                // Sin link de Stripe configurado: ocultar la pestaña y usar PayPal
+                var sTab = document.getElementById('pay-tab-stripe');
+                var sPanel = document.getElementById('panel-stripe');
+                var pTab = document.getElementById('pay-tab-paypal');
+                var pPanel = document.getElementById('panel-paypal');
+                if (sTab) sTab.style.display = 'none';
+                if (sPanel) sPanel.classList.remove('active');
+                if (pTab) pTab.classList.add('active');
+                if (pPanel) pPanel.classList.add('active');
+                currentPaymentMethod = 'paypal';
             }
             if (cfg.paypal && cfg.paypal.link) {
                 var p = document.getElementById('pay-link-paypal');
