@@ -974,7 +974,7 @@
                 </div>
                 <p class="text-sm text-gray-500 mt-4 leading-relaxed i18n" 
                    
-                    data-es="Especialista en ingeniería de producción para la creación de recursos visuales de alta fidelidad. Utilizo herramientas de vanguardia como Leonardo AI, Midjourney y Gemini para automatizar tareas repetitivas y potenciar la conceptualización creativa, logrando una optimización del flujo de trabajo superior al 40 %."
+                    data-es="Especialista en Prompt Engineering para la generación de activos visuales de alta fidelidad. Utilizo herramientas de vanguardia como Leonardo AI, Midjourney y Gemini para automatizar tareas repetitivas y potenciar la conceptualización creativa, logrando una optimización del flujo de trabajo superior al 40%."
                     
                     data-en="Prompt Engineering Specialist for the generation of high-fidelity visual assets. I use cutting-edge tools such as Leonardo AI, Midjourney, and Gemini to automate repetitive tasks and enhance creative conceptualization, achieving workflow optimization of over 40%.">
                     Especialista en Prompt Engineering para la generación de activos visuales de alta fidelidad. Utilizo herramientas de vanguardia como Leonardo AI, Midjourney y Gemini para automatizar tareas repetitivas y potenciar la conceptualización creativa, logrando una optimización del flujo de trabajo superior al 40%.
@@ -1005,7 +1005,7 @@
 
             <div class="relative flex flex-col md:flex-row gap-8 items-center">
                 <div class="md:w-1/2 md:text-right">
-                    <span class="text-yellow-600 font-bold text-xs i18n" data-es="2019 — PRESENTE" data-en="2019 — PRESENT">2019 — PRESENTE | Perú</span>
+                    <span class="text-yellow-600 font-bold text-xs i18n" data-es="2019 — PRESENTE | Perú" data-en="2019 — PRESENT | Peru">2019 — PRESENTE | Perú</span>
                     <h4 class="text-2xl font-bold">ESTUDIO CONCEPTUAL SAC</h4>
                     <p class="text-sm text-gray-500 uppercase tracking-widest i18n" data-es="Diseñador Senior & Especialista Web" data-en="Senior Designer & Web Specialist">Diseñador Senior & Especialista Web</p>
                 </div>
@@ -1045,13 +1045,13 @@
                 <div class="md:w-1/2 md:text-right">
                     <span class="text-yellow-600 font-bold text-xs">MAY 2016 — JUL 2016 | VZLA</span>
                     <h4 class="text-2xl font-bold">GRIFO CENTRO, C.A.</h4>
-                    <p class="text-sm text-gray-500 uppercase tracking-widest i18n" data-es="Operaciones & Publicidad" data-en="Operations & Advertising">Diseñador Gráfico</p>
+                    <p class="text-sm text-gray-500 uppercase tracking-widest i18n" data-es="Diseñador Gráfico" data-en="Graphic Designer">Diseñador Gráfico</p>
                 </div>
                 <div class="absolute left-[-5px] md:left-1/2 md:ml-[-5px] w-[10px] h-[10px] bg-yellow-600 rounded-full"></div>
                 <div class="md:w-1/2 bg-white/5 p-6 rounded-2xl border border-white/5 text-sm text-gray-400 i18n"
                     data-es="Diseñador Gráfico en la empresa Grifocentro. elaboración de empaques, diseño gráfico en general, aunque fue una estancia breve aproveche el poco tiempo dentro de esta empresa, agradeciendo la oportunidad prestada por la misma. esperando siempre que la situación país cambien para beneficio de todos sus empleados y directores."
-                    data-en="Creation of the advertising department. Development of learning platforms under Moodle and institutional image management.">
-                    Creación del departamento de publicidad. Desarrollo de plataformas de aprendizaje bajo Moodle y gestión de imagen institucional.
+                    data-en="Graphic Designer at Grifocentro company. Packaging design and general graphic design; although it was a brief stay, I made the most of the little time inside this company, grateful for the opportunity it lent me, always hoping that the country's situation changes for the benefit of all its employees and directors.">
+                    Diseñador Gráfico en la empresa Grifocentro. elaboración de empaques, diseño gráfico en general, aunque fue una estancia breve aproveche el poco tiempo dentro de esta empresa, agradeciendo la oportunidad prestada por la misma. esperando siempre que la situación país cambien para beneficio de todos sus empleados y directores.
                 </div>
             </div>
 
@@ -1126,7 +1126,7 @@
         <div class="max-w-7xl mx-auto">
             <div class="flex flex-col md:flex-row justify-between items-end mb-12">
                 <div>
-                    <span class="text-yellow-600 text-[10px] font-black uppercase tracking-[0.4em] i18n" data-es="Validation" data-en="Validation">Validación</span>
+                    <span class="text-yellow-600 text-[10px] font-black uppercase tracking-[0.4em] i18n" data-es="Validación" data-en="Validation">Validación</span>
                     <h2 class="text-4xl font-black uppercase i18n" data-es="Referencias" data-en="References">Referencias</h2>
                 </div>
                 <p class="text-gray-500 max-w-sm mt-4 md:mt-0 text-sm i18n" 
@@ -1498,6 +1498,30 @@
     </div>
 
     <script>
+        // Utilidades compartidas: declaradas en script clásico para que openProductModal
+        // (también aquí) las vea; el módulo Firebase las consume vía window.*
+        function escapeHtml(s) {
+            return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+            });
+        }
+        function normalizeProduct(p) {
+            if (!p) return null;
+            return {
+                id: p.id,
+                titulo: p.titulo || p.titleEs || '',
+                descripcion: p.descripcion || p.descEs || '',
+                imagen: p.imagen || p.img || 'images/producto1.jpg',
+                categoria: p.categoria || p.tag || '',
+                precioOriginal: p.precioOriginal || p.old || '',
+                precioDescuento: p.precioDescuento || p.price || '',
+                features: typeof p.features === 'string' ? p.features : (p.featuresEs ? p.featuresEs.join(', ') : 'Incluido'),
+                activo: p.activo !== false
+            };
+        }
+        window.escapeHtml = escapeHtml;
+        window.normalizeProduct = normalizeProduct;
+
         // --- Animación del Fondo (Network Effect) ---
         const canvas = document.getElementById('hero-canvas');
         const ctx = canvas.getContext('2d');
@@ -1913,24 +1937,8 @@
         auth.languageCode = 'es';
 
         // ===== SINCRONIZACIÓN DE PRODUCTOS (Firestore + localStorage) =====
-        function escapeHtml(s) {
-            return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-        }
-
-        function normalizeProduct(p) {
-            if (!p) return null;
-            return {
-                id: p.id,
-                titulo: p.titulo || p.titleEs || '',
-                descripcion: p.descripcion || p.descEs || '',
-                imagen: p.imagen || p.img || 'images/producto1.jpg',
-                categoria: p.categoria || p.tag || '',
-                precioOriginal: p.precioOriginal || p.old || '',
-                precioDescuento: p.precioDescuento || p.price || '',
-                features: typeof p.features === 'string' ? p.features : (p.featuresEs ? p.featuresEs.join(', ') : 'Incluido'),
-                activo: p.activo !== false
-            };
-        }
+        // escapeHtml / normalizeProduct están declaradas en el script clásico anterior
+        // y expuestas a window.*; las consumimos desde ahí para evitar duplicación.
 
         window.indexProductsLive = [];
 
@@ -1939,17 +1947,17 @@
             if (!track) return;
             const products = window.indexProductsLive.length > 0
                 ? window.indexProductsLive
-                : (window.productData || []).map(normalizeProduct);
+                : (window.productData || []).map(window.normalizeProduct);
             if (!products.length) {
                 track.innerHTML = '<div class="text-center py-12 text-zinc-500 w-full">No hay productos disponibles.</div>';
                 return;
             }
             track.innerHTML = products.slice(0, 5).map((p, i) => `
                 <div class="slide-card" onclick="openProductModal(${i})" style="cursor:pointer">
-                    <div class="card-bg" style="background-image: url('${escapeHtml(p.imagen)}');"></div>
+                    <div class="card-bg" style="background-image: url('${window.escapeHtml(p.imagen)}');"></div>
                     <div>
-                        <span class="card-tag i18n">${escapeHtml(p.categoria)}</span>
-                        <span class="card-title i18n">${escapeHtml(p.titulo)}</span>
+                        <span class="card-tag i18n">${window.escapeHtml(p.categoria)}</span>
+                        <span class="card-title i18n">${window.escapeHtml(p.titulo)}</span>
                         <span class="card-cta i18n" data-es="Ver detalles →" data-en="View details →">Ver detalles →</span>
                     </div>
                 </div>
@@ -1974,7 +1982,7 @@
             }
             const activos = (productos || []).filter(p => p && p.activo !== false);
             if (activos.length > 0) {
-                window.indexProductsLive = activos.map(normalizeProduct);
+                window.indexProductsLive = activos.map(window.normalizeProduct);
                 renderIndexSlider();
             }
         }
@@ -1994,7 +2002,7 @@
                 try {
                     const productos = JSON.parse(e.newValue || '[]');
                     const activos = (productos || []).filter(p => p && p.activo !== false);
-                    window.indexProductsLive = activos.map(normalizeProduct);
+                    window.indexProductsLive = activos.map(window.normalizeProduct);
                     renderIndexSlider();
                 } catch (err) { console.warn('[storage event]', err); }
             }
